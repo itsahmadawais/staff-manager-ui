@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
+
+$primary-color: #005E8E;
+$secondary-color: #219FCA;
+$accent-color: #FFC107;
+$grey-color: #E9ECEF;
+
+* {
+    font-family: 'Open Sans', sans-serif;
+}
+
+/***** Buttons *****/
+.btn-primary {
+    background-color: $primary-color;
+    border-color: $primary-color;
+    &:hover {
+        background-color: $secondary-color;
+        border-color: $secondary-color;
+    }
+    &:disabled {
+        background-color: $secondary-color;
+        border-color: $secondary-color;
+    }
+}
+
+/***** Router Link *****/
+.link {
+    color: $primary-color;
+    text-decoration: none;
+    &:hover {
+        color: $secondary-color;
+    }
+}
+
+/***** Forms *****/
+input {
+    &:focus {
+        box-shadow: none !important;
+        border-color: $primary-color !important;
+    }
+}
+.error-feedback {
+    font-size: 12px;
+    color: red;
+    margin-top: 5px;
+}
+
+/*
+##### Public Layout #####
+*/
+.public-layout {
+    height: 100vh;
+    background-image: url('../public/images/public-background2.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/***** Public Content *****/
+.public-content {
+    height: 100vh;
+}
+
+/***** Public Form *****/
+.public-form {
+    width: 30%;
+    .link {
+        font-size: 14px;
+    }
+    img {
+        width: 150px;
+    }
+}

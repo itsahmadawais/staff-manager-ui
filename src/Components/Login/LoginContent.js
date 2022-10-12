@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Form, Spinner } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import Avatar from '../UI/Avatar';
+import { Avatar } from '../UI';
 
 export default function LoginContent() {
   const navigate = useNavigate();

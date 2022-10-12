@@ -1,12 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
 
 $primary-color: #005E8E;
-$secondary-color: #219FCA;
-$accent-color: #FFC107;
-$grey-color: #E9ECEF;
+$secondary-color: #E8AE00;
+$grey-color: #f7f7f7;
+$grey-border-color: #efefef;
 
 * {
     font-family: 'Open Sans', sans-serif;
+}
+
+@mixin breakpoint($class) {
+    @if $class==xs {
+        @media (max-width: 576px) {
+            @content;
+        }
+    }
+    @else if $class==sm {
+        @media (max-width: 768px) {
+            @content;
+        }
+    }
+    @else if $class==md {
+        @media (max-width: 992px) {
+            @content;
+        }
+    }
+    @else if $class==lg {
+        @media (max-width: 1200px) {
+            @content;
+        }
+    }
+    @else {
+        @warn "Breakpoint mixin supports: xs, sm, md, lg";
+    }
 }
 
 /***** Buttons *****/
@@ -20,6 +46,27 @@ $grey-color: #E9ECEF;
     &:disabled {
         background-color: $secondary-color;
         border-color: $secondary-color;
+    }
+}
+.btn-topbar-icon {
+    background-color: $grey-color;
+    border-radius: 40px;
+    border: none;
+    padding: 10px;
+    svg {
+        color: $primary-color;
+    }
+    &:hover {
+        background-color: $grey-color;
+        svg {
+            color: $secondary-color;
+        }
+    }
+    &:focus {
+        background-color: $grey-color;
+    }
+    &::after {
+        display: none;
     }
 }
 
@@ -45,6 +92,34 @@ input {
     margin-top: 5px;
 }
 
+/***** Avatar *****/
+.avatar {
+    width: 40px;
+    border-radius: 40px;
+    object-fit: cover;
+}
+
+/***** Scollbar *****/
+.custom-scrollbar {
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+    &::-webkit-scrollbar-track {
+        background-color: $grey-border-color;
+        border-radius: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: rgb(201, 201, 201);
+        border-radius: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        &:hover {
+            background-color: rgb(180, 180, 180);
+        }
+    }
+}
+
 /*
 ##### Public Layout #####
 */
@@ -64,10 +139,127 @@ input {
 /***** Public Form *****/
 .public-form {
     width: 30%;
+    @include breakpoint(md) {
+        width: 50%;
+    }
+    @include breakpoint(xs) {
+        width: 80%;
+    }
     .link {
         font-size: 14px;
     }
     img {
         width: 150px;
+        border-radius: 0;
+    }
+}
+
+/*
+##### Login Layout #####
+*/
+.login-layout {
+    .main-content-wrap {
+        height: 100vh;
+        .main-content {
+            height: calc(100vh - 145px);
+        }
+    }
+}
+
+/*
+##### Topbar #####
+*/
+.topbar {
+    box-shadow: 2px 2px 5px 2px $grey-color;
+    border-radius: 10px;
+    .topbar-left {
+        p {
+            font-weight: 600;
+        }
+    }
+    .topbar-right {
+        .btn-topbar-icon {
+            position: relative;
+            .badge {
+                position: absolute;
+                right: 0;
+                background-color: $primary-color;
+                border-radius: 20px;
+                font-size: 10px;
+            }
+        }
+        .dropdown-menu {
+            border: none;
+            min-width: 250px;
+            max-width: 250px;
+            p {
+                font-size: 14px;
+                color: gray;
+                &.head-text {
+                    color: $primary-color;
+                    border-bottom: 1px solid $grey-border-color;
+                }
+            }
+            .dropdown-item {
+                font-size: 13px;
+                width: 100%;
+                overflow: hidden;
+                white-space: normal;
+                &:not(:last-child) {
+                    border-bottom: 1px solid $grey-border-color;
+                }
+                &:hover {
+                    background-color: $grey-color;
+                }
+            }
+        }
+    }
+}
+
+/*
+##### Bottombar #####
+*/
+.bottombar {
+    border-top: 1px solid $grey-border-color;
+}
+
+/*
+##### Sidebar #####
+*/
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: $primary-color;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    overflow: auto;
+    .sidebar-top {
+        img {
+            width: 50px;
+            border-radius: 0;
+        }
+        p {
+            color: #fff;
+            font-weight: 600;
+        }
+    }
+    .nav-menu {
+        .menu-item {
+            color: #fff;
+            text-decoration: none;
+            svg {
+                margin-right: 5px;
+            }
+            &:hover {
+                color: $secondary-color;
+            }
+            &.active {
+                background-color: $secondary-color;
+                border-radius: 7px;
+                &:hover {
+                    color: #fff;
+                }
+            }
+        }
     }
 }

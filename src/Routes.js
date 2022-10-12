@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route } from 'react-router-dom';
-import { ForgotPassword, Login, ResetPassword } from './Pages';
+import { ForgotPassword, Login, ResetPassword, Dashboard } from './Pages';
 
 export function getRoutes() {
     const routes = [
@@ -15,6 +15,10 @@ export function getRoutes() {
         {
             path: '/reset-password',
             component: <ResetPassword />
+        },
+        {
+            path: '/',
+            component: <Dashboard />
         }
     ];
 

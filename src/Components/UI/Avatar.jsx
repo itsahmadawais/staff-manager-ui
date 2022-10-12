@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function Avatar({image, imageClass}) {
   return (
-    <img src={image} className={imageClass} alt='' />
+    <img src={image ? image : '/images/avatar.png'} className={'avatar '+imageClass} alt='' />
   )
 }

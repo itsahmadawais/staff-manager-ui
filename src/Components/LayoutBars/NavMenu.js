@@ -1,76 +1,225 @@
 import React from 'react';
+import { Accordion } from 'react-bootstrap';
 import { BsGridFill } from "react-icons/bs";
-import { FaFileAlt, FaRegBuilding, FaMapMarkerAlt, FaFolderOpen, FaUserFriends, 
-    FaUserEdit, FaUserCog, FaCalendarAlt, FaCalendarTimes, FaUserTie, FaCog, FaPowerOff } from "react-icons/fa";
-import { Navigate, NavLink } from 'react-router-dom';
+import { FaFileAlt, FaBuilding, FaMapMarkerAlt, FaFolderOpen, FaUserFriends, 
+    FaUserEdit, FaUserCog, FaCalendarAlt, FaCalendarTimes, FaUserTie, FaCog, FaPowerOff, FaCircle } from "react-icons/fa";
+import { useNavigate, NavLink } from 'react-router-dom';
 
 export default function NavMenu() {
     const navMenu = [
         {
             id: '1',
-            link: '/',
+            link: '/dashboard',
             icon: <BsGridFill size={18} />,
             title: 'Dashboard'
         },
         {
             id: '2',
-            link: '/reports',
             icon: <FaFileAlt size={18} />,
-            title: 'Reports'
+            title: 'Reports',
+            submenu: [
+                {
+                    id: '1',
+                    link: '/reports',
+                    icon: <FaCircle size={14} />,
+                    title: 'Absence Reports'
+                }
+            ]
         },
         {
             id: '3',
-            link: '/departments',
-            icon: <FaRegBuilding size={18} />,
-            title: 'Departments'
+            icon: <FaBuilding size={18} />,
+            title: 'Departments',
+            submenu: [
+                {
+                    id: '1',
+                    link: '/departments',
+                    icon: <FaCircle size={14} />,
+                    title: 'View All'
+                },
+                {
+                    id: '2',
+                    link: '/departments/create',
+                    icon: <FaCircle size={14} />,
+                    title: 'Add New'
+                }
+            ]
         },
         {
             id: '4',
-            link: '/locations',
             icon: <FaMapMarkerAlt size={18} />,
-            title: 'Locations'
+            title: 'Locations',
+            submenu: [
+                {
+                    id: '1',
+                    link: '/locations',
+                    icon: <FaCircle size={14} />,
+                    title: 'View All'
+                },
+                {
+                    id: '2',
+                    link: '/locations/create',
+                    icon: <FaCircle size={14} />,
+                    title: 'Add New'
+                }
+            ]
         },
         {
             id: '5',
-            link: '/documents',
             icon: <FaFolderOpen size={18} />,
-            title: 'Documents'
+            title: 'Documents',
+            submenu: [
+                {
+                    id: '1',
+                    link: '/documents',
+                    icon: <FaCircle size={14} />,
+                    title: 'View All'
+                },
+                {
+                    id: '2',
+                    link: '/documents/create',
+                    icon: <FaCircle size={14} />,
+                    title: 'Add New'
+                }
+            ]
         },
         {
             id: '6',
-            link: '/employees',
             icon: <FaUserTie size={18} />,
-            title: 'Empolyees'
+            title: 'Empolyees',
+            submenu: [
+                {
+                    id: '1',
+                    link: '/employees',
+                    icon: <FaCircle size={14} />,
+                    title: 'View All'
+                },
+                {
+                    id: '2',
+                    link: '/employees/create',
+                    icon: <FaCircle size={14} />,
+                    title: 'Add New'
+                }
+            ]
         },
         {
             id: '7',
-            link: '/subcontractors',
             icon: <FaUserEdit size={18} />,
-            title: 'Subcontractors'
+            title: 'Subcontractors',
+            submenu: [
+                {
+                    id: '1',
+                    link: '/subcontractors',
+                    icon: <FaCircle size={14} />,
+                    title: 'View All'
+                },
+                {
+                    id: '2',
+                    link: '/subcontractors/create',
+                    icon: <FaCircle size={14} />,
+                    title: 'Add New'
+                }
+            ]
         },
         {
             id: '8',
-            link: '/clients',
             icon: <FaUserCog size={18} />,
-            title: 'Clients'
+            title: 'Clients',
+            submenu: [
+                {
+                    id: '1',
+                    link: '/clients',
+                    icon: <FaCircle size={14} />,
+                    title: 'View All'
+                },
+                {
+                    id: '2',
+                    link: '/clients/create',
+                    icon: <FaCircle size={14} />,
+                    title: 'Add New'
+                }
+            ]
         },
         {
             id: '9',
-            link: '/schedule',
             icon: <FaCalendarAlt size={18} />,
-            title: 'Schedule'
+            title: 'Schedule',
+            submenu: [
+                {
+                    id: '1',
+                    link: '/schedule',
+                    icon: <FaCircle size={14} />,
+                    title: 'View All'
+                },
+                {
+                    id: '2',
+                    link: '/schedule/create',
+                    icon: <FaCircle size={14} />,
+                    title: 'Add New'
+                },
+                {
+                    id: '3',
+                    link: '/schedule/assign-shifts',
+                    icon: <FaCircle size={14} />,
+                    title: 'Assign Shifts'
+                },
+                {
+                    id: '4',
+                    link: '/schedule/view-calendar',
+                    icon: <FaCircle size={14} />,
+                    title: 'View Calendar'
+                }
+            ]
         },
         {
             id: '10',
-            link: '/absence',
             icon: <FaCalendarTimes size={18} />,
-            title: 'Absence'
+            title: 'Absence',
+            submenu: [
+                {
+                    id: '1',
+                    link: '/absence',
+                    icon: <FaCircle size={14} />,
+                    title: 'View All'
+                },
+                {
+                    id: '2',
+                    link: '/absence/create',
+                    icon: <FaCircle size={14} />,
+                    title: 'Add New'
+                },
+                {
+                    id: '3',
+                    link: '/absence/allowances',
+                    icon: <FaCircle size={14} />,
+                    title: 'Manage Allowances'
+                }
+            ]
         },
         {
             id: '11',
-            link: '/users',
             icon: <FaUserFriends size={18} />,
-            title: 'Users'
+            title: 'Users',
+            submenu: [
+                {
+                    id: '1',
+                    link: '/users',
+                    icon: <FaCircle size={14} />,
+                    title: 'View All'
+                },
+                {
+                    id: '2',
+                    link: '/users/create',
+                    icon: <FaCircle size={14} />,
+                    title: 'Add New'
+                },
+                {
+                    id: '3',
+                    link: '/users/role',
+                    icon: <FaCircle size={14} />,
+                    title: 'Role Permissions'
+                }
+            ]
         },
         {
             id: '12',
@@ -87,7 +236,8 @@ export default function NavMenu() {
         }
     ];
 
-    const handleLogout = () => Navigate('/login');
+    const navigate = useNavigate();
+    const handleLogout = () => navigate('/login');
 
     return (
         <>
@@ -97,18 +247,42 @@ export default function NavMenu() {
                         return(
                             <div
                                 key={navitem.id} 
-                                className='menu-item corner-radius py-2 px-3 my-1 d-flex justify-content-between align-items-center' 
+                                className='menu-item corner-radius py-2 px-3 my-2 d-flex justify-content-between align-items-center' 
                                 onClick={()=>navitem.onClick()}
+                                style={{cursor: 'pointer'}}
                             >
                                 <div>{navitem.icon} {navitem.title}</div>
                             </div>
                         )
-                    } else{
+                    } else if(navitem.submenu!==undefined){
+                        return(
+                            <Accordion key={navitem.id}>
+                                <Accordion.Button className='py-2 px-3'>
+                                    {navitem.icon} {navitem.title}
+                                </Accordion.Button>
+                                <Accordion.Body className='p-0'>
+                                    {
+                                        navitem.submenu.map((subitem) => {
+                                            return(
+                                                <NavLink 
+                                                    key={subitem.id} 
+                                                    to={subitem.link} 
+                                                    className='menu-item corner-radius py-2 px-3 my-2 d-flex justify-content-between align-items-center'
+                                                >
+                                                    <div>{subitem.icon} {subitem.title}</div>
+                                                </NavLink>
+                                            )
+                                        })
+                                    }
+                                </Accordion.Body>
+                            </Accordion>
+                        )
+                    } else {
                         return(
                             <NavLink 
                                 key={navitem.id} 
                                 to={navitem.link} 
-                                className='menu-item corner-radius py-2 px-3 my-1 d-flex justify-content-between align-items-center'
+                                className='menu-item corner-radius py-2 px-3 my-2 d-flex justify-content-between align-items-center'
                             >
                                 <div>{navitem.icon} {navitem.title}</div>
                             </NavLink>

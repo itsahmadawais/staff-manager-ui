@@ -1,16 +1,59 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
+import { Button } from 'react-bootstrap';
+import { BsArrowLeft } from 'react-icons/bs';
 import { Avatar } from '../UI'
 import NavMenu from './NavMenu'
 
 export default function Sidebar() {
+  const [isMini, setIsMini] = useState(true);
+  const sidebarRef = useRef(null);
+  const [toggleMini, setToggleMini] = useState(false);
+
+  const toggleSidebar = () => {
+    if (toggleMini) {
+      if (isMini) {
+        sidebarRef.current.style.width = '250px';
+        sidebarRef.current.style.overflow = 'auto';
+        setIsMini(false);
+      } else {
+        sidebarRef.current.style.width = '65px';
+        sidebarRef.current.style.overflow = 'hidden';
+        setIsMini(true);
+      }
+    }
+  };
+
+  const sidebarToggleClick = () => {
+    setToggleMini(!toggleMini);
+    if (toggleMini) {
+      sidebarRef.current.style.width = '250px';
+      sidebarRef.current.style.overflow = 'auto';
+      setIsMini(false);
+    } else {
+      sidebarRef.current.style.width = '65px';
+      sidebarRef.current.style.overflow = 'hidden';
+      setIsMini(true);
+    }
+  };
+
   return (
-    <div className='sidebar px-2 py-3 custom-scrollbar'>
-      <div className='sidebar-top d-flex flex-wrap align-items-center'>
-        <Avatar image='/images/logo.png' />
-        <p className='ms-3 mb-0'>Company Name</p>
-      </div>
-      <div className='nav-menu mt-4'>
-        <NavMenu />
+    <div style={{position: 'relative'}} className={toggleMini ? 'sidebar-wrap active' : 'sidebar-wrap'}>
+      <Button className='toggle-arrow' onClick={sidebarToggleClick}>
+        <BsArrowLeft size={16} />
+      </Button>
+      <div
+        ref={sidebarRef} 
+        className='sidebar px-2 py-3 custom-scrollbar'
+        onMouseEnter={toggleSidebar} 
+        onMouseLeave={toggleSidebar}
+      >
+        <div className='sidebar-top d-flex align-items-center'>
+          <Avatar image='/images/logo.png' />
+          <p className='ms-3 mb-0'>Company Name</p>
+        </div>
+        <div className='nav-menu mt-4'>
+          <NavMenu />
+        </div>
       </div>
     </div>
   )

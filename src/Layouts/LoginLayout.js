@@ -7,9 +7,7 @@ export default function LoginLayout({children}) {
         <div className='row g-0'>
             <div className='col-md-12'>
                 <div className='d-flex'>
-                    <div className='sidebar-wrap'>
-                        <Sidebar />
-                    </div>
+                    <Sidebar />
                     <div className='main-content-wrap flex-grow-1 py-2 px-3'>
                         <Topbar />
                         <div className='main-content p-3'>

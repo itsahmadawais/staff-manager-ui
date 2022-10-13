@@ -17,7 +17,7 @@ export function getRoutes() {
             component: <ResetPassword />
         },
         {
-            path: '/',
+            path: '/dashboard',
             component: <Dashboard />
         }
     ];

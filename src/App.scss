@@ -226,38 +226,102 @@ input {
 /*
 ##### Sidebar #####
 */
-.sidebar {
-    width: 250px;
-    height: 100vh;
-    background-color: $primary-color;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    overflow: auto;
-    .sidebar-top {
-        img {
-            width: 50px;
-            border-radius: 0;
+.sidebar-wrap {
+    &.active {
+        .toggle-arrow {
+            transform: rotate(180deg);
         }
-        p {
-            color: #fff;
-            font-weight: 600;
+        .sidebar {
+            .accordion {
+                .accordion-button {
+                    svg {
+                        overflow: visible;
+                    }
+                }
+            }
         }
     }
-    .nav-menu {
-        .menu-item {
-            color: #fff;
-            text-decoration: none;
-            svg {
-                margin-right: 5px;
+    .toggle-arrow {
+        color: #fff;
+        position: absolute;
+        top: 5px;
+        right: -30px;
+        padding: 0px 6px 3px;
+        background-color: $primary-color;
+        border-radius: 20px;
+        border: none;
+        box-shadow: none;
+    }
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        background-color: $primary-color;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        overflow-y: auto;
+        transition: 0.3s;
+        white-space: nowrap;
+        z-index: 1;
+        overflow-x: hidden;
+        .sidebar-top {
+            img {
+                width: 50px;
+                border-radius: 0;
             }
-            &:hover {
-                color: $secondary-color;
+            p {
+                color: #fff;
+                font-weight: 600;
+                max-width: 140px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
-            &.active {
-                background-color: $secondary-color;
-                border-radius: 7px;
+        }
+        .nav-menu {
+            .menu-item {
+                color: #fff;
+                text-decoration: none;
+                svg {
+                    margin-right: 19px;
+                }
                 &:hover {
+                    color: $secondary-color;
+                }
+                &.active {
+                    background-color: $secondary-color;
+                    border-radius: 7px;
+                    &:hover {
+                        color: #fff;
+                    }
+                }
+            }
+            .accordion {
+                .accordion-button {
+                    background-color: $primary-color;
                     color: #fff;
+                    border-radius: 7px;
+                    box-shadow: none;
+                    svg {
+                        margin-right: 23px;
+                    }
+                    &:not(.collapsed) {
+                        background-color: rgba(255, 255, 255, 0.105);
+                    }
+                    &:hover {
+                        color: $secondary-color;
+                    }
+                    &::after {
+                        background-size: 15px;
+                        filter: brightness(0) invert(1);
+                    }
+                }
+                .accordion-body {
+                    .menu-item {
+                        font-size: 14px;
+                        svg {
+                            margin-right: 23px;
+                        }
+                    }
                 }
             }
         }

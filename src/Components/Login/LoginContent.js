@@ -30,7 +30,7 @@ export default function LoginContent() {
             setSubmitting(true);
             setTimeout(() => {
               setSubmitting(false);
-              navigate('/');
+              navigate('/dashboard');
             }, 1500);
           }}
         >

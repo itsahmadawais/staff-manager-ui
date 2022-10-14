@@ -30,7 +30,7 @@ export default function Topbar() {
       </div>
       <div className='topbar-right d-flex align-items-center'>
         <Dropdown className='me-2'>
-          <Dropdown.Toggle variant='topbar-icon'>
+          <Dropdown.Toggle variant='icon'>
             <BiBell size={24} /><span className='badge'>1</span>
           </Dropdown.Toggle>
           <Dropdown.Menu className='shadow-sm'>
@@ -44,7 +44,7 @@ export default function Topbar() {
             }
           </Dropdown.Menu>
         </Dropdown>
-        <Button variant='topbar-icon'>
+        <Button variant='icon'>
           <BiEnvelope size={24} /><span className='badge'>1</span>
         </Button>
       </div>

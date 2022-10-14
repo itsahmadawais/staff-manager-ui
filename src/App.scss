@@ -37,18 +37,20 @@ $grey-border-color: #efefef;
 
 /***** Buttons *****/
 .btn-primary {
+    font-size: 14px;
     background-color: $primary-color;
-    border-color: $primary-color;
+    border: none;
     &:hover {
         background-color: $secondary-color;
-        border-color: $secondary-color;
     }
     &:disabled {
         background-color: $secondary-color;
-        border-color: $secondary-color;
+    }
+    &:focus {
+        background-color: $primary-color;
     }
 }
-.btn-topbar-icon {
+.btn-icon {
     background-color: $grey-color;
     border-radius: 40px;
     border: none;
@@ -178,7 +180,7 @@ input {
         }
     }
     .topbar-right {
-        .btn-topbar-icon {
+        .btn-icon {
             position: relative;
             .badge {
                 position: absolute;
@@ -325,5 +327,55 @@ input {
                 }
             }
         }
+    }
+}
+
+/*
+##### View Calendar #####
+*/
+.view-calendar {
+    .calendar-head {
+        .current-week {
+            .dates {
+                span {
+                    font-weight: 600;
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+    .calendar-body {
+        table {
+            thead {
+                th {
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+            }
+            tbody {
+                tr {
+                    td {
+                        max-width: 100px;
+                        min-width: 100px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/***** Employee Shift *****/
+.employee-shift {
+    background-color: $primary-color;
+    border-radius: 5px;
+    font-size: 11px;
+    span {
+        color: #fff;
+    }
+    .status {
+        font-size: 10px;
+        background-color: $secondary-color;
+        border-radius: 5px;
+        width: fit-content;
     }
 }

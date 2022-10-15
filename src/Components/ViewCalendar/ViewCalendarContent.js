@@ -3,6 +3,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Button, Table } from 'react-bootstrap';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import EmployeeShift from './EmployeeShift';
+import { Avatar } from '../UI';
 
 export default function ViewCalendarContent() {
     const currentWeek = [
@@ -160,109 +161,355 @@ export default function ViewCalendarContent() {
 
     const employeeShifts = [
         {
-            id: '1',
-            image: '/images/user.jpg',
+            id: '18',
+            image: '',
             name: 'Abdullah',
             shiftsHours: 0,
-            shiftDays: []
+            shiftDays: [
+                {
+                    id: '25',
+                    date: '10-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '26',
+                    date: '11-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '27',
+                    date: '12-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '28',
+                    date: '13-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '29',
+                    date: '14-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '30',
+                    date: '15-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '31',
+                    date: '16-10-2022',
+                    shifts: []
+                },
+            ]
         },
         {
-            id: '2',
+            id: '19',
             image: '/images/user.jpg',
             name: 'Aalam Zaib',
             shiftsHours: 72,
             shiftDays: [
                 {
-                    id: '1',
+                    id: '32',
                     date: '10-10-2022',
                     shifts: []
                 },
                 {
-                    id: '2',
+                    id: '33',
                     date: '11-10-2022',
                     shifts: []
                 },
                 {
-                    id: '3',
-                    client: 'Coca Cola European Partner',
-                    site: 'CCEP Uxbridge',
-                    startDate: '12-10-2022',
-                    endDate: '12-10-2022',
-                    startTime: '19:00',
-                    endTime: '07:00',
+                    id: '34',
+                    date: '12-10-2022',
+                    shifts: [
+                        {
+                            id: '35',
+                            client: 'Coca Cola European Partner',
+                            site: 'CCEP Uxbridge',
+                            startDate: '12-10-2022',
+                            endDate: '12-10-2022',
+                            startTime: '19:00',
+                            endTime: '07:00',
+                        }
+                    ]
                 },
                 {
-                    id: '4',
-                    client: 'Coca Cola European Partner',
-                    site: 'CCEP Uxbridge',
-                    startDate: '13-10-2022',
-                    endDate: '13-10-2022',
-                    startTime: '19:00',
-                    endTime: '07:00',
+                    id: '36',
+                    date: '13-10-2022',
+                    shifts: [
+                        {
+                            id: '37',
+                            client: 'Coca Cola European Partner',
+                            site: 'CCEP Uxbridge',
+                            startDate: '13-10-2022',
+                            endDate: '13-10-2022',
+                            startTime: '19:00',
+                            endTime: '07:00',
+                        }
+                    ]
                 },
                 {
-                    id: '5',
-                    client: 'Coca Cola European Partner',
-                    site: 'CCEP Uxbridge',
-                    startDate: '14-10-2022',
-                    endDate: '14-10-2022',
-                    startTime: '19:00',
-                    endTime: '07:00',
+                    id: '38',
+                    date: '14-10-2022',
+                    shifts: [
+                        {
+                            id: '39',
+                            client: 'Coca Cola European Partner',
+                            site: 'CCEP Uxbridge',
+                            startDate: '14-10-2022',
+                            endDate: '14-10-2022',
+                            startTime: '19:00',
+                            endTime: '07:00',
+                        }
+                    ]
                 },
                 {
-                    id: '6',
-                    client: 'Coca Cola European Partner',
-                    site: 'CCEP Uxbridge',
-                    startDate: '15-10-2022',
-                    endDate: '15-10-2022',
-                    startTime: '19:00',
-                    endTime: '07:00',
+                    id: '40',
+                    date: '15-10-2022',
+                    shifts: [
+                        {
+                            id: '41',
+                            client: 'Coca Cola European Partner',
+                            site: 'CCEP Uxbridge',
+                            startDate: '15-10-2022',
+                            endDate: '15-10-2022',
+                            startTime: '19:00',
+                            endTime: '07:00',
+                        }
+                    ]
                 },
                 {
-                    id: '7',
-                    client: 'Coca Cola European Partner',
-                    site: 'CCEP Uxbridge',
-                    startDate: '16-10-2022',
-                    endDate: '16-10-2022',
-                    startTime: '19:00',
-                    endTime: '07:00',
+                    id: '42',
+                    date: '16-10-2022',
+                    shifts: [
+                        {
+                            id: '43',
+                            client: 'Coca Cola European Partner',
+                            site: 'CCEP Uxbridge',
+                            startDate: '16-10-2022',
+                            endDate: '16-10-2022',
+                            startTime: '19:00',
+                            endTime: '07:00',
+                        }
+                    ]
                 }
             ]
         },
         {
-            id: '3',
+            id: '20',
             image: '/images/user.jpg',
             name: 'Amir Shafique',
             shiftsHours: 0,
-            shiftDays: []
+            shiftDays: [
+                {
+                    id: '43',
+                    date: '10-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '44',
+                    date: '11-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '45',
+                    date: '12-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '46',
+                    date: '13-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '47',
+                    date: '14-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '48',
+                    date: '15-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '49',
+                    date: '16-10-2022',
+                    shifts: []
+                }
+            ]
         },
         {
-            id: '4',
+            id: '21',
             image: '/images/user.jpg',
             name: 'Amir Shafique',
             shiftsHours: 0,
-            shiftDays: []
+            shiftDays: [
+                {
+                    id: '50',
+                    date: '10-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '51',
+                    date: '11-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '52',
+                    date: '12-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '53',
+                    date: '13-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '54',
+                    date: '14-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '55',
+                    date: '15-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '56',
+                    date: '16-10-2022',
+                    shifts: []
+                }
+            ]
         },
         {
-            id: '5',
+            id: '22',
             image: '/images/user.jpg',
             name: 'Amir Shafique',
             shiftsHours: 0,
-            shiftDays: []
+            shiftDays: [
+                {
+                    id: '57',
+                    date: '10-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '58',
+                    date: '11-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '59',
+                    date: '12-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '60',
+                    date: '13-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '61',
+                    date: '14-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '62',
+                    date: '15-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '63',
+                    date: '16-10-2022',
+                    shifts: []
+                }
+            ]
         },
         {
-            id: '6',
+            id: '23',
             image: '/images/user.jpg',
             name: 'Amir Shafique',
             shiftsHours: 0,
-            shiftDays: []
+            shiftDays: [
+                {
+                    id: '64',
+                    date: '10-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '65',
+                    date: '11-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '66',
+                    date: '12-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '67',
+                    date: '13-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '68',
+                    date: '14-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '69',
+                    date: '15-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '70',
+                    date: '16-10-2022',
+                    shifts: []
+                }
+            ]
         },
         {
-            id: '7',
+            id: '24',
             image: '/images/user.jpg',
             name: 'Amir Shafique',
             shiftsHours: 0,
-            shiftDays: []
+            shiftDays: [
+                {
+                    id: '71',
+                    date: '10-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '72',
+                    date: '11-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '73',
+                    date: '12-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '74',
+                    date: '13-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '75',
+                    date: '14-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '76',
+                    date: '15-10-2022',
+                    shifts: []
+                },
+                {
+                    id: '77',
+                    date: '16-10-2022',
+                    shifts: []
+                }
+            ]
         }
     ];
 
@@ -291,7 +538,7 @@ export default function ViewCalendarContent() {
                 <Button variant='primary'>Publish Shifts</Button>
             </div>
             <div className='calendar-body mt-4'>
-                <Table bordered responsive>
+                <Table className='head-table mb-0' bordered responsive>
                     <thead>
                         <tr>
                             <th>Employees</th>
@@ -302,22 +549,24 @@ export default function ViewCalendarContent() {
                             }
                         </tr>
                     </thead>
-                    <DragDropContext>
-                        <tbody>
-                            <tr>
-                                <td>Unassigned Shifts</td>
-                                {
-                                    unassignedShiftDays.map((item) => {
-                                        return(
-                                            <Droppable key={item.id} droppableId={item.id+item.date}>
-                                                {(provided) => (
-                                                    <td 
-                                                        {...provided.droppableProps}
-                                                        ref={provided.innerRef}
-                                                    >
-                                                        {
-                                                            item.shifts.length ? (
-                                                                item.shifts.map((item, index) => {
+                </Table>
+                <DragDropContext style={{overflow: 'auto'}}>
+                    <div className='unassigned-wrap custom-scrollbar'>
+                        <Table className='mb-0' bordered responsive>
+                            <tbody>
+                                <tr>
+                                    <td>Unassigned Shifts</td>
+                                    {
+                                        unassignedShiftDays.map((item) => {
+                                            return(
+                                                <Droppable key={item.id} droppableId={item.id+item.date}>
+                                                    {(provided) => (
+                                                        <td 
+                                                            {...provided.droppableProps}
+                                                            ref={provided.innerRef}
+                                                        >
+                                                            {
+                                                                item.shifts?.map((item, index) => {
                                                                     return(
                                                                         <Draggable 
                                                                             key={item.id} 
@@ -336,20 +585,75 @@ export default function ViewCalendarContent() {
                                                                         </Draggable>
                                                                     )
                                                                 })
-                                                            ) : (
-                                                                ''
-                                                            )
-                                                        }
-                                                    </td>
-                                                )}
-                                            </Droppable>
+                                                            }
+                                                            {provided.placeholder}
+                                                        </td>
+                                                    )}
+                                                </Droppable>
+                                            )
+                                        })
+                                    }
+                                </tr>
+                            </tbody>
+                        </Table>
+                    </div>
+                    <div className='assigned-wrap custom-scrollbar'>
+                        <Table className='mb-0' bordered responsive>
+                            <tbody>
+                                {
+                                    employeeShifts.map((item) => {
+                                        return(
+                                            <tr key={item.id}>
+                                                <td>
+                                                    <Avatar image={item.image} />
+                                                    <p className='name mb-0'>{item.name}</p>
+                                                    <p className='hours mb-0'>{item.shiftsHours} hours</p>
+                                                </td>
+                                                {
+                                                    item.shiftDays.map((item) => {
+                                                        return(
+                                                            <Droppable key={item.id} droppableId={item.id+item.date}>
+                                                                {(provided) => (
+                                                                    <td 
+                                                                        {...provided.droppableProps}
+                                                                        ref={provided.innerRef}
+                                                                    >
+                                                                        {
+                                                                            item.shifts?.map((item, index) => {
+                                                                                return(
+                                                                                    <Draggable 
+                                                                                        key={item.id} 
+                                                                                        draggableId={item.id} 
+                                                                                        index={index}
+                                                                                    >
+                                                                                        {(provided) => (
+                                                                                            <div
+                                                                                                ref={provided.innerRef}
+                                                                                                {...provided.dragHandleProps}
+                                                                                                {...provided.draggableProps}
+                                                                                            >
+                                                                                                <EmployeeShift data={item} />
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </Draggable>
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                        {provided.placeholder}
+                                                                    </td>
+                                                                )}
+                                                            </Droppable>
+                                                        )
+                                                    })
+                                                }
+                                            </tr>
                                         )
                                     })
                                 }
-                            </tr>
-                        </tbody>
-                    </DragDropContext>
-                </Table>
+                            </tbody>
+                        </Table>
+                    </div>
+                </DragDropContext>
             </div>
         </div>
     )

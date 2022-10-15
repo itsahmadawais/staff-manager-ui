@@ -345,18 +345,69 @@ input {
         }
     }
     .calendar-body {
-        table {
+        .head-table {
+            width: calc(100% - 10px);
+            font-size: 14px;
             thead {
                 th {
-                    font-size: 14px;
                     font-weight: 600;
+                    max-width: 100px;
+                    min-width: 100px;
+                    &:first-child {
+                        max-width: 70px;
+                        min-width: 70px;
+                    }
                 }
             }
-            tbody {
-                tr {
-                    td {
-                        max-width: 100px;
-                        min-width: 100px;
+        }
+        .unassigned-wrap {
+            height: 120px;
+            border-bottom: 8px solid $grey-border-color;
+            table {
+                font-size: 14px;
+                thead {
+                    th {
+                        font-size: 14px;
+                        font-weight: 600;
+                    }
+                }
+                tbody {
+                    tr {
+                        td {
+                            max-width: 100px;
+                            min-width: 100px;
+                            &:first-child {
+                                max-width: 70px;
+                                min-width: 70px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .assigned-wrap {
+            height: calc(100vh - 410px);
+            table {
+                font-size: 14px;
+                tbody {
+                    tr {
+                        td {
+                            max-width: 100px;
+                            min-width: 100px;
+                            &:first-child {
+                                max-width: 70px;
+                                min-width: 70px;
+                                img {
+                                    width: 30px;
+                                }
+                                .name {
+                                    font-weight: 600;
+                                }
+                                .hours {
+                                    font-size: 12px;
+                                }
+                            }
+                        }
                     }
                 }
             }

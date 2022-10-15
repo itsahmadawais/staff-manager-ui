@@ -10,7 +10,9 @@ export default function EmployeeShift({data}) {
         <span>{data.startTime}</span>
         <span> - </span>
         <span>{data.endTime}</span>
-        <p className='status mb-0 mt-1 px-1'>{data.status}</p>
+        {
+          data.status ? <p className='status mb-0 mt-1 px-1'>{data.status}</p> : ''
+        }
     </div>
   )
 }

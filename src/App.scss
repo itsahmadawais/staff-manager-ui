@@ -380,6 +380,12 @@ input {
                                 max-width: 70px;
                                 min-width: 70px;
                             }
+                            &.dragging-over {
+                                background-color: $grey-color;
+                            }
+                            &.current-day {
+                                background-color: rgb(236, 250, 255);
+                            }
                         }
                     }
                 }
@@ -406,6 +412,12 @@ input {
                                 .hours {
                                     font-size: 12px;
                                 }
+                            }
+                            &.dragging-over {
+                                background-color: $grey-color;
+                            }
+                            &.current-day {
+                                background-color: rgb(236, 250, 255);
                             }
                         }
                     }

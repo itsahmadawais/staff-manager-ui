@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Button, Table } from 'react-bootstrap';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
@@ -513,6 +513,58 @@ export default function ViewCalendarContent() {
         }
     ];
 
+    const today = new Date().toISOString().replace(/T.*/,'').split('-').reverse().join('-');
+    const [unassigned] = useState(unassignedShiftDays);
+    const [assigned] = useState(employeeShifts);
+    
+    const handleDragEnd = (result) => {
+        const {source, destination} = result;
+        if (!destination) {
+            return;
+        }
+        //if employee shifts are moved to unassigned shifts
+        if (source.droppableId.indexOf('unassigned') === -1 && destination.droppableId.indexOf('unassigned') !== -1) {
+            window.alert('Cannot move to unassigned shifts');
+        } else {
+            //if unassigned shifts are moved from and to unassigned shifts
+            if (source.droppableId.indexOf('unassigned') !== -1 && destination.droppableId.indexOf('unassigned') !== -1) {
+                let sourceId = source.droppableId.substring(source.droppableId.indexOf(' ') + 1);
+                let sourceClone = unassigned.find(obj => obj.date === sourceId);
+                let destId = destination.droppableId.substring(destination.droppableId.indexOf(' ') + 1);
+                let destClone = unassigned.find(obj => obj.date === destId);
+                
+                let [removed] = sourceClone.shifts.splice(source.index, 1);
+                destClone.shifts.splice(destination.index, 0, removed);
+            }
+            //if unassigned shifts are moved to employee shifts
+            else if (source.droppableId.indexOf('unassigned') !== -1 && destination.droppableId.indexOf('unassigned') === -1) {
+                let sourceId = source.droppableId.substring(source.droppableId.indexOf(' ') + 1);
+                let sourceClone = unassigned.find(obj => obj.date === sourceId);
+                let destUserId = destination.droppableId.substring(0, destination.droppableId.indexOf(' '));
+                let destUserClone = assigned.find(obj => obj.id === destUserId);
+                let destId = destination.droppableId.substring(destination.droppableId.indexOf(' ') + 1);
+                let destClone = destUserClone.shiftDays.find(obj => obj.date === destId);
+                
+                let [removed] = sourceClone.shifts.splice(source.index, 1);
+                destClone.shifts.splice(destination.index, 0, removed);
+            }
+            //if employee shifts are moved from and to employee shifts
+            else if (source.droppableId.indexOf('unassigned') === -1 && destination.droppableId.indexOf('unassigned') === -1) {
+                let sourceUserId = source.droppableId.substring(0, source.droppableId.indexOf(' '));
+                let sourceUserClone = assigned.find(obj => obj.id === sourceUserId);
+                let sourceId = source.droppableId.substring(source.droppableId.indexOf(' ') + 1);
+                let sourceClone = sourceUserClone.shiftDays.find(obj => obj.date === sourceId);
+                let destUserId = destination.droppableId.substring(0, destination.droppableId.indexOf(' '));
+                let destUserClone = assigned.find(obj => obj.id === destUserId);
+                let destId = destination.droppableId.substring(destination.droppableId.indexOf(' ') + 1);
+                let destClone = destUserClone.shiftDays.find(obj => obj.date === destId);
+                
+                let [removed] = sourceClone.shifts.splice(source.index, 1);
+                destClone.shifts.splice(destination.index, 0, removed);
+            }
+        }
+    };
+
     return (
         <div className='view-calendar'>
             <div className='calendar-head d-flex align-items-center justify-content-between'>
@@ -550,27 +602,29 @@ export default function ViewCalendarContent() {
                         </tr>
                     </thead>
                 </Table>
-                <DragDropContext style={{overflow: 'auto'}}>
+                <DragDropContext onDragEnd={handleDragEnd}>
                     <div className='unassigned-wrap custom-scrollbar'>
                         <Table className='mb-0' bordered responsive>
                             <tbody>
                                 <tr>
                                     <td>Unassigned Shifts</td>
                                     {
-                                        unassignedShiftDays.map((item) => {
+                                        unassigned.map((shiftDay) => {
                                             return(
-                                                <Droppable key={item.id} droppableId={item.id+item.date}>
-                                                    {(provided) => (
+                                                <Droppable key={shiftDay.id} droppableId={'unassigned '+shiftDay.date}>
+                                                    {(provided, snapshot) => (
                                                         <td 
                                                             {...provided.droppableProps}
                                                             ref={provided.innerRef}
+                                                            className={`${snapshot.isDraggingOver ? 'dragging-over ' : undefined}
+                                                            ${shiftDay.date === today ? 'current-day' : undefined}`}
                                                         >
                                                             {
-                                                                item.shifts?.map((item, index) => {
+                                                                shiftDay.shifts?.map((shift, index) => {
                                                                     return(
                                                                         <Draggable 
-                                                                            key={item.id} 
-                                                                            draggableId={item.id} 
+                                                                            key={shift.id} 
+                                                                            draggableId={shift.id} 
                                                                             index={index}
                                                                         >
                                                                             {(provided) => (
@@ -579,7 +633,7 @@ export default function ViewCalendarContent() {
                                                                                     {...provided.dragHandleProps}
                                                                                     {...provided.draggableProps}
                                                                                 >
-                                                                                    <EmployeeShift data={item} />
+                                                                                    <EmployeeShift data={shift} />
                                                                                 </div>
                                                                             )}
                                                                         </Draggable>
@@ -601,29 +655,31 @@ export default function ViewCalendarContent() {
                         <Table className='mb-0' bordered responsive>
                             <tbody>
                                 {
-                                    employeeShifts.map((item) => {
+                                    assigned.map((employee) => {
                                         return(
-                                            <tr key={item.id}>
+                                            <tr key={employee.id}>
                                                 <td>
-                                                    <Avatar image={item.image} />
-                                                    <p className='name mb-0'>{item.name}</p>
-                                                    <p className='hours mb-0'>{item.shiftsHours} hours</p>
+                                                    <Avatar image={employee.image} />
+                                                    <p className='name mb-0'>{employee.name}</p>
+                                                    <p className='hours mb-0'>{employee.shiftsHours} hours</p>
                                                 </td>
                                                 {
-                                                    item.shiftDays.map((item) => {
+                                                    employee.shiftDays.map((shiftDay) => {
                                                         return(
-                                                            <Droppable key={item.id} droppableId={item.id+item.date}>
-                                                                {(provided) => (
+                                                            <Droppable key={shiftDay.id} droppableId={employee.id+' '+shiftDay.date}>
+                                                                {(provided, snapshot) => (
                                                                     <td 
                                                                         {...provided.droppableProps}
                                                                         ref={provided.innerRef}
+                                                                        className={`${snapshot.isDraggingOver ? 'dragging-over ' : undefined}
+                                                                        ${shiftDay.date === today ? 'current-day' : undefined}`}
                                                                     >
                                                                         {
-                                                                            item.shifts?.map((item, index) => {
+                                                                            shiftDay.shifts?.map((shift, index) => {
                                                                                 return(
                                                                                     <Draggable 
-                                                                                        key={item.id} 
-                                                                                        draggableId={item.id} 
+                                                                                        key={shift.id} 
+                                                                                        draggableId={shift.id} 
                                                                                         index={index}
                                                                                     >
                                                                                         {(provided) => (
@@ -632,7 +688,7 @@ export default function ViewCalendarContent() {
                                                                                                 {...provided.dragHandleProps}
                                                                                                 {...provided.draggableProps}
                                                                                             >
-                                                                                                <EmployeeShift data={item} />
+                                                                                                <EmployeeShift data={shift} />
                                                                                             </div>
                                                                                         )}
                                                                                     </Draggable>

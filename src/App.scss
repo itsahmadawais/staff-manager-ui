@@ -36,10 +36,12 @@ $grey-border-color: #efefef;
 }
 
 /***** Buttons *****/
-.btn-primary {
+.btn {
     font-size: 14px;
-    background-color: $primary-color;
     border: none;
+}
+.btn-primary {
+    background-color: $primary-color;
     &:hover {
         background-color: $secondary-color;
     }
@@ -53,7 +55,6 @@ $grey-border-color: #efefef;
 .btn-icon {
     background-color: $grey-color;
     border-radius: 40px;
-    border: none;
     padding: 10px;
     svg {
         color: $primary-color;
@@ -440,5 +441,20 @@ input {
         background-color: $secondary-color;
         border-radius: 5px;
         width: fit-content;
+    }
+}
+
+/***** View Shift Modal *****/
+.view-shift-modal {
+    .modal-header {
+        .modal-title {
+            font-size: 16px;
+        }
+    }
+    .modal-body {
+        font-size: 14px;
+        .field-name {
+            font-weight: 600;
+        }
     }
 }

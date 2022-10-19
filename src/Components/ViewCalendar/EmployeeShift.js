@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ViewShiftModal from './ViewShiftModal';
 
-export default function EmployeeShift({data}) {
+export default function EmployeeShift({data, employee}) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(!show);
@@ -20,7 +20,7 @@ export default function EmployeeShift({data}) {
           !data.published ? <p className='status mb-0 mt-1 px-1'>{data.status}</p> : ''
         }
       </div>
-      <ViewShiftModal data={data} show={show} handleClose={handleClose} />
+      <ViewShiftModal data={data} employee={employee} show={show} handleClose={handleClose} />
     </>
   )
 }

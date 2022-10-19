@@ -60,6 +60,56 @@ export default function ViewCalendarContent() {
                     startTime: '19:00',
                     endTime: '07:00',
                     status: 'Awaiting',
+                    position: 'Core Officer',
+                    case: 'uxbridge (New) - 00002334',
+                    pastEmployees: [
+                        {
+                            id: '80',
+                            name: 'Alam Zaidi'
+                        },
+                        {
+                            id: '81',
+                            name: 'Daniel Smith'
+                        }
+                    ],
+                    type: 'shift',
+                    payRate: '0.00',
+                    chargeRate: '0.00',
+                    extraRate: '0.00',
+                    suggestedEmployees: [
+                        {
+                            id: '82',
+                            firstName: 'Ruth',
+                            lastName: 'Hunt',
+                            email: 'ruthhunt@example.com',
+                            shiftCount: '198',
+                            smallestDistance: '30.8'
+                        },
+                        {
+                            id: '83',
+                            firstName: 'Micheal',
+                            lastName: 'Glover',
+                            email: 'micheal_glover@example.com',
+                            shiftCount: '198',
+                            smallestDistance: '30.8'
+                        },
+                        {
+                            id: '84',
+                            firstName: 'Alam',
+                            lastName: 'Zaib',
+                            email: 'alamzaib@example.com',
+                            shiftCount: '198',
+                            smallestDistance: '30.8'
+                        },
+                        {
+                            id: '85',
+                            firstName: 'Ruth',
+                            lastName: 'Hunt',
+                            email: 'ruthhunt@example.com',
+                            shiftCount: '198',
+                            smallestDistance: '30.8'
+                        }
+                    ],
                     cancelled: false,
                     published: false
                 }
@@ -78,6 +128,23 @@ export default function ViewCalendarContent() {
                     startTime: '19:00',
                     endTime: '07:00',
                     status: 'Awaiting',
+                    position: 'Core Officer',
+                    case: 'uxbridge (New) - 00002334',
+                    pastEmployees: [
+                        {
+                            id: '86',
+                            name: 'Alam Zaidi'
+                        },
+                        {
+                            id: '87',
+                            name: 'Daniel Smith'
+                        }
+                    ],
+                    type: 'shift',
+                    payRate: '0.00',
+                    chargeRate: '0.00',
+                    extraRate: '0.00',
+                    suggestedEmployees: [],
                     cancelled: false,
                     published: false
                 },
@@ -90,6 +157,23 @@ export default function ViewCalendarContent() {
                     startTime: '07:00',
                     endTime: '19:00',
                     status: 'Awaiting',
+                    position: 'Core Officer',
+                    case: 'uxbridge (New) - 00002334',
+                    pastEmployees: [
+                        {
+                            id: '88',
+                            name: 'Alam Zaidi'
+                        },
+                        {
+                            id: '89',
+                            name: 'Daniel Smith'
+                        }
+                    ],
+                    type: 'shift',
+                    payRate: '0.00',
+                    chargeRate: '0.00',
+                    extraRate: '0.00',
+                    suggestedEmployees: [],
                     cancelled: false,
                     published: false
                 },
@@ -102,6 +186,23 @@ export default function ViewCalendarContent() {
                     startTime: '07:00',
                     endTime: '19:00',
                     status: 'Failed to Confirm',
+                    position: 'Core Officer',
+                    case: 'uxbridge (New) - 00002334',
+                    pastEmployees: [
+                        {
+                            id: '90',
+                            name: 'Alam Zaidi'
+                        },
+                        {
+                            id: '91',
+                            name: 'Daniel Smith'
+                        }
+                    ],
+                    type: 'shift',
+                    payRate: '0.00',
+                    chargeRate: '0.00',
+                    extraRate: '0.00',
+                    suggestedEmployees: [],
                     cancelled: false,
                     published: false
                 },
@@ -114,6 +215,23 @@ export default function ViewCalendarContent() {
                     startTime: '07:00',
                     endTime: '19:00',
                     status: 'Declined',
+                    position: 'Core Officer',
+                    case: 'uxbridge (New) - 00002334',
+                    pastEmployees: [
+                        {
+                            id: '92',
+                            name: 'Alam Zaidi'
+                        },
+                        {
+                            id: '93',
+                            name: 'Daniel Smith'
+                        }
+                    ],
+                    type: 'shift',
+                    payRate: '0.00',
+                    chargeRate: '0.00',
+                    extraRate: '0.00',
+                    suggestedEmployees: [],
                     cancelled: false,
                     published: false
                 }
@@ -132,6 +250,14 @@ export default function ViewCalendarContent() {
                     startTime: '19:00',
                     endTime: '07:00',
                     status: 'Confirmed',
+                    position: 'Core Officer',
+                    case: 'uxbridge (New) - 00002334',
+                    pastEmployees: [],
+                    type: 'shift',
+                    payRate: '0.00',
+                    chargeRate: '0.00',
+                    extraRate: '0.00',
+                    suggestedEmployees: [],
                     cancelled: false,
                     published: false
                 }
@@ -150,6 +276,14 @@ export default function ViewCalendarContent() {
                     startTime: '19:00',
                     endTime: '07:00',
                     status: 'Awaiting',
+                    position: 'Core Officer',
+                    case: 'uxbridge (New) - 00002334',
+                    pastEmployees: [],
+                    type: 'shift',
+                    payRate: '0.00',
+                    chargeRate: '0.00',
+                    extraRate: '0.00',
+                    suggestedEmployees: [],
                     cancelled: false,
                     published: false
                 }
@@ -167,7 +301,7 @@ export default function ViewCalendarContent() {
             id: '18',
             image: '',
             name: 'Abdullah',
-            shiftsHours: 0,
+            shiftsHours: '0',
             shiftDays: [
                 {
                     id: '25',
@@ -210,7 +344,7 @@ export default function ViewCalendarContent() {
             id: '19',
             image: '/images/user.jpg',
             name: 'Aalam Zaib',
-            shiftsHours: 72,
+            shiftsHours: '72',
             shiftDays: [
                 {
                     id: '32',
@@ -234,6 +368,22 @@ export default function ViewCalendarContent() {
                             endDate: '12-10-2022',
                             startTime: '19:00',
                             endTime: '07:00',
+                            position: 'Core Officer',
+                            case: 'uxbridge (New) - 00002334',
+                            pastEmployees: [
+                                {
+                                    id: '98',
+                                    name: 'Alam Zaidi'
+                                },
+                                {
+                                    id: '99',
+                                    name: 'Daniel Smith'
+                                }
+                            ],
+                            type: 'shift',
+                            payRate: '0.00',
+                            chargeRate: '0.00',
+                            extraRate: '0.00',
                             cancelled: false,
                             published: true
                         }
@@ -251,6 +401,13 @@ export default function ViewCalendarContent() {
                             endDate: '13-10-2022',
                             startTime: '19:00',
                             endTime: '07:00',
+                            position: 'Core Officer',
+                            case: 'uxbridge (New) - 00002334',
+                            pastEmployees: [],
+                            type: 'shift',
+                            payRate: '0.00',
+                            chargeRate: '0.00',
+                            extraRate: '0.00',
                             cancelled: false,
                             published: true
                         }
@@ -268,6 +425,13 @@ export default function ViewCalendarContent() {
                             endDate: '14-10-2022',
                             startTime: '19:00',
                             endTime: '07:00',
+                            position: 'Core Officer',
+                            case: 'uxbridge (New) - 00002334',
+                            pastEmployees: [],
+                            type: 'shift',
+                            payRate: '0.00',
+                            chargeRate: '0.00',
+                            extraRate: '0.00',
                             cancelled: false,
                             published: true
                         }
@@ -285,6 +449,13 @@ export default function ViewCalendarContent() {
                             endDate: '15-10-2022',
                             startTime: '19:00',
                             endTime: '07:00',
+                            position: 'Core Officer',
+                            case: 'uxbridge (New) - 00002334',
+                            pastEmployees: [],
+                            type: 'shift',
+                            payRate: '0.00',
+                            chargeRate: '0.00',
+                            extraRate: '0.00',
                             cancelled: false,
                             published: true
                         }
@@ -302,6 +473,13 @@ export default function ViewCalendarContent() {
                             endDate: '16-10-2022',
                             startTime: '19:00',
                             endTime: '07:00',
+                            position: 'Core Officer',
+                            case: 'uxbridge (New) - 00002334',
+                            pastEmployees: [],
+                            type: 'shift',
+                            payRate: '0.00',
+                            chargeRate: '0.00',
+                            extraRate: '0.00',
                             cancelled: false,
                             published: true
                         }
@@ -313,7 +491,7 @@ export default function ViewCalendarContent() {
             id: '20',
             image: '/images/user.jpg',
             name: 'Amir Shafique',
-            shiftsHours: 0,
+            shiftsHours: '0',
             shiftDays: [
                 {
                     id: '43',
@@ -356,7 +534,7 @@ export default function ViewCalendarContent() {
             id: '21',
             image: '/images/user.jpg',
             name: 'Amir Shafique',
-            shiftsHours: 0,
+            shiftsHours: '0',
             shiftDays: [
                 {
                     id: '50',
@@ -399,7 +577,7 @@ export default function ViewCalendarContent() {
             id: '22',
             image: '/images/user.jpg',
             name: 'Amir Shafique',
-            shiftsHours: 0,
+            shiftsHours: '0',
             shiftDays: [
                 {
                     id: '57',
@@ -442,7 +620,7 @@ export default function ViewCalendarContent() {
             id: '23',
             image: '/images/user.jpg',
             name: 'Amir Shafique',
-            shiftsHours: 0,
+            shiftsHours: '0',
             shiftDays: [
                 {
                     id: '64',
@@ -485,7 +663,7 @@ export default function ViewCalendarContent() {
             id: '24',
             image: '/images/user.jpg',
             name: 'Amir Shafique',
-            shiftsHours: 0,
+            shiftsHours: '0',
             shiftDays: [
                 {
                     id: '71',
@@ -662,7 +840,7 @@ export default function ViewCalendarContent() {
                                                                                             {...provided.dragHandleProps}
                                                                                             {...provided.draggableProps}
                                                                                         >
-                                                                                            <EmployeeShift data={shift} />
+                                                                                            <EmployeeShift data={shift} employee={''} />
                                                                                         </div>
                                                                                     )}
                                                                                 </Draggable>
@@ -729,7 +907,7 @@ export default function ViewCalendarContent() {
                                                                                                         {...provided.dragHandleProps}
                                                                                                         {...provided.draggableProps}
                                                                                                     >
-                                                                                                        <EmployeeShift data={shift} />
+                                                                                                        <EmployeeShift data={shift} employee={employee} />
                                                                                                     </div>
                                                                                                 )}
                                                                                             </Draggable>

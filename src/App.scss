@@ -123,6 +123,13 @@ input {
     }
 }
 
+/***** Modal *****/
+.max-modal-height {
+    .modal-body {
+        max-height: 500px;
+    }
+}
+
 /*
 ##### Public Layout #####
 */
@@ -452,9 +459,18 @@ input {
         }
     }
     .modal-body {
-        font-size: 14px;
+        font-size: 13px;
         .field-name {
             font-weight: 600;
+        }
+        .past-employees {
+            a {
+                &:not(:last-child) {
+                    &::after {
+                        content: ',';
+                    }
+                }
+            }
         }
     }
 }

@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
+import EditShiftModal from './EditShiftModal';
 import ViewShiftModal from './ViewShiftModal';
 
 export default function EmployeeShift({data, employee}) {
-  const [show, setShow] = useState(false);
+  const [showView, setShowView] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
-  const handleClose = () => setShow(!show);
+  const handleCloseView = () => setShowView(!showView);
+  const handleCloseEdit = () => setShowEdit(!showEdit);
   
   return (
     <>
-      <div className='employee-shift mb-1 p-1' onClick={handleClose}>
+      <div className='employee-shift mb-1 p-1' onClick={handleCloseView}>
         <span>{data.client}</span>
         <span> - </span>
         <span>{data.site}</span>
@@ -20,7 +23,8 @@ export default function EmployeeShift({data, employee}) {
           !data.published ? <p className='status mb-0 mt-1 px-1'>{data.status}</p> : ''
         }
       </div>
-      <ViewShiftModal data={data} employee={employee} show={show} handleClose={handleClose} />
+      <ViewShiftModal data={data} employee={employee} show={showView} handleCloseView={handleCloseView} handleCloseEdit={handleCloseEdit} />
+      <EditShiftModal data={data} show={showEdit} handleClose={handleCloseEdit} />
     </>
   )
 }

@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Button, Table, Form } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { Loader } from '../UI';
+import { Loader, Pagination } from '../UI';
 
-export default function ViewShiftModal({data, employee, show, handleClose}) {
+export default function ViewShiftModal({data, employee, show, handleCloseView, handleCloseEdit}) {
     const [searchEmp, setSearchEmp] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [currentSuggestedEmps, setCurrentSuggestedEmps] = useState(data.suggestedEmployees);
 
+    const openEditModal = () => {
+        handleCloseView();
+        handleCloseEdit();
+    };
     useEffect(() => {
       setTimeout(() => {
         setIsLoading(false);
       }, 2500);
-    }, [isLoading])
+    }, [isLoading]);
     
-
     return (
         <Modal 
             show={show} 
-            onHide={handleClose}
+            onHide={handleCloseView}
             className='view-shift-modal max-modal-height'
             size='xl'
             centered
@@ -138,7 +142,7 @@ export default function ViewShiftModal({data, employee, show, handleClose}) {
                                     <tbody>
                                         {
                                             data.suggestedEmployees.length ? (
-                                                data.suggestedEmployees.filter((item) => {
+                                                currentSuggestedEmps.filter((item) => {
                                                     if (searchEmp === '') {
                                                         return item;
                                                     } else if (item.firstName.toLowerCase().includes(searchEmp.toLowerCase())) {
@@ -170,19 +174,29 @@ export default function ViewShiftModal({data, employee, show, handleClose}) {
                                         }
                                     </tbody>
                                 </Table>
+                                {
+                                    !isLoading && data.suggestedEmployees.length > 5 &&
+                                    <div className='d-flex justify-content-end'>
+                                        <Pagination 
+                                            data={data.suggestedEmployees}
+                                            setCurrentItems={setCurrentSuggestedEmps}
+                                            perPageItems={5}
+                                        />
+                                    </div>
+                                }
                             </div>
                         }
                     </Modal.Body>
                 )
             }
             <Modal.Footer>
-                <Button variant="primary" onClick={handleClose}>
+                <Button variant="primary" onClick={handleCloseView}>
                     View Shift
                 </Button>
-                <Button variant="secondary" onClick={handleClose}>
+                <Button variant="secondary" onClick={handleCloseView}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={handleClose}>
+                <Button variant="primary" onClick={openEditModal}>
                     Edit
                 </Button>
             </Modal.Footer>

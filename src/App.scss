@@ -492,11 +492,11 @@ input {
     }
 }
 
-/***** View Shift Modal *****/
-.view-shift-modal {
+/***** Shift Modal *****/
+.shift-modal {
     .modal-header {
         .modal-title {
-            font-size: 16px;
+            font-size: 15px;
         }
     }
     .modal-body {
@@ -520,6 +520,24 @@ input {
             thead {
                 background-color: $primary-color;
                 color: #fff;
+            }
+        }
+        .job-type-radio {
+            width: 100%;
+            cursor: pointer;
+            border: 1px solid $primary-color;
+            color: $primary-color;
+            &.active {
+                background-color: $primary-color;
+                color: #fff;
+            }
+            &:not(.active) {
+                &:hover {
+                    background-color: $grey-color;
+                }
+            }
+            input {
+                visibility: hidden;
             }
         }
     }

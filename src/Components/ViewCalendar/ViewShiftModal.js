@@ -22,7 +22,7 @@ export default function ViewShiftModal({data, employee, show, handleCloseView, h
         <Modal 
             show={show} 
             onHide={handleCloseView}
-            className='view-shift-modal max-modal-height'
+            className='shift-modal max-modal-height'
             size='xl'
             centered
         >
@@ -51,31 +51,29 @@ export default function ViewShiftModal({data, employee, show, handleCloseView, h
                                 <p className='field-name mb-0'>Site</p>
                                 <p>{data.site}</p>
                                 <p className='field-name mb-0'>Employee</p>
-                                <p>{
+                                {
                                     employee !== '' ? (
                                         <Link to={'#'} className='link'>{employee.name}</Link>
                                     ) : (
-                                        'Unassigned'
+                                        <p>Unassigned</p>
                                     )
-                                    }</p>
+                                }
                                 <p className='field-name mb-0'>Past Employees</p>
-                                <p>
-                                    {
-                                        data.pastEmployees.length ?
-                                        <div className='past-employees d-flex flex-wrap'>
-                                            {
-                                                data.pastEmployees.map((item) => {
-                                                    return(
-                                                        <Link to={'#'} className='link me-1'>
-                                                            {item.name}
-                                                        </Link>
-                                                    )
-                                                })
-                                            }
-                                        </div> :
-                                        'No past employees on this shift'
-                                    }
-                                </p>
+                                {
+                                    data.pastEmployees.length ?
+                                    <div className='past-employees d-flex flex-wrap'>
+                                        {
+                                            data.pastEmployees.map((item) => {
+                                                return(
+                                                    <Link key={item.id} to={'#'} className='link me-1'>
+                                                        {item.name}
+                                                    </Link>
+                                                )
+                                            })
+                                        }
+                                    </div> :
+                                    <p>No past employees on this shift</p>
+                                }
                             </div>
                         </div>
                         <hr className='mt-0' />
@@ -154,7 +152,7 @@ export default function ViewShiftModal({data, employee, show, handleCloseView, h
                                                     }
                                                 }).map((item) => {
                                                     return(
-                                                        <tr>
+                                                        <tr key={item.id}>
                                                             <td>{item.firstName}</td>
                                                             <td>{item.lastName}</td>
                                                             <td>{item.email}</td>

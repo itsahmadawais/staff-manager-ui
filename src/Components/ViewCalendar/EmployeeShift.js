@@ -24,7 +24,7 @@ export default function EmployeeShift({data, employee}) {
         }
       </div>
       <ViewShiftModal data={data} employee={employee} show={showView} handleCloseView={handleCloseView} handleCloseEdit={handleCloseEdit} />
-      <EditShiftModal data={data} show={showEdit} handleClose={handleCloseEdit} />
+      <EditShiftModal data={data} employee={employee} show={showEdit} handleClose={handleCloseEdit} />
     </>
   )
 }

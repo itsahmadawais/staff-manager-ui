@@ -20,7 +20,7 @@ export default function EmployeeShift({data, employee}) {
         <span> - </span>
         <span>{data.endTime}</span>
         {
-          !data.published ? <p className='status mb-0 mt-1 px-1'>{data.status}</p> : ''
+          data.status !== 'Confirmed' ? <p className='status mb-0 mt-1 px-1'>{data.status}</p> : ''
         }
       </div>
       <ViewShiftModal data={data} employee={employee} show={showView} handleCloseView={handleCloseView} handleCloseEdit={handleCloseEdit} />

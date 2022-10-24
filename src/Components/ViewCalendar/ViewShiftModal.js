@@ -95,13 +95,13 @@ export default function ViewShiftModal({data, employee, show, handleCloseView, h
                         <div className='row g-0'>
                             <div className='col-md-6'>
                                 <p className='field-name mb-0'>Pay Rate</p>
-                                <p>{data.payRate}</p>
+                                <p>${data.payRate}</p>
                                 <p className='field-name mb-0'>Extra Rate</p>
-                                <p>{data.extraRate}</p>
+                                <p>${data.extraRate}</p>
                             </div>
                             <div className='col-md-6'>
                                 <p className='field-name mb-0'>Charge Rate</p>
-                                <p>{data.chargeRate}</p>
+                                <p>${data.chargeRate}</p>
                             </div>
                         </div>
                         <hr className='mt-0' />

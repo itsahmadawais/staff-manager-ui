@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import EditShiftModal from './EditShiftModal';
 import ViewShiftModal from './ViewShiftModal';
 
-export default function EmployeeShift({data, employee}) {
+export default function EmployeeShift({data, employee, dayIndex, shiftIndex, handleShiftEdit}) {
   const [showView, setShowView] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
@@ -23,8 +23,22 @@ export default function EmployeeShift({data, employee}) {
           data.status !== 'Confirmed' ? <p className='status mb-0 mt-1 px-1'>{data.status}</p> : ''
         }
       </div>
-      <ViewShiftModal data={data} employee={employee} show={showView} handleCloseView={handleCloseView} handleCloseEdit={handleCloseEdit} />
-      <EditShiftModal data={data} employee={employee} show={showEdit} handleClose={handleCloseEdit} />
+      <ViewShiftModal 
+        data={data} 
+        employee={employee} 
+        show={showView} 
+        handleCloseView={handleCloseView} 
+        handleCloseEdit={handleCloseEdit} 
+      />
+      <EditShiftModal 
+        data={data} 
+        employee={employee} 
+        dayIndex={dayIndex}
+        shiftIndex={shiftIndex} 
+        show={showEdit} 
+        handleClose={handleCloseEdit} 
+        handleShiftEdit={handleShiftEdit} 
+      />
     </>
   )
 }

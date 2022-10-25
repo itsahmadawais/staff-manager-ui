@@ -3,8 +3,10 @@ import { Button, Form, Modal, Table } from 'react-bootstrap';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import Select from 'react-select';
+import moment from 'moment/moment';
+import { ButtonLoader } from '../UI';
 
-export default function EditShiftModal({data, employee, show, handleClose}) {
+export default function EditShiftModal({data, employee, dayIndex, shiftIndex, show, handleClose, handleShiftEdit}) {
     const clients = [
         { value: 'Coca Cola European Partner', label: 'Coca Cola European Partner' },
         { value: 'Profile Security Services Limited', label: 'Profile Security Services Limited' }
@@ -49,25 +51,37 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
         startDate: Yup.date().required('Required'),
         endDate: Yup.date().min(Yup.ref('startDate'), 'End Date must not be earlier than Start Date').required('Required'),
         startTime: Yup.string().required('Required'),
-        endTime: Yup.string().min(Yup.ref('startTime'), 'End Time must not be earlier than Start Time').required('Required'),
+        endTime: Yup.string().required('Required').test(
+            'endTimeLimit',
+            'End Time must not be earlier than Start Time',
+            function (value) {
+                const {startDate, endDate, startTime} = this.parent;
+                console.log(startDate.getTime() === endDate.getTime());
+                if (startDate.getTime() === endDate.getTime()) {
+                    return moment(value, 'HH:mm').isSameOrAfter(moment(startTime, 'HH:mm'));
+                } else {
+                    return true;
+                }
+            }
+        ),
         client: Yup.string().required('Required'),
         site: Yup.string().required('Required'),
         case: Yup.string().required('Required'),
         position: Yup.string().required('Required'),
         quantity: Yup.number().min(1, 'Quantity must be atleast 1'),
         payRate: Yup.number().required('Required').test(
-            "maxDigitsAfterDecimal",
-            "Pay Rate must have 2 digits after decimal or less",
+            'maxDigitsAfterDecimal',
+            'Pay Rate must have 2 digits after decimal or less',
             (number) => /^\d+(\.\d{1,2})?$/.test(number)
           ),
         chargeRate: Yup.number().required('Required').test(
-            "maxDigitsAfterDecimal",
-            "Charge Rate must have 2 digits after decimal or less",
+            'maxDigitsAfterDecimal',
+            'Charge Rate must have 2 digits after decimal or less',
             (number) => /^\d+(\.\d{1,2})?$/.test(number)
           ),
         extraRate: Yup.number().test(
-            "maxDigitsAfterDecimal",
-            "Extra Rate must have 2 digits after decimal or less",
+            'maxDigitsAfterDecimal',
+            'Extra Rate must have 2 digits after decimal or less',
             (number) => /^\d+(\.\d{1,2})?$/.test(number)
           ),
     })
@@ -102,8 +116,8 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                 <Formik
                     initialValues={{
                         type: data.type,
-                        startDate: data.startDate,
-                        endDate: data.endDate,
+                        startDate: data.startDate.split("-").reverse().join("-"),
+                        endDate: data.endDate.split("-").reverse().join("-"),
                         startTime: data.startTime,
                         endTime: data.endTime,
                         client: data.client,
@@ -120,6 +134,7 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values, {setSubmitting}) => {
+                        handleShiftEdit(values, employee !== '' ? employee.id : 'Unassigned', dayIndex, shiftIndex);
                         setSubmitting(true);
                         setTimeout(() => {
                             setSubmitting(false);
@@ -134,11 +149,11 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                             isSubmitting}) => (
                                 <Form onSubmit={handleSubmit}>
                                     <Modal.Body className='custom-scrollbar'>
-                                            <div className='row g-0 mb-3'>
-                                                <Form.Label>
-                                                    Select Job Type *
-                                                </Form.Label>
-                                                <div className='col-md-6 pe-2'>
+                                            <Form.Label>
+                                                Select Job Type *
+                                            </Form.Label>
+                                            <div className='div d-flex mb-3'>
+                                                <div className='w-50 pe-2'>
                                                     <label 
                                                         htmlFor='type-shift' 
                                                         className={'job-type-radio p-2 text-center '+ (values.type === 'shift' ? 'active' : '')} 
@@ -152,7 +167,7 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                                                         Shift
                                                     </label>
                                                 </div>
-                                                <div className='col-md-6 ps-2'>
+                                                <div className='w-50 ps-2'>
                                                     <label 
                                                         htmlFor='type-response' 
                                                         className={'job-type-radio p-2 text-center '+ (values.type === 'response' ? 'active' : '')}
@@ -170,93 +185,68 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                                                     {errors.type && touched.type && errors.type}
                                                 </p>
                                             </div>
-                                            {
-                                                values.type === 'shift' ? (
-                                                    <>
-                                                        <div className='row g-0 mb-3'>
-                                                            <div className='col-md-6 pe-2'>
-                                                                <Form.Label>Start Date *</Form.Label>
-                                                                <Form.Control
-                                                                    type='date'
-                                                                    name='startDate'
-                                                                    defaultValue={values.startDate.split("-").reverse().join("-")}
-                                                                    onChange={handleChange}
-                                                                />
-                                                                <p className='error-feedback'>
-                                                                    {errors.startDate && touched.startDate && errors.startDate}
-                                                                </p>
-                                                            </div>
-                                                            <div className='col-md-6 ps-2'>
-                                                                <Form.Label>End Date *</Form.Label>
-                                                                <Form.Control
-                                                                    type='date'
-                                                                    name='endDate'
-                                                                    defaultValue={values.endDate.split("-").reverse().join("-")}
-                                                                    onChange={handleChange}
-                                                                />
-                                                                <p className='error-feedback'>
-                                                                    {errors.endDate && touched.endDate && errors.endDate}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div className='row g-0 mb-3'>
-                                                            <div className='col-md-6 pe-2'>
-                                                                <Form.Label>Start Time *</Form.Label>
-                                                                <Form.Control
-                                                                    type='time'
-                                                                    name='startTime'
-                                                                    defaultValue={values.startTime}
-                                                                    onChange={handleChange}
-                                                                />
-                                                                <p className='error-feedback'>
-                                                                    {errors.startTime && touched.startTime && errors.startTime}
-                                                                </p>
-                                                            </div>
-                                                            <div className='col-md-6 ps-2'>
-                                                                <Form.Label>End Time *</Form.Label>
-                                                                <Form.Control
-                                                                    type='time'
-                                                                    name='endTime'
-                                                                    defaultValue={values.endTime}
-                                                                    onChange={handleChange}
-                                                                />
-                                                                <p className='error-feedback'>
-                                                                    {errors.endTime && touched.endTime && errors.endTime}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </>
-                                                ) : (
-                                                    <div className='row g-0 mb-3'>
-                                                        <div className='col-md-6 pe-2'>
-                                                            <Form.Label>Start Date *</Form.Label>
-                                                            <Form.Control
-                                                                type='date'
-                                                                name='startDate'
-                                                                defaultValue={values.startDate.split("-").reverse().join("-")}
-                                                                onChange={handleChange}
-                                                            />
-                                                            <p className='error-feedback'>
-                                                                {errors.startDate && touched.startDate && errors.startDate}
-                                                            </p>
-                                                        </div>
-                                                        <div className='col-md-6 pe-2'>
-                                                            <Form.Label>Start Time *</Form.Label>
-                                                            <Form.Control
-                                                                type='time'
-                                                                name='startTime'
-                                                                defaultValue={values.startTime}
-                                                                onChange={handleChange}
-                                                            />
-                                                            <p className='error-feedback'>
-                                                                {errors.startTime && touched.startTime && errors.startTime}
-                                                            </p>
-                                                        </div>
+                                            <div className='div d-flex flex-wrap mb-3'>
+                                                <div className='w-50 pe-2'>
+                                                    <Form.Label>Start Date *</Form.Label>
+                                                    <Form.Control
+                                                        type='date'
+                                                        name='startDate'
+                                                        defaultValue={values.startDate}
+                                                        onChange={handleChange}
+                                                    />
+                                                    {values.startDate}
+                                                    <p className='error-feedback'>
+                                                        {errors.startDate && touched.startDate && errors.startDate}
+                                                    </p>
+                                                </div>
+                                                {
+                                                    values.type === 'shift' &&
+                                                    <div className='w-50 ps-2'>
+                                                        <Form.Label>End Date *</Form.Label>
+                                                        <Form.Control
+                                                            type='date'
+                                                            name='endDate'
+                                                            defaultValue={values.endDate}
+                                                            onChange={handleChange}
+                                                        />
+                                                        {values.endDate}
+                                                        <p className='error-feedback'>
+                                                            {errors.endDate && touched.endDate && errors.endDate}
+                                                        </p>
                                                     </div>
-                                                )
-                                            }
-                                            <div className='row g-0 mb-3'>
-                                                <div className='col-md-6 pe-2'>
+                                                }
+                                                <div className='w-50 pe-2'>
+                                                    <Form.Label>Start Time *</Form.Label>
+                                                    <Form.Control
+                                                        type='time'
+                                                        name='startTime'
+                                                        defaultValue={values.startTime}
+                                                        onChange={handleChange}
+                                                    />
+                                                    {values.startTime}
+                                                    <p className='error-feedback'>
+                                                        {errors.startTime && touched.startTime && errors.startTime}
+                                                    </p>
+                                                </div>
+                                                {
+                                                    values.type === 'shift' &&
+                                                    <div className='w-50 ps-2'>
+                                                        <Form.Label>End Time *</Form.Label>
+                                                        <Form.Control
+                                                            type='time'
+                                                            name='endTime'
+                                                            defaultValue={values.endTime}
+                                                            onChange={handleChange}
+                                                        />
+                                                        {values.endTime}
+                                                        <p className='error-feedback'>
+                                                            {errors.endTime && touched.endTime && errors.endTime}
+                                                        </p>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div className='div d-flex mb-3'>
+                                                <div className='w-50 pe-2'>
                                                     <Form.Label>Client *</Form.Label>
                                                     <Select
                                                         name='client'
@@ -269,7 +259,7 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                                                         {errors.client && touched.client && errors.client}
                                                     </p>
                                                 </div>
-                                                <div className='col-md-6 ps-2'>
+                                                <div className='w-50 ps-2'>
                                                     <Form.Label>Site *</Form.Label>
                                                     <Select
                                                         name='site'
@@ -283,8 +273,8 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className='row g-0 mb-3'>
-                                                <div className='col-md-6 pe-2'>
+                                            <div className='div d-flex mb-3'>
+                                                <div className='w-50 pe-2'>
                                                     <Form.Label>Subsite</Form.Label>
                                                     <Select
                                                         name='subsite'
@@ -298,7 +288,7 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                                                         onChange={(opt) => setFieldValue('subsite', opt.value)}
                                                     />
                                                 </div>
-                                                <div className='col-md-6 ps-2'>
+                                                <div className='w-50 ps-2'>
                                                     <Form.Label>Case *</Form.Label>
                                                     <Select
                                                         name='case'
@@ -314,8 +304,8 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                                             </div>
                                             {
                                                 values.type === 'shift' &&
-                                                <div className='row g-0 mb-3'>
-                                                    <div className='col-md-6 pe-2'>
+                                                <div className='div d-flex mb-3'>
+                                                    <div className='w-50 pe-2'>
                                                         <Form.Label>Position *</Form.Label>
                                                         <Select
                                                             name='position'
@@ -328,30 +318,28 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                                                             {errors.position && touched.position && errors.position}
                                                         </p>
                                                     </div>
-                                                    <div className='col-md-6 ps-2'></div>
+                                                    <div className='w-50 ps-2'></div>
                                                 </div>
                                             }
-                                            <div className='row g-0 mb-3'>
-                                                <div className='col-md-12'>
-                                                    <p className='fw-bold mb-0'>Assign Employee</p>
-                                                    <hr className='mt-1' />
-                                                    <Form.Label>Employee</Form.Label>
-                                                    <Select
-                                                        name='employee'
-                                                        defaultValue={
-                                                            values.employee !== '' ? 
-                                                            {value: values.employee, label: values.employee} : 
-                                                            undefined
-                                                        }
-                                                        isSearchable={true}
-                                                        isClearable={true}
-                                                        options={employees} 
-                                                        onChange={(opt) => setFieldValue('employee', opt.value)}
-                                                    />
-                                                </div>
+                                            <div className='div mb-3'>
+                                                <p className='fw-bold mb-0'>Assign Employee</p>
+                                                <hr className='mt-1' />
+                                                <Form.Label>Employee</Form.Label>
+                                                <Select
+                                                    name='employee'
+                                                    defaultValue={
+                                                        values.employee !== '' ? 
+                                                        {value: values.employee, label: values.employee} : 
+                                                        undefined
+                                                    }
+                                                    isSearchable={true}
+                                                    isClearable={true}
+                                                    options={employees} 
+                                                    onChange={(opt) => setFieldValue('employee', opt.value)}
+                                                />
                                             </div>
-                                            <div className='row g-0 mb-3'>
-                                                <div className='col-md-6 pe-2'>
+                                            <div className='div d-flex mb-3'>
+                                                <div className='w-50 pe-2'>
                                                     <Form.Label>Pay Rate *</Form.Label>
                                                     <Form.Control
                                                         type='number'
@@ -363,7 +351,7 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                                                         {errors.payRate && touched.payRate && errors.payRate}
                                                     </p>
                                                 </div>
-                                                <div className='col-md-6 ps-2'>
+                                                <div className='w-50 ps-2'>
                                                     <Form.Label>Charge Rate *</Form.Label>
                                                     <Form.Control
                                                         type='number'
@@ -376,8 +364,8 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className='row g-0 mb-3'>
-                                                <div className='col-md-6 pe-2'>
+                                            <div className='div d-flex mb-3'>
+                                                <div className='w-50 pe-2'>
                                                     <Form.Label>Extra Charge</Form.Label>
                                                     <Form.Control
                                                         type='number'
@@ -389,51 +377,53 @@ export default function EditShiftModal({data, employee, show, handleClose}) {
                                                         {errors.extraRate && touched.extraRate && errors.extraRate}
                                                     </p>
                                                 </div>
-                                                <div className='col-md-6 ps-2'></div>
+                                                <div className='w-50 ps-2'></div>
                                             </div>
-                                            <div className='row g-0 mb-3'>
-                                                <div className='col-md-12'>
-                                                    <p className='fw-bold mb-0'>Site Assets</p>
-                                                    <hr className='mt-1' />
-                                                    <Table bordered responsive>
-                                                        <thead>
-                                                            <tr>
-                                                                <th></th>
-                                                                <th>Name</th>
-                                                                <th>Type</th>
-                                                                <th>Current Location</th>
-                                                                <th>Hand Back Location</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {
-                                                                siteAssetsList.map((item, index) => {
-                                                                    return(
-                                                                        <tr key={item.id}>
-                                                                            <td>
-                                                                                <Form.Check
-                                                                                    type='checkbox'
-                                                                                    id={'site-asset-'+item.id}
-                                                                                    name={`siteAssets[${index}].id`}
-                                                                                    checked={matchAsset(item.id)}
-                                                                                />
-                                                                            </td>
-                                                                            <td>{item.name}</td>
-                                                                            <td>{item.type}</td>
-                                                                            <td>{item.currentLoc}</td>
-                                                                            <td>{item.handBackLoc}</td>
-                                                                        </tr>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </tbody>
-                                                    </Table>
-                                                </div>
+                                            <div className='div mb-3'>
+                                                <p className='fw-bold mb-0'>Site Assets</p>
+                                                <hr className='mt-1' />
+                                                <Table bordered responsive>
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>Name</th>
+                                                            <th>Type</th>
+                                                            <th>Current Location</th>
+                                                            <th>Hand Back Location</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {
+                                                            siteAssetsList.map((item, index) => {
+                                                                return(
+                                                                    <tr key={item.id}>
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                type='checkbox'
+                                                                                id={'site-asset-'+item.id}
+                                                                                name={`siteAssets[${index}].id`}
+                                                                                defaultChecked={matchAsset(item.id)}
+                                                                            />
+                                                                        </td>
+                                                                        <td>{item.name}</td>
+                                                                        <td>{item.type}</td>
+                                                                        <td>{item.currentLoc}</td>
+                                                                        <td>{item.handBackLoc}</td>
+                                                                    </tr>
+                                                                )
+                                                            })
+                                                        }
+                                                    </tbody>
+                                                </Table>
                                             </div>
                                         </Modal.Body>
                                         <Modal.Footer>
-                                            <Button variant='secondary' disabled={isSubmitting}>Cancel</Button>
-                                            <Button type='submit' variant='primary' disabled={isSubmitting}>Save</Button>
+                                            <Button variant='secondary' disabled={isSubmitting}>
+                                                Cancel
+                                            </Button>
+                                            <Button type='submit' variant='primary' disabled={isSubmitting}>
+                                                Save {isSubmitting && <ButtonLoader />}
+                                            </Button>
                                         </Modal.Footer>
                                 </Form>
                             )}

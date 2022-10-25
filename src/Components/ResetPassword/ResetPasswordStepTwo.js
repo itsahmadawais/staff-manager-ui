@@ -1,9 +1,9 @@
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Form, Spinner } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { Avatar } from '../UI';
+import { Avatar, ButtonLoader } from '../UI';
 
 export default function ResetPasswordStepTwo() {
     const navigate = useNavigate();
@@ -78,14 +78,7 @@ export default function ResetPasswordStepTwo() {
                         Reset
                         {
                             isSubmitting &&
-                            <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                            className='ms-2'
-                            />
+                            <ButtonLoader />
                         }
                         </Button>
                     </Form>

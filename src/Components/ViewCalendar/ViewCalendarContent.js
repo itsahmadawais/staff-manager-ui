@@ -754,8 +754,8 @@ export default function ViewCalendarContent() {
     ];
 
     const today = new Date().toISOString().replace(/T.*/,'').split('-').reverse().join('-');
-    const [unassigned] = useState(unassignedShiftDays);
-    const [assigned] = useState(employeeShifts);
+    const [unassigned, setUnassigned] = useState(unassignedShiftDays);
+    const [assigned, setAssigned] = useState(employeeShifts);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -813,6 +813,53 @@ export default function ViewCalendarContent() {
         }
     };
 
+    const handleShiftEdit = (values, empId, dayIndex, shiftIndex) => {
+        if (empId === 'Unassigned') {
+            let newData = [...unassigned];
+            newData[dayIndex].shifts[shiftIndex] = {
+                ...newData[dayIndex].shifts[shiftIndex],
+                type: values.type,
+                startDate: values.startDate.split("-").reverse().join("-"),
+                endDate: values.endDate.split("-").reverse().join("-"),
+                startTime: values.startTime,
+                endTime: values.endTime,
+                client: values.client,
+                site: values.site,
+                subsite: values.subsite,
+                case: values.case,
+                position: values.position,
+                quantity: values.quantity,
+                payRate: values.payRate,
+                chargeRate: values.chargeRate,
+                extraRate: values.extraRate,
+                siteAssets: values.siteAssets
+            };
+            setUnassigned(newData);
+        } else {
+            let newData = [...assigned];
+            let empIndex = newData.findIndex(user => user.id === empId);
+            newData[empIndex].shiftDays[dayIndex].shifts[shiftIndex] = {
+                ...newData[empIndex].shiftDays[dayIndex].shifts[shiftIndex],
+                type: values.type,
+                startDate: values.startDate.split("-").reverse().join("-"),
+                endDate: values.endDate.split("-").reverse().join("-"),
+                startTime: values.startTime,
+                endTime: values.endTime,
+                client: values.client,
+                site: values.site,
+                subsite: values.subsite,
+                case: values.case,
+                position: values.position,
+                quantity: values.quantity,
+                payRate: values.payRate,
+                chargeRate: values.chargeRate,
+                extraRate: values.extraRate,
+                siteAssets: values.siteAssets
+            };
+            setAssigned(newData);
+        }
+    };
+
     return (
         <div className='view-calendar'>
             <div className='calendar-head d-flex align-items-center justify-content-between'>
@@ -865,7 +912,7 @@ export default function ViewCalendarContent() {
                                         <>
                                             <td>Unassigned Shifts</td>
                                             {
-                                                unassigned.map((shiftDay) => {
+                                                unassigned.map((shiftDay, dayIndex) => {
                                                     return(
                                                         <Droppable key={shiftDay.id} droppableId={'unassigned '+shiftDay.date}>
                                                             {(provided, snapshot) => (
@@ -889,7 +936,13 @@ export default function ViewCalendarContent() {
                                                                                             {...provided.dragHandleProps}
                                                                                             {...provided.draggableProps}
                                                                                         >
-                                                                                            <EmployeeShift data={shift} employee={''} />
+                                                                                            <EmployeeShift 
+                                                                                                data={shift} 
+                                                                                                employee={''} 
+                                                                                                dayIndex={dayIndex}
+                                                                                                shiftIndex={index} 
+                                                                                                handleShiftEdit={handleShiftEdit} 
+                                                                                            />
                                                                                         </div>
                                                                                     )}
                                                                                 </Draggable>
@@ -932,7 +985,7 @@ export default function ViewCalendarContent() {
                                                             <p className='hours mb-0'>{employee.shiftsHours} hours</p>
                                                         </td>
                                                         {
-                                                            employee.shiftDays.map((shiftDay) => {
+                                                            employee.shiftDays.map((shiftDay, dayIndex) => {
                                                                 return(
                                                                     <Droppable key={shiftDay.id} droppableId={employee.id+' '+shiftDay.date}>
                                                                         {(provided, snapshot) => (
@@ -956,7 +1009,13 @@ export default function ViewCalendarContent() {
                                                                                                         {...provided.dragHandleProps}
                                                                                                         {...provided.draggableProps}
                                                                                                     >
-                                                                                                        <EmployeeShift data={shift} employee={employee} />
+                                                                                                        <EmployeeShift 
+                                                                                                            data={shift} 
+                                                                                                            employee={employee} 
+                                                                                                            dayIndex={dayIndex}
+                                                                                                            shiftIndex={index} 
+                                                                                                            handleShiftEdit={handleShiftEdit} 
+                                                                                                        />
                                                                                                     </div>
                                                                                                 )}
                                                                                             </Draggable>

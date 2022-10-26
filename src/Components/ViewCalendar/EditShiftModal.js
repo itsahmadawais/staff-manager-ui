@@ -24,9 +24,13 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
         { value: 'Core Officer', label: 'Core Officer' }
     ];
     const employees = [
-        { value: 'Abdullah', label: 'Abdullah' },
-        { value: 'Aalam Zaib', label: 'Aalam Zaib' },
-        { value: 'Amir Shafique', label: 'Amir Shafique' }
+        { value: '18', label: 'Abdullah' },
+        { value: '19', label: 'Aalam Zaib' },
+        { value: '20', label: 'Amir Shafique' },
+        { value: '21', label: 'Amir Shafique'},
+        { value: '22', label: 'Amir Shafique'},
+        { value: '23', label: 'Amir Shafique'},
+        { value: '24', label: 'Amir Shafique'},
     ];
     const siteAssetsList = [
         {
@@ -45,18 +49,19 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
         }
     ];
 
+    const [selectedOpt, setSelectedOpt] = useState(employee !== '' ? {value: employee.id, label: employee.name} : null);
     const [isLoading, setIsLoading] = useState(true);
+    
     const validationSchema = Yup.object().shape({
         type: Yup.string().required('Required'),
         startDate: Yup.date().required('Required'),
         endDate: Yup.date().min(Yup.ref('startDate'), 'End Date must not be earlier than Start Date').required('Required'),
         startTime: Yup.string().required('Required'),
         endTime: Yup.string().required('Required').test(
-            'endTimeLimit',
+            'minimumEndTime',
             'End Time must not be earlier than Start Time',
             function (value) {
                 const {startDate, endDate, startTime} = this.parent;
-                console.log(startDate.getTime() === endDate.getTime());
                 if (startDate.getTime() === endDate.getTime()) {
                     return moment(value, 'HH:mm').isSameOrAfter(moment(startTime, 'HH:mm'));
                 } else {
@@ -125,7 +130,7 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                         subsite: data.subsite,
                         case: data.case,
                         position: data.position,
-                        employee: employee !== '' ? employee.name : '',
+                        employee: employee !== '' ? employee.id : '',
                         quantity: data.quantity,
                         payRate: data.payRate,
                         chargeRate: data.chargeRate,
@@ -134,10 +139,12 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values, {setSubmitting}) => {
+                        values.employee = selectedOpt !== null ? selectedOpt.value : '';
                         handleShiftEdit(values, employee !== '' ? employee.id : 'Unassigned', dayIndex, shiftIndex);
                         setSubmitting(true);
                         setTimeout(() => {
                             setSubmitting(false);
+                            handleClose();
                         }, 1500);
                     }}>
                         {({values,
@@ -329,13 +336,14 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                     name='employee'
                                                     defaultValue={
                                                         values.employee !== '' ? 
-                                                        {value: values.employee, label: values.employee} : 
+                                                        {value: values.employee, label: employee.name} : 
                                                         undefined
                                                     }
                                                     isSearchable={true}
                                                     isClearable={true}
-                                                    options={employees} 
-                                                    onChange={(opt) => setFieldValue('employee', opt.value)}
+                                                    options={employees}
+                                                    value={selectedOpt} 
+                                                    onChange={(opt) => setSelectedOpt(opt)}
                                                 />
                                             </div>
                                             <div className='div d-flex mb-3'>

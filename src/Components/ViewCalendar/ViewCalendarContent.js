@@ -814,30 +814,102 @@ export default function ViewCalendarContent() {
     };
 
     const handleShiftEdit = (values, empId, dayIndex, shiftIndex) => {
-        if (empId === 'Unassigned') {
-            let newData = [...unassigned];
-            newData[dayIndex].shifts[shiftIndex] = {
-                ...newData[dayIndex].shifts[shiftIndex],
-                type: values.type,
-                startDate: values.startDate.split("-").reverse().join("-"),
-                endDate: values.endDate.split("-").reverse().join("-"),
-                startTime: values.startTime,
-                endTime: values.endTime,
-                client: values.client,
-                site: values.site,
-                subsite: values.subsite,
-                case: values.case,
-                position: values.position,
-                quantity: values.quantity,
-                payRate: values.payRate,
-                chargeRate: values.chargeRate,
-                extraRate: values.extraRate,
-                siteAssets: values.siteAssets
-            };
-            setUnassigned(newData);
-        } else {
-            let newData = [...assigned];
-            let empIndex = newData.findIndex(user => user.id === empId);
+        //if source is from unassigned shifts list
+        if (empId === 'Unassigned') { 
+            let unassignedData = [...unassigned];
+            let assignedData = [...assigned];
+            
+            //assign the changed shift values
+            changeShiftValues(unassignedData, values, dayIndex, shiftIndex, -1);
+
+            //if no employee is assigned (i.e. destination is also unassigned shifts list)
+            if (values.employee === '') {
+                let dayDestIndex = unassignedData.findIndex(day => day.date === values.startDate.split("-").reverse().join("-"));
+                //if start date is changed
+                if (dayIndex !== dayDestIndex) {
+                    let tempShift = unassignedData[dayIndex].shifts[shiftIndex];
+                    //remove the shift from source
+                    unassignedData[dayIndex].shifts.splice(shiftIndex, 1);
+
+                    //add the shift to destination
+                    unassignedData[dayDestIndex].shifts.push(tempShift);
+                }
+                setUnassigned(unassignedData);
+            } 
+            //if an employee is assigned (i.e. destination is employee shifts list)
+            else {
+                let empDestIndex = assignedData.findIndex(user => user.id === values.employee);
+                let dayDestIndex = assignedData[empDestIndex].shiftDays.findIndex(day => day.date === values.startDate.split("-").reverse().join("-"));
+
+                let tempShift = unassignedData[dayIndex].shifts[shiftIndex];
+                //remove the shift from source employee's shifts
+                unassignedData[dayIndex].shifts.splice(shiftIndex, 1);
+
+                //add the shift to destination employee's shifts
+                assignedData[empDestIndex].shiftDays[dayDestIndex].shifts.push(tempShift);
+
+                setUnassigned(unassignedData);
+                setAssigned(assignedData);
+            }
+        } 
+        //if source is from employee shifts list
+        else { 
+            let unassignedData = [...unassigned];
+            let assignedData = [...assigned];
+
+            //if employee is not removed (i.e. destination is employee shifts list)
+            if (values.employee !== '') {
+                let empIndex = assignedData.findIndex(user => user.id === empId);
+                let empDestIndex = assignedData.findIndex(user => user.id === values.employee);
+                let dayDestIndex = assignedData[empDestIndex].shiftDays.findIndex(day => day.date === values.startDate.split("-").reverse().join("-"));
+                
+                //assign the changed shift values
+                changeShiftValues(assignedData, values, dayIndex, shiftIndex, empIndex);
+
+                //if empolyee not changed
+                if (empIndex === empDestIndex) {
+                    //if start date is changed
+                    if (dayIndex !== dayDestIndex) {
+                        let tempShift = assignedData[empIndex].shiftDays[dayIndex].shifts[shiftIndex];
+                        //remove the shift from source employee's shifts
+                        assignedData[empIndex].shiftDays[dayIndex].shifts.splice(shiftIndex, 1);
+
+                        //add the shift to destination employee's shifts
+                        assignedData[empIndex].shiftDays[dayDestIndex].shifts.push(tempShift);
+                    }
+                } 
+                //if new employee assigned
+                else {
+                    let tempShift = assignedData[empIndex].shiftDays[dayIndex].shifts[shiftIndex];
+                    //remove the shift from source employee's shifts
+                    assignedData[empIndex].shiftDays[dayIndex].shifts.splice(shiftIndex, 1);
+
+                    //add the shift to destination employee's shifts
+                    assignedData[empDestIndex].shiftDays[dayDestIndex].shifts.push(tempShift);
+                }
+                setAssigned(assignedData);
+            }
+            //if employee is removed (i.e. destination is unassigned shifts list)
+            else {
+                let empIndex = assignedData.findIndex(user => user.id === empId);
+                let dayDestIndex = unassignedData.findIndex(day => day.date === values.startDate.split("-").reverse().join("-"));
+                
+                let tempShift = assignedData[empIndex].shiftDays[dayIndex].shifts[shiftIndex];
+                //remove the shift from source employee's shifts
+                assignedData[empIndex].shiftDays[dayIndex].shifts.splice(shiftIndex, 1);
+
+                //add the shift to destination unassigned shifts
+                unassignedData[dayDestIndex].shifts.push(tempShift);
+
+                setUnassigned(unassignedData);
+                setAssigned(assignedData);
+            }
+        }
+    };
+
+    function changeShiftValues(newData, values, dayIndex, shiftIndex, empIndex) {
+        //if not unassigned shifts list
+        if (empIndex !== -1) { 
             newData[empIndex].shiftDays[dayIndex].shifts[shiftIndex] = {
                 ...newData[empIndex].shiftDays[dayIndex].shifts[shiftIndex],
                 type: values.type,
@@ -856,9 +928,29 @@ export default function ViewCalendarContent() {
                 extraRate: values.extraRate,
                 siteAssets: values.siteAssets
             };
-            setAssigned(newData);
+        } 
+        //if unassigned shifts list
+        else { 
+            newData[dayIndex].shifts[shiftIndex] = {
+                ...newData[dayIndex].shifts[shiftIndex],
+                type: values.type,
+                startDate: values.startDate.split("-").reverse().join("-"),
+                endDate: values.endDate.split("-").reverse().join("-"),
+                startTime: values.startTime,
+                endTime: values.endTime,
+                client: values.client,
+                site: values.site,
+                subsite: values.subsite,
+                case: values.case,
+                position: values.position,
+                quantity: values.quantity,
+                payRate: values.payRate,
+                chargeRate: values.chargeRate,
+                extraRate: values.extraRate,
+                siteAssets: values.siteAssets
+            };
         }
-    };
+    }
 
     return (
         <div className='view-calendar'>

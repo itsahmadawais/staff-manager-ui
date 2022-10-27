@@ -30,7 +30,7 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
         { value: '21', label: 'Amir Shafique'},
         { value: '22', label: 'Amir Shafique'},
         { value: '23', label: 'Amir Shafique'},
-        { value: '24', label: 'Amir Shafique'},
+        { value: '24', label: 'Amir Shafique'}
     ];
     const siteAssetsList = [
         {
@@ -42,10 +42,38 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
         },
         {
             id: '102',
-            name: 'Nottingham CCEP Set',
+            name: 'Buckingham CCEP Set',
             type: 'key',
             currentLoc: 'BLACK TERMINATED FORD RANGER FD18 UAS (Vehicle)',
             handBackLoc: ''
+        }
+    ];
+    const handbackOpts = [
+        {
+            label: 'Sites',
+            options: [
+                { value: 'CCEP Uxbridge', label: 'CCEP Uxbridge' },
+                { value: 'KGV - Cruise', label: 'KGV - Cruise' },
+                { value: 'Hydrasun Gateway Business Park', label: 'Hydrasun Gateway Business Park' }
+            ]
+        },
+        {
+            label: 'Vehicles',
+            options: [
+                { value: 'FD18 UAS (Vehicle)', label: 'FD18 UAS (Vehicle)'}
+            ]
+        },
+        {
+            label: 'Users',
+            options: [
+                { value: '18', label: 'Abdullah'},
+                { value: '19', label: 'Aalam Zaib' },
+                { value: '20', label: 'Amir Shafique' },
+                { value: '21', label: 'Amir Shafique'},
+                { value: '22', label: 'Amir Shafique'},
+                { value: '23', label: 'Amir Shafique'},
+                { value: '24', label: 'Amir Shafique'}
+            ]
         }
     ];
 
@@ -409,14 +437,45 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                                             <Form.Check
                                                                                 type='checkbox'
                                                                                 id={'site-asset-'+item.id}
-                                                                                name={`siteAssets[${index}].id`}
+                                                                                name={'site-asset-'+item.id}
                                                                                 defaultChecked={matchAsset(item.id)}
+                                                                                onChange={(e) => {
+                                                                                    let temp = [...values.siteAssets];
+                                                                                    if (e.target.checked) {
+                                                                                        temp.push(item);
+                                                                                        setFieldValue('siteAssets', temp);
+                                                                                    } else {
+                                                                                        temp.splice(index, 1);
+                                                                                        setFieldValue('siteAssets', temp);
+                                                                                    }
+                                                                                }}
                                                                             />
                                                                         </td>
                                                                         <td>{item.name}</td>
                                                                         <td>{item.type}</td>
                                                                         <td>{item.currentLoc}</td>
-                                                                        <td>{item.handBackLoc}</td>
+                                                                        <td>
+                                                                            {
+                                                                                <Select
+                                                                                    name={'handback-loc'+item.id}
+                                                                                    defaultValue={
+                                                                                        {
+                                                                                            value: values.siteAssets[index]?.handBackLoc, 
+                                                                                            label: values.siteAssets[index]?.handBackLoc
+                                                                                        }
+                                                                                    }
+                                                                                    isSearchable={true}
+                                                                                    options={handbackOpts} 
+                                                                                    onChange={(opt) => {
+                                                                                        let temp = [...values.siteAssets];
+                                                                                        temp[index].handBackLoc = opt.label;
+                                                                                        setFieldValue('siteAssets', temp);
+                                                                                    }}
+                                                                                    isDisabled={values.siteAssets.find(asset => asset.id !== item.id)}
+                                                                                />
+                                                                                
+                                                                            }
+                                                                        </td>
                                                                     </tr>
                                                                 )
                                                             })

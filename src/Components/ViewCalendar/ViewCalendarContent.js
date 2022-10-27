@@ -4,6 +4,7 @@ import { Button, Table } from 'react-bootstrap';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import EmployeeShift from './EmployeeShift';
 import { Avatar, Loader } from '../UI';
+import moment from 'moment';
 
 export default function ViewCalendarContent() {
     const currentWeek = [
@@ -772,7 +773,24 @@ export default function ViewCalendarContent() {
         }
         //if employee shifts are moved to unassigned shifts
         if (source.droppableId.indexOf('unassigned') === -1 && destination.droppableId.indexOf('unassigned') !== -1) {
-            window.alert('Cannot move to unassigned shifts');
+            //window.alert('Cannot move to unassigned shifts');
+            let sourceId = source.droppableId.substring(source.droppableId.indexOf(' ') + 1);
+            let sourceUserId = source.droppableId.substring(0, source.droppableId.indexOf(' '));
+            let sourceUserClone = assigned.find(obj => obj.id === sourceUserId);
+            let sourceClone = sourceUserClone.shiftDays.find(obj => obj.date === sourceId);
+            let destId = destination.droppableId.substring(destination.droppableId.indexOf(' ') + 1);
+            let destClone = unassigned.find(obj => obj.date === destId);
+            
+            let [removed] = sourceClone.shifts.splice(source.index, 1);
+            destClone.shifts.splice(destination.index, 0, removed);
+
+            //manipulate start and end dates
+            let newStartDate = destClone.shifts[destination.index].startDate;
+            let newEndDate = destClone.shifts[destination.index].endDate;
+            let difference = moment(newEndDate, 'DD-MM-YYYY').diff(moment(newStartDate, 'DD-MM-YYYY'), 'days');
+            destClone.shifts[destination.index].startDate = destId;
+            destClone.shifts[destination.index].endDate = moment(destId, 'DD-MM-YYYY').add(difference, 'days').format('DD-MM-YYYY');
+
         } else {
             //if unassigned shifts are moved from and to unassigned shifts
             if (source.droppableId.indexOf('unassigned') !== -1 && destination.droppableId.indexOf('unassigned') !== -1) {
@@ -783,6 +801,13 @@ export default function ViewCalendarContent() {
                 
                 let [removed] = sourceClone.shifts.splice(source.index, 1);
                 destClone.shifts.splice(destination.index, 0, removed);
+                
+                //manipulate start and end dates
+                let newStartDate = destClone.shifts[destination.index].startDate;
+                let newEndDate = destClone.shifts[destination.index].endDate;
+                let difference = moment(newEndDate, 'DD-MM-YYYY').diff(moment(newStartDate, 'DD-MM-YYYY'), 'days');
+                destClone.shifts[destination.index].startDate = destId;
+                destClone.shifts[destination.index].endDate = moment(destId, 'DD-MM-YYYY').add(difference, 'days').format('DD-MM-YYYY');
             }
             //if unassigned shifts are moved to employee shifts
             else if (source.droppableId.indexOf('unassigned') !== -1 && destination.droppableId.indexOf('unassigned') === -1) {
@@ -795,6 +820,13 @@ export default function ViewCalendarContent() {
                 
                 let [removed] = sourceClone.shifts.splice(source.index, 1);
                 destClone.shifts.splice(destination.index, 0, removed);
+
+                //manipulate start and end dates
+                let newStartDate = destClone.shifts[destination.index].startDate;
+                let newEndDate = destClone.shifts[destination.index].endDate;
+                let difference = moment(newEndDate, 'DD-MM-YYYY').diff(moment(newStartDate, 'DD-MM-YYYY'), 'days');
+                destClone.shifts[destination.index].startDate = destId;
+                destClone.shifts[destination.index].endDate = moment(destId, 'DD-MM-YYYY').add(difference, 'days').format('DD-MM-YYYY');
             }
             //if employee shifts are moved from and to employee shifts
             else if (source.droppableId.indexOf('unassigned') === -1 && destination.droppableId.indexOf('unassigned') === -1) {
@@ -809,6 +841,13 @@ export default function ViewCalendarContent() {
                 
                 let [removed] = sourceClone.shifts.splice(source.index, 1);
                 destClone.shifts.splice(destination.index, 0, removed);
+
+                //manipulate start and end dates
+                let newStartDate = destClone.shifts[destination.index].startDate;
+                let newEndDate = destClone.shifts[destination.index].endDate;
+                let difference = moment(newEndDate, 'DD-MM-YYYY').diff(moment(newStartDate, 'DD-MM-YYYY'), 'days');
+                destClone.shifts[destination.index].startDate = destId;
+                destClone.shifts[destination.index].endDate = moment(destId, 'DD-MM-YYYY').add(difference, 'days').format('DD-MM-YYYY');
             }
         }
     };

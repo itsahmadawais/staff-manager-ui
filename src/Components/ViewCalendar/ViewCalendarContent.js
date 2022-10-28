@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Button, Table } from 'react-bootstrap';
-import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
+import { BiChevronLeft, BiChevronRight, BiPlus } from 'react-icons/bi';
 import EmployeeShift from './EmployeeShift';
 import { Avatar, Loader } from '../UI';
 import moment from 'moment';
+import CreateShiftModal from './CreateShiftModal';
 
 export default function ViewCalendarContent() {
     const currentWeek = [
@@ -758,12 +759,23 @@ export default function ViewCalendarContent() {
     const [unassigned, setUnassigned] = useState(unassignedShiftDays);
     const [assigned, setAssigned] = useState(employeeShifts);
     const [isLoading, setIsLoading] = useState(true);
+    const [createShiftShow, setCreateShiftShow] = useState(false);
+    const [createShiftDate, setCreateShiftDate] = useState('');
+    const [createShiftEmp, setCreateShiftEmp] = useState('');
+
+    const handleCreateShiftShow = () => setCreateShiftShow(!createShiftShow);
+
+    const handleCreateShiftValues = (date, employee) => {
+        setCreateShiftDate(date);
+        setCreateShiftEmp(employee);
+        handleCreateShiftShow();
+    };
 
     useEffect(() => {
       setTimeout(() => {
         setIsLoading(false);
       }, 1500);
-    }, [isLoading])
+    }, [isLoading]);
     
     
     const handleDragEnd = (result) => {
@@ -1022,7 +1034,20 @@ export default function ViewCalendarContent() {
                             <th>Employees</th>
                             {
                                 currentWeek.map((item, index) => {
-                                    return <th key={index}>{item.day}, {item.date.substring(0, item.date.indexOf('-'))}</th>
+                                    return(
+                                        <th key={index}>
+                                            <div className='d-flex justify-content-between'>
+                                                <span>{item.day}, {item.date.substring(0, item.date.indexOf('-'))}</span>
+                                                <Button 
+                                                    variant='icon' 
+                                                    className='px-1 py-0' 
+                                                    onClick={() => handleCreateShiftValues(item.date, '')}
+                                                >
+                                                    <BiPlus size={20} />
+                                                </Button>
+                                            </div>
+                                        </th>
+                                    )
                                 })
                             }
                         </tr>
@@ -1125,6 +1150,8 @@ export default function ViewCalendarContent() {
                                                                                 ref={provided.innerRef}
                                                                                 className={`${snapshot.isDraggingOver ? 'dragging-over ' : undefined}
                                                                                 ${shiftDay.date === today ? 'current-day' : undefined}`}
+                                                                                onClick={() => handleCreateShiftValues(shiftDay.date, employee)}
+                                                                                style={{cursor: 'pointer'}}
                                                                             >
                                                                                 {
                                                                                     shiftDay.shifts?.map((shift, index) => {
@@ -1171,6 +1198,14 @@ export default function ViewCalendarContent() {
                     </div>
                 </DragDropContext>
             </div>
+
+            {/***** Create Shift Modal *****/}
+            <CreateShiftModal 
+                date={createShiftDate} 
+                employee={createShiftEmp} 
+                show={createShiftShow} 
+                handleClose={handleCreateShiftShow} 
+            />
         </div>
     )
 }

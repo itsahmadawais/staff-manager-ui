@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import { Button, Form, Modal, Table } from 'react-bootstrap';
-import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
+import { Formik, Field } from 'formik';
 import Select from 'react-select';
-import moment from 'moment/moment';
+import moment from 'moment';
 import { ButtonLoader } from '../UI';
 
-export default function EditShiftModal({data, employee, dayIndex, shiftIndex, show, handleClose, handleShiftEdit}) {
+export default function CreateShiftModal({date, employee, show, handleClose}) {
     const clients = [
         { value: 'Coca Cola European Partner', label: 'Coca Cola European Partner' },
         { value: 'Profile Security Services Limited', label: 'Profile Security Services Limited' }
@@ -79,7 +79,7 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
 
     const [selectedOpt, setSelectedOpt] = useState(employee !== '' ? {value: employee.id, label: employee.name} : null);
     const [isLoading, setIsLoading] = useState(true);
-    
+
     const validationSchema = Yup.object().shape({
         type: Yup.string().required('Required'),
         startDate: Yup.date().required('Required'),
@@ -101,6 +101,7 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
         site: Yup.string().required('Required'),
         case: Yup.string().required('Required'),
         position: Yup.string().required('Required'),
+        quantity: Yup.number().min(1, 'Quantity must be atleast 1'),
         payRate: Yup.number().required('Required').test(
             'maxDigitsAfterDecimal',
             'Pay Rate must have 2 digits after decimal or less',
@@ -117,63 +118,51 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
             (number) => /^\d+(\.\d{1,2})?$/.test(number)
           ),
     });
-    
-    const matchAsset = (assetId) => {
-        let matched = false;
-        data.siteAssets.forEach(asset => {
-            if (assetId === asset.id) {
-                matched = true;
-            }
-        });
-        return matched;
-    };
 
     useEffect(() => {
         setTimeout(() => {
-            setIsLoading(false);
+          setIsLoading(false);
         }, 2500);
-    }, [isLoading]);
+      }, [isLoading]);
 
     return (
         <Modal
-            show={show} 
+            show={show}
             onHide={handleClose}
             className='shift-modal max-modal-height'
             size='xl'
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title>Edit Shift ({data.client} - {data.site})</Modal.Title>
+                <Modal.Title>Create New Shift</Modal.Title>
             </Modal.Header>
-                <Formik
-                    initialValues={{
-                        type: data.type,
-                        startDate: data.startDate.split("-").reverse().join("-"),
-                        endDate: data.endDate.split("-").reverse().join("-"),
-                        startTime: data.startTime,
-                        endTime: data.endTime,
-                        client: data.client,
-                        site: data.site,
-                        subsite: data.subsite,
-                        case: data.case,
-                        position: data.position,
-                        employee: employee !== '' ? employee.id : '',
-                        payRate: data.payRate,
-                        chargeRate: data.chargeRate,
-                        extraRate: data.extraRate,
-                        siteAssets: data.siteAssets
-                    }}
-                    validationSchema={validationSchema}
-                    onSubmit={(values, {setSubmitting}) => {
-                        values.employee = selectedOpt !== null ? selectedOpt.value : '';
-                        handleShiftEdit(values, employee !== '' ? employee.id : 'Unassigned', dayIndex, shiftIndex);
-                        setSubmitting(true);
-                        setTimeout(() => {
-                            setSubmitting(false);
-                            handleClose();
-                        }, 1500);
-                    }}>
-                        {({values,
+            <Formik
+                initialValues={{
+                    type: 'shift',
+                    startDate: date.split("-").reverse().join("-"),
+                    endDate: date.split("-").reverse().join("-"),
+                    startTime: '',
+                    endTime: '',
+                    client: '',
+                    site: '',
+                    subsite: '',
+                    case: '',
+                    position: '',
+                    quantity: '1',
+                    employee: employee !== '' ? employee.id : '',
+                    payRate: '0',
+                    chargeRate: '0',
+                    extraRate: '0',
+                    siteAssets: []
+                }}
+                validationSchema={validationSchema}
+                onSubmit={(values, {setSubmitting}) => {
+                    setSubmitting(true);
+                    setTimeout(() => {
+                        setSubmitting(false);
+                    }, 1500);
+                }}>
+                    {({values,
                             errors,
                             touched,
                             setFieldValue,
@@ -251,7 +240,6 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                     <Form.Control
                                                         type='time'
                                                         name='startTime'
-                                                        defaultValue={values.startTime}
                                                         onChange={handleChange}
                                                     />
                                                     <p className='error-feedback'>
@@ -265,7 +253,6 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                         <Form.Control
                                                             type='time'
                                                             name='endTime'
-                                                            defaultValue={values.endTime}
                                                             onChange={handleChange}
                                                         />
                                                         <p className='error-feedback'>
@@ -279,7 +266,6 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                     <Form.Label>Client *</Form.Label>
                                                     <Select
                                                         name='client'
-                                                        defaultValue={{value: values.client, label: values.client}}
                                                         isSearchable={true}
                                                         options={clients} 
                                                         onChange={(opt) => setFieldValue('client', opt.value)}
@@ -292,7 +278,6 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                     <Form.Label>Site *</Form.Label>
                                                     <Select
                                                         name='site'
-                                                        defaultValue={{value: values.site, label: values.site}}
                                                         isSearchable={true}
                                                         options={sites}
                                                         onChange={(opt) => setFieldValue('site', opt.value)} 
@@ -307,11 +292,6 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                     <Form.Label>Subsite</Form.Label>
                                                     <Select
                                                         name='subsite'
-                                                        defaultValue={
-                                                            values.subsite !== '' ?
-                                                            {value: values.subsite, label: values.subsite} :
-                                                            undefined
-                                                        }
                                                         isSearchable={true}
                                                         options={subsites} 
                                                         onChange={(opt) => setFieldValue('subsite', opt.value)}
@@ -321,7 +301,6 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                     <Form.Label>Case *</Form.Label>
                                                     <Select
                                                         name='case'
-                                                        defaultValue={{value: values.case, label: values.case}}
                                                         isSearchable={true}
                                                         options={cases}
                                                         onChange={(opt) => setFieldValue('case', opt.value)} 
@@ -331,25 +310,35 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                     </p>
                                                 </div>
                                             </div>
-                                            {
-                                                values.type === 'shift' &&
-                                                <div className='div d-flex mb-3'>
+                                            <div className='div d-flex mb-3'>
+                                                {
+                                                    values.type === 'shift' &&
                                                     <div className='w-50 pe-2'>
-                                                        <Form.Label>Position *</Form.Label>
-                                                        <Select
-                                                            name='position'
-                                                            defaultValue={{value: values.position, label: values.position}}
-                                                            isSearchable={true}
-                                                            options={positions} 
-                                                            onChange={(opt) => setFieldValue('position', opt.value)}
+                                                            <Form.Label>Position *</Form.Label>
+                                                            <Select
+                                                                name='position'
+                                                                isSearchable={true}
+                                                                options={positions} 
+                                                                onChange={(opt) => setFieldValue('position', opt.value)}
+                                                            />
+                                                            <p className='error-feedback'>
+                                                                {errors.position && touched.position && errors.position}
+                                                            </p>
+                                                        </div>
+                                                }
+                                                    <div className={`w-50 ${values.type === 'shift' ? 'ps-2' : 'pe-2'}`}>
+                                                        <Form.Label>Quantity *</Form.Label>
+                                                        <Form.Control
+                                                            type='number'
+                                                            name='quantity'
+                                                            value={values.quantity}
+                                                            onChange={handleChange}
                                                         />
                                                         <p className='error-feedback'>
-                                                            {errors.position && touched.position && errors.position}
+                                                            {errors.quantity && touched.quantity && errors.quantity}
                                                         </p>
                                                     </div>
-                                                    <div className='w-50 ps-2'></div>
                                                 </div>
-                                            }
                                             <div className='div mb-3'>
                                                 <p className='fw-bold mb-0'>Assign Employee</p>
                                                 <hr className='mt-1' />
@@ -432,7 +421,6 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                                                 type='checkbox'
                                                                                 id={'site-asset-'+item.id}
                                                                                 name={'site-asset-'+item.id}
-                                                                                defaultChecked={matchAsset(item.id)}
                                                                                 onChange={(e) => {
                                                                                     let temp = [...values.siteAssets];
                                                                                     if (e.target.checked) {
@@ -452,12 +440,6 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                                             {
                                                                                 <Select
                                                                                     name={'handback-loc'+item.id}
-                                                                                    defaultValue={
-                                                                                        {
-                                                                                            value: values.siteAssets[index]?.handBackLoc, 
-                                                                                            label: values.siteAssets[index]?.handBackLoc
-                                                                                        }
-                                                                                    }
                                                                                     isSearchable={true}
                                                                                     options={handbackOpts} 
                                                                                     onChange={(opt) => {

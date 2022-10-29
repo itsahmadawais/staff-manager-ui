@@ -6,6 +6,7 @@ import EmployeeShift from './EmployeeShift';
 import { Avatar, Loader } from '../UI';
 import moment from 'moment';
 import CreateShiftModal from './CreateShiftModal';
+import { v4 as uuid } from 'uuid';
 
 export default function ViewCalendarContent() {
     const currentWeek = [
@@ -765,10 +766,13 @@ export default function ViewCalendarContent() {
 
     const handleCreateShiftShow = () => setCreateShiftShow(!createShiftShow);
 
-    const handleCreateShiftValues = (date, employee) => {
-        setCreateShiftDate(date);
-        setCreateShiftEmp(employee);
-        handleCreateShiftShow();
+    const handleCreateShiftValues = (e, date, employee) => {
+        if (e.target == e.currentTarget) {
+            e.stopPropagation();
+            setCreateShiftDate(date);
+            setCreateShiftEmp(employee);
+            handleCreateShiftShow();
+        }
     };
 
     useEffect(() => {
@@ -1001,7 +1005,68 @@ export default function ViewCalendarContent() {
                 siteAssets: values.siteAssets
             };
         }
-    }
+    };
+
+    const handleShiftCreation = (values) => {
+        if (values.employee === '') {
+            let newData = [...unassigned];
+            let dayIndex = newData.findIndex(obj => obj.date === values.startDate.split("-").reverse().join("-"));
+            for (let i = 0; i < values.quantity; i++) {
+                let newShift = {
+                    id: uuid().slice(0,3),
+                    type: values.type,
+                    startDate: values.startDate.split("-").reverse().join("-"),
+                    endDate: values.endDate.split("-").reverse().join("-"),
+                    startTime: values.startTime,
+                    endTime: values.endTime,
+                    client: values.client,
+                    site: values.site,
+                    subsite: values.subsite,
+                    case: values.case,
+                    position: values.position,
+                    quantity: values.quantity,
+                    payRate: values.payRate,
+                    chargeRate: values.chargeRate,
+                    extraRate: values.extraRate,
+                    siteAssets: values.siteAssets,
+                    pastEmployees: [],
+                    cancelled: false,
+                    published: false,
+                    status: 'Awaiting'
+                }
+                newData[dayIndex].shifts.push(newShift);
+            }
+            setUnassigned(newData);
+        } else {
+            let newData = [...assigned];
+            let empIndex = newData.findIndex(obj => obj.id === values.employee);
+            let dayIndex = newData[empIndex].shiftDays.findIndex(obj => obj.date === values.startDate.split("-").reverse().join("-"));
+            let newShift = {
+                id: uuid().slice(0,3),
+                type: values.type,
+                startDate: values.startDate.split("-").reverse().join("-"),
+                endDate: values.endDate.split("-").reverse().join("-"),
+                startTime: values.startTime,
+                endTime: values.endTime,
+                client: values.client,
+                site: values.site,
+                subsite: values.subsite,
+                case: values.case,
+                position: values.position,
+                quantity: values.quantity,
+                payRate: values.payRate,
+                chargeRate: values.chargeRate,
+                extraRate: values.extraRate,
+                siteAssets: values.siteAssets,
+                pastEmployees: [],
+                cancelled: false,
+                published: false,
+                status: "Awaiting"
+            }
+            newData[empIndex].shiftDays[dayIndex].shifts.push(newShift);
+            setAssigned(newData);
+        }
+    };
 
     return (
         <div className='view-calendar'>
@@ -1041,9 +1106,8 @@ export default function ViewCalendarContent() {
                                                 <Button 
                                                     variant='icon' 
                                                     className='px-1 py-0' 
-                                                    onClick={() => handleCreateShiftValues(item.date, '')}
                                                 >
-                                                    <BiPlus size={20} />
+                                                    <BiPlus size={20} onClick={(e) => handleCreateShiftValues(e, item.date, '')} />
                                                 </Button>
                                             </div>
                                         </th>
@@ -1150,8 +1214,7 @@ export default function ViewCalendarContent() {
                                                                                 ref={provided.innerRef}
                                                                                 className={`${snapshot.isDraggingOver ? 'dragging-over ' : undefined}
                                                                                 ${shiftDay.date === today ? 'current-day' : undefined}`}
-                                                                                onClick={() => handleCreateShiftValues(shiftDay.date, employee)}
-                                                                                style={{cursor: 'pointer'}}
+                                                                                onClick={(e) => handleCreateShiftValues(e, shiftDay.date, employee)}
                                                                             >
                                                                                 {
                                                                                     shiftDay.shifts?.map((shift, index) => {
@@ -1205,6 +1268,7 @@ export default function ViewCalendarContent() {
                 employee={createShiftEmp} 
                 show={createShiftShow} 
                 handleClose={handleCreateShiftShow} 
+                handleShiftCreation={handleShiftCreation}
             />
         </div>
     )

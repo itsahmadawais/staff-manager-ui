@@ -6,7 +6,7 @@ import Select from 'react-select';
 import moment from 'moment';
 import { ButtonLoader } from '../UI';
 
-export default function CreateShiftModal({date, employee, show, handleClose}) {
+export default function CreateShiftModal({date, employee, show, handleClose, handleShiftCreation}) {
     const clients = [
         { value: 'Coca Cola European Partner', label: 'Coca Cola European Partner' },
         { value: 'Profile Security Services Limited', label: 'Profile Security Services Limited' }
@@ -76,6 +76,12 @@ export default function CreateShiftModal({date, employee, show, handleClose}) {
             ]
         }
     ];
+    const repeatOpts = [
+        { value: 'Daily', label: 'Daily'},
+        { value: 'Weekly', label: 'Weekly'},
+        { value: 'Monthly', label: 'Monthly'},
+        { value: 'Yearly', label: 'Yearly'}
+    ];
 
     const [selectedOpt, setSelectedOpt] = useState(employee !== '' ? {value: employee.id, label: employee.name} : null);
     const [isLoading, setIsLoading] = useState(true);
@@ -117,6 +123,8 @@ export default function CreateShiftModal({date, employee, show, handleClose}) {
             'Extra Rate must have 2 digits after decimal or less',
             (number) => /^\d+(\.\d{1,2})?$/.test(number)
           ),
+        repetition: Yup.string().required('Required'),
+        every: Yup.number().min(1, 'It should not be less than 1')
     });
 
     useEffect(() => {
@@ -153,13 +161,19 @@ export default function CreateShiftModal({date, employee, show, handleClose}) {
                     payRate: '0',
                     chargeRate: '0',
                     extraRate: '0',
-                    siteAssets: []
+                    siteAssets: [],
+                    repetition: 'shift-recurrence',
+                    repeat: 'Weekly',
+                    every: '1'
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, {setSubmitting}) => {
+                    values.employee = selectedOpt !== null ? selectedOpt.value : '';
+                    handleShiftCreation(values);
                     setSubmitting(true);
                     setTimeout(() => {
                         setSubmitting(false);
+                        handleClose();
                     }, 1500);
                 }}>
                     {({values,
@@ -281,6 +295,7 @@ export default function CreateShiftModal({date, employee, show, handleClose}) {
                                                         isSearchable={true}
                                                         options={sites}
                                                         onChange={(opt) => setFieldValue('site', opt.value)} 
+                                                        isDisabled={values.client === '' ? true : false}
                                                     />
                                                     <p className='error-feedback'>
                                                         {errors.site && touched.site && errors.site}
@@ -295,6 +310,7 @@ export default function CreateShiftModal({date, employee, show, handleClose}) {
                                                         isSearchable={true}
                                                         options={subsites} 
                                                         onChange={(opt) => setFieldValue('subsite', opt.value)}
+                                                        isDisabled={values.site === '' ? true : false}
                                                     />
                                                 </div>
                                                 <div className='w-50 ps-2'>
@@ -304,6 +320,7 @@ export default function CreateShiftModal({date, employee, show, handleClose}) {
                                                         isSearchable={true}
                                                         options={cases}
                                                         onChange={(opt) => setFieldValue('case', opt.value)} 
+                                                        isDisabled={values.site === '' ? true : false}
                                                     />
                                                     <p className='error-feedback'>
                                                         {errors.case && touched.case && errors.case}
@@ -401,63 +418,142 @@ export default function CreateShiftModal({date, employee, show, handleClose}) {
                                             <div className='div mb-3'>
                                                 <p className='fw-bold mb-0'>Site Assets</p>
                                                 <hr className='mt-1' />
-                                                <Table bordered responsive>
-                                                    <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th>Name</th>
-                                                            <th>Type</th>
-                                                            <th>Current Location</th>
-                                                            <th>Hand Back Location</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            siteAssetsList.map((item, index) => {
-                                                                return(
-                                                                    <tr key={item.id}>
-                                                                        <td>
-                                                                            <Form.Check
-                                                                                type='checkbox'
-                                                                                id={'site-asset-'+item.id}
-                                                                                name={'site-asset-'+item.id}
-                                                                                onChange={(e) => {
-                                                                                    let temp = [...values.siteAssets];
-                                                                                    if (e.target.checked) {
-                                                                                        temp.push(item);
-                                                                                        setFieldValue('siteAssets', temp);
-                                                                                    } else {
-                                                                                        temp.splice(index, 1);
-                                                                                        setFieldValue('siteAssets', temp);
-                                                                                    }
-                                                                                }}
-                                                                            />
-                                                                        </td>
-                                                                        <td>{item.name}</td>
-                                                                        <td>{item.type}</td>
-                                                                        <td>{item.currentLoc}</td>
-                                                                        <td>
-                                                                            {
-                                                                                <Select
-                                                                                    name={'handback-loc'+item.id}
-                                                                                    isSearchable={true}
-                                                                                    options={handbackOpts} 
-                                                                                    onChange={(opt) => {
-                                                                                        let temp = [...values.siteAssets];
-                                                                                        temp[index].handBackLoc = opt.label;
-                                                                                        setFieldValue('siteAssets', temp);
-                                                                                    }}
-                                                                                    isDisabled={values.siteAssets.find(asset => asset.id !== item.id)}
-                                                                                />
-                                                                                
-                                                                            }
-                                                                        </td>
+                                                {
+                                                    values.site === '' ? (
+                                                        <>
+                                                            <div className='d-flex justify-content-center'>
+                                                                Please select a site to begin selecting assets.
+                                                            </div>
+                                                            <hr />
+                                                        </>
+                                                    ) : (
+                                                        siteAssetsList.length !== 0 ? (
+                                                            <Table bordered responsive>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th></th>
+                                                                        <th>Name</th>
+                                                                        <th>Type</th>
+                                                                        <th>Current Location</th>
+                                                                        <th>Hand Back Location</th>
                                                                     </tr>
-                                                                )
-                                                            })
-                                                        }
-                                                    </tbody>
-                                                </Table>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {
+                                                                        siteAssetsList.map((item, index) => {
+                                                                            return(
+                                                                                <tr key={item.id}>
+                                                                                    <td>
+                                                                                        <Form.Check
+                                                                                            type='checkbox'
+                                                                                            id={'site-asset-'+item.id}
+                                                                                            name={'site-asset-'+item.id}
+                                                                                            onChange={(e) => {
+                                                                                                let temp = [...values.siteAssets];
+                                                                                                if (e.target.checked) {
+                                                                                                    temp.push(item);
+                                                                                                    setFieldValue('siteAssets', temp);
+                                                                                                } else {
+                                                                                                    let i = temp.findIndex(obj => obj.id === item.id)
+                                                                                                    temp.splice(i, 1);
+                                                                                                    setFieldValue('siteAssets', temp);
+                                                                                                }
+                                                                                            }}
+                                                                                        />
+                                                                                    </td>
+                                                                                    <td>{item.name}</td>
+                                                                                    <td>{item.type}</td>
+                                                                                    <td>{item.currentLoc}</td>
+                                                                                    <td>
+                                                                                        {
+                                                                                            <Select
+                                                                                                name={'handback-loc'+item.id}
+                                                                                                isSearchable={true}
+                                                                                                options={handbackOpts} 
+                                                                                                onChange={(opt) => {
+                                                                                                    let temp = [...values.siteAssets];
+                                                                                                    temp[index].handBackLoc = opt.label;
+                                                                                                    setFieldValue('siteAssets', temp);
+                                                                                                }}
+                                                                                                isDisabled={!values.siteAssets.find(asset => asset.id === item.id)}
+                                                                                            />   
+                                                                                        }
+                                                                                    </td>
+                                                                                </tr>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </tbody>
+                                                            </Table>
+                                                        ) : (
+                                                            <>
+                                                                <div className='d-flex justify-content-center'>
+                                                                    No data
+                                                                </div>
+                                                                <hr />
+                                                            </>
+                                                        )
+                                                    )
+                                                }
+                                            </div>
+                                            <div className='div d-flex mb-3'>
+                                                <div className='w-50 pe-2'>
+                                                    <label 
+                                                        htmlFor='shift-recurrence' 
+                                                        className={'job-type-radio p-2 text-center '+ (values.repetition === 'shift-recurrence' ? 'active' : '')} 
+                                                    >
+                                                        <Field
+                                                            name="repetition"
+                                                            id="shift-recurrence"
+                                                            value="shift-recurrence"
+                                                            type="radio"
+                                                        />
+                                                        Shift Recurrence
+                                                    </label>
+                                                </div>
+                                                <div className='w-50 ps-2'>
+                                                    <label 
+                                                        htmlFor='extra-dates' 
+                                                        className={'job-type-radio p-2 text-center '+ (values.repetition === 'extra-dates' ? 'active' : '')}
+                                                    >
+                                                        <Field
+                                                            name="repetition"
+                                                            id="extra-dates"
+                                                            value="extra-dates"
+                                                            type="radio"
+                                                        />
+                                                        Extra Dates
+                                                    </label>
+                                                </div>
+                                                <p className='error-feedback'>
+                                                    {errors.repetition && touched.repetition && errors.repetition}
+                                                </p>
+                                            </div>
+                                            <div className='div d-flex align-items-center mb-3'>
+                                                <p className='fw-bold mb-0 me-3'>Repeat</p>
+                                                <Select
+                                                    name='repeat'
+                                                    defaultValue={
+                                                        {value: values.repeat, label: values.repeat}
+                                                    }
+                                                    isSearchable={false}
+                                                    isClearable={false}
+                                                    options={repeatOpts}
+                                                    onChange={(opt) => setFieldValue('repeat', opt.value)}
+                                                />
+                                            </div>
+                                            <div className='div d-flex align-items-center mb-3'>
+                                                <p className='fw-bold mb-0 me-3'>Every</p>
+                                                <Form.Control
+                                                    type='number'
+                                                    name='every'
+                                                    value={values.every}
+                                                    onChange={handleChange}
+                                                />
+                                                <p className='fw-bold mb-0 me-3'>week(s)</p>
+                                                <p className='error-feedback'>
+                                                    {errors.every && touched.every && errors.every}
+                                                </p>
                                             </div>
                                         </Modal.Body>
                                         <Modal.Footer>

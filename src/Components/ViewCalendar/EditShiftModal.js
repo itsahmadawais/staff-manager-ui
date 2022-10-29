@@ -412,70 +412,81 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                             <div className='div mb-3'>
                                                 <p className='fw-bold mb-0'>Site Assets</p>
                                                 <hr className='mt-1' />
-                                                <Table bordered responsive>
-                                                    <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th>Name</th>
-                                                            <th>Type</th>
-                                                            <th>Current Location</th>
-                                                            <th>Hand Back Location</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            siteAssetsList.map((item, index) => {
-                                                                return(
-                                                                    <tr key={item.id}>
-                                                                        <td>
-                                                                            <Form.Check
-                                                                                type='checkbox'
-                                                                                id={'site-asset-'+item.id}
-                                                                                name={'site-asset-'+item.id}
-                                                                                defaultChecked={matchAsset(item.id)}
-                                                                                onChange={(e) => {
-                                                                                    let temp = [...values.siteAssets];
-                                                                                    if (e.target.checked) {
-                                                                                        temp.push(item);
-                                                                                        setFieldValue('siteAssets', temp);
-                                                                                    } else {
-                                                                                        temp.splice(index, 1);
-                                                                                        setFieldValue('siteAssets', temp);
+                                                {
+                                                    siteAssetsList.length !== 0 ? (
+                                                        <Table bordered responsive>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>Name</th>
+                                                                    <th>Type</th>
+                                                                    <th>Current Location</th>
+                                                                    <th>Hand Back Location</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {
+                                                                    siteAssetsList.map((item, index) => {
+                                                                        return(
+                                                                            <tr key={item.id}>
+                                                                                <td>
+                                                                                    <Form.Check
+                                                                                        type='checkbox'
+                                                                                        id={'site-asset-'+item.id}
+                                                                                        name={'site-asset-'+item.id}
+                                                                                        defaultChecked={matchAsset(item.id)}
+                                                                                        onChange={(e) => {
+                                                                                            let temp = [...values.siteAssets];
+                                                                                            if (e.target.checked) {
+                                                                                                temp.push(item);
+                                                                                                setFieldValue('siteAssets', temp);
+                                                                                            } else {
+                                                                                                let i = temp.findIndex(obj => obj.id === item.id)
+                                                                                                temp.splice(i, 1);
+                                                                                                setFieldValue('siteAssets', temp);
+                                                                                            }
+                                                                                        }}
+                                                                                    />
+                                                                                </td>
+                                                                                <td>{item.name}</td>
+                                                                                <td>{item.type}</td>
+                                                                                <td>{item.currentLoc}</td>
+                                                                                <td>
+                                                                                    {
+                                                                                        <Select
+                                                                                            name={'handback-loc'+item.id}
+                                                                                            defaultValue={
+                                                                                                {
+                                                                                                    value: values.siteAssets[index]?.handBackLoc, 
+                                                                                                    label: values.siteAssets[index]?.handBackLoc
+                                                                                                }
+                                                                                            }
+                                                                                            isSearchable={true}
+                                                                                            options={handbackOpts} 
+                                                                                            onChange={(opt) => {
+                                                                                                let temp = [...values.siteAssets];
+                                                                                                temp[index].handBackLoc = opt.label;
+                                                                                                setFieldValue('siteAssets', temp);
+                                                                                            }}
+                                                                                            isDisabled={!values.siteAssets.find(asset => asset.id === item.id)}
+                                                                                        />
                                                                                     }
-                                                                                }}
-                                                                            />
-                                                                        </td>
-                                                                        <td>{item.name}</td>
-                                                                        <td>{item.type}</td>
-                                                                        <td>{item.currentLoc}</td>
-                                                                        <td>
-                                                                            {
-                                                                                <Select
-                                                                                    name={'handback-loc'+item.id}
-                                                                                    defaultValue={
-                                                                                        {
-                                                                                            value: values.siteAssets[index]?.handBackLoc, 
-                                                                                            label: values.siteAssets[index]?.handBackLoc
-                                                                                        }
-                                                                                    }
-                                                                                    isSearchable={true}
-                                                                                    options={handbackOpts} 
-                                                                                    onChange={(opt) => {
-                                                                                        let temp = [...values.siteAssets];
-                                                                                        temp[index].handBackLoc = opt.label;
-                                                                                        setFieldValue('siteAssets', temp);
-                                                                                    }}
-                                                                                    isDisabled={values.siteAssets.find(asset => asset.id !== item.id)}
-                                                                                />
-                                                                                
-                                                                            }
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            })
-                                                        }
-                                                    </tbody>
-                                                </Table>
+                                                                                </td>
+                                                                            </tr>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </tbody>
+                                                        </Table>
+                                                    ) : (
+                                                        <>
+                                                            <div className='d-flex justify-content-center'>
+                                                                No data
+                                                            </div>
+                                                            <hr />
+                                                        </>
+                                                    )
+                                                }
                                             </div>
                                         </Modal.Body>
                                         <Modal.Footer>

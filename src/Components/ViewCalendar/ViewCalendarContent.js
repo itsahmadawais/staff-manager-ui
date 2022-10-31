@@ -763,6 +763,7 @@ export default function ViewCalendarContent() {
     const [createShiftShow, setCreateShiftShow] = useState(false);
     const [createShiftDate, setCreateShiftDate] = useState('');
     const [createShiftEmp, setCreateShiftEmp] = useState('');
+    const [recordsToShow, setRecordsToShow] = useState(2);
 
     const handleCreateShiftShow = () => setCreateShiftShow(!createShiftShow);
 
@@ -774,6 +775,9 @@ export default function ViewCalendarContent() {
             handleCreateShiftShow();
         }
     };
+
+    const showMoreRecords = () => setRecordsToShow(recordsToShow + 2);
+    const showLessRecords = () => setRecordsToShow(recordsToShow - 2);
 
     useEffect(() => {
       setTimeout(() => {
@@ -1196,7 +1200,7 @@ export default function ViewCalendarContent() {
                                     </tr> :
                                     <>
                                         {
-                                            assigned.map((employee) => {
+                                            assigned.slice(0, recordsToShow).map((employee) => {
                                                 return(
                                                     <tr key={employee.id}>
                                                         <td>
@@ -1258,6 +1262,19 @@ export default function ViewCalendarContent() {
                                 }
                             </tbody>
                         </Table>
+                        <div className='records-paginate-wrap'>
+                            <p className='text-center mt-3 mb-2'>Showing {recordsToShow} of {assigned.length}</p>
+                            <div className='d-flex justify-content-center'>
+                                {
+                                    recordsToShow > 2 &&
+                                    <Button variant='primary' className='mb-3 me-2' onClick={showLessRecords}>Show Less</Button>
+                                }
+                                {
+                                    (assigned.length > 2 && !(recordsToShow >= assigned.length)) &&
+                                    <Button variant='primary' className='mb-3' onClick={showMoreRecords}>Show More</Button>
+                                }
+                            </div>
+                        </div>
                     </div>
                 </DragDropContext>
             </div>

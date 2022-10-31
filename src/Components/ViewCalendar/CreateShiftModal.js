@@ -5,6 +5,7 @@ import { Formik, Field } from 'formik';
 import Select from 'react-select';
 import moment from 'moment';
 import { ButtonLoader } from '../UI';
+import { BsX } from "react-icons/bs";
 
 export default function CreateShiftModal({date, employee, show, handleClose, handleShiftCreation}) {
     const clients = [
@@ -79,8 +80,16 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
     const repeatOpts = [
         { value: 'Daily', label: 'Daily'},
         { value: 'Weekly', label: 'Weekly'},
-        { value: 'Monthly', label: 'Monthly'},
-        { value: 'Yearly', label: 'Yearly'}
+        { value: 'Monthly', label: 'Monthly'}
+    ];
+    const repeatDaysOpts = [
+        { value: 'Mon', label: 'Mon'},
+        { value: 'Tue', label: 'Tue'},
+        { value: 'Wed', label: 'Wed'},
+        { value: 'Thu', label: 'Thu'},
+        { value: 'Fri', label: 'Fri'},
+        { value: 'Sat', label: 'Sat'},
+        { value: 'Sun', label: 'Sun'}
     ];
 
     const [selectedOpt, setSelectedOpt] = useState(employee !== '' ? {value: employee.id, label: employee.name} : null);
@@ -89,24 +98,39 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
     const validationSchema = Yup.object().shape({
         type: Yup.string().required('Required'),
         startDate: Yup.date().required('Required'),
-        endDate: Yup.date().min(Yup.ref('startDate'), 'End Date must not be earlier than Start Date').required('Required'),
+        endDate: Yup.date()
+        .when('type', {
+            is: (val) => val === 'response',
+            then: Yup.date().notRequired(),
+            otherwise: Yup.date().min(Yup.ref('startDate'), 'End Date must not be earlier than Start Date').required('Required')
+        }),
         startTime: Yup.string().required('Required'),
-        endTime: Yup.string().required('Required').test(
-            'minimumEndTime',
-            'End Time must not be earlier than Start Time',
-            function (value) {
-                const {startDate, endDate, startTime} = this.parent;
-                if (startDate.getTime() === endDate.getTime()) {
-                    return moment(value, 'HH:mm').isSameOrAfter(moment(startTime, 'HH:mm'));
-                } else {
-                    return true;
+        endTime: Yup.string()
+        .when('type', {
+            is: (val) => val === 'response',
+            then: Yup.string().notRequired(),
+            otherwise: Yup.string().required('Required').test(
+                'minimumEndTime',
+                'End Time must not be earlier than Start Time',
+                function (value) {
+                    const {startDate, endDate, startTime} = this.parent;
+                    if (startDate.getTime() === endDate.getTime()) {
+                        return moment(value, 'HH:mm').isSameOrAfter(moment(startTime, 'HH:mm'));
+                    } else {
+                        return true;
+                    }
                 }
-            }
-        ),
+            )
+        }),
         client: Yup.string().required('Required'),
         site: Yup.string().required('Required'),
         case: Yup.string().required('Required'),
-        position: Yup.string().required('Required'),
+        position: Yup.string()
+        .when('type', {
+            is: (val) => val === 'response',
+            then: Yup.string().notRequired(),
+            otherwise: Yup.string().required('Required')
+        }),
         quantity: Yup.number().min(1, 'Quantity must be atleast 1'),
         payRate: Yup.number().required('Required').test(
             'maxDigitsAfterDecimal',
@@ -124,7 +148,22 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
             (number) => /^\d+(\.\d{1,2})?$/.test(number)
           ),
         repetition: Yup.string().required('Required'),
-        every: Yup.number().min(1, 'It should not be less than 1')
+        repeatCount: Yup.number().when('repetition', {
+            is: (val) => val === 'shift-recurrence',
+            then: Yup.number().min(1, 'It should not be less than 1')
+        }),
+        repeatEndDate: Yup.date().when('repetition', {
+            is: (val) => val === 'shift-recurrence',
+            then: Yup.date().min(moment().format('YYYY-MM-DD'), 'End date should not be less than current day')
+        }),
+        repeatEndCount: Yup.number().when('repetition', {
+            is: (val) => val === 'shift-recurrence',
+            then: Yup.number().min(1, 'It should not be less than 1')
+        }),
+        extraDates: Yup.array().of(Yup.date().when('repetition', {
+            is: (val) => val === 'extra-dates',
+            then: Yup.date().min(moment().format('YYYY-MM-DD'), 'All dates must be greater than current day')
+        }))
     });
 
     useEffect(() => {
@@ -164,7 +203,12 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                     siteAssets: [],
                     repetition: 'shift-recurrence',
                     repeat: 'Weekly',
-                    every: '1'
+                    repeatCount: '1',
+                    repeatDays: [],
+                    repeatEnd: 'On date',
+                    repeatEndDate: moment().format('YYYY-MM-DD'),
+                    repeatEndCount: '1',
+                    extraDates: [],
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, {setSubmitting}) => {
@@ -188,7 +232,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                             <Form.Label>
                                                 Select Job Type *
                                             </Form.Label>
-                                            <div className='div d-flex mb-3'>
+                                            <div className='d-flex mb-3'>
                                                 <div className='w-50 pe-2'>
                                                     <label 
                                                         htmlFor='type-shift' 
@@ -221,7 +265,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                     {errors.type && touched.type && errors.type}
                                                 </p>
                                             </div>
-                                            <div className='div d-flex flex-wrap mb-3'>
+                                            <div className='d-flex flex-wrap mb-3'>
                                                 <div className='w-50 pe-2'>
                                                     <Form.Label>Start Date *</Form.Label>
                                                     <Form.Control
@@ -275,7 +319,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                     </div>
                                                 }
                                             </div>
-                                            <div className='div d-flex mb-3'>
+                                            <div className='d-flex mb-3'>
                                                 <div className='w-50 pe-2'>
                                                     <Form.Label>Client *</Form.Label>
                                                     <Select
@@ -302,7 +346,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className='div d-flex mb-3'>
+                                            <div className='d-flex mb-3'>
                                                 <div className='w-50 pe-2'>
                                                     <Form.Label>Subsite</Form.Label>
                                                     <Select
@@ -327,7 +371,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className='div d-flex mb-3'>
+                                            <div className='d-flex mb-3'>
                                                 {
                                                     values.type === 'shift' &&
                                                     <div className='w-50 pe-2'>
@@ -356,7 +400,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                         </p>
                                                     </div>
                                                 </div>
-                                            <div className='div mb-3'>
+                                            <div className='mb-3'>
                                                 <p className='fw-bold mb-0'>Assign Employee</p>
                                                 <hr className='mt-1' />
                                                 <Form.Label>Employee</Form.Label>
@@ -374,7 +418,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                     onChange={(opt) => setSelectedOpt(opt)}
                                                 />
                                             </div>
-                                            <div className='div d-flex mb-3'>
+                                            <div className='d-flex mb-3'>
                                                 <div className='w-50 pe-2'>
                                                     <Form.Label>Pay Rate *</Form.Label>
                                                     <Form.Control
@@ -400,7 +444,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className='div d-flex mb-3'>
+                                            <div className='d-flex mb-3'>
                                                 <div className='w-50 pe-2'>
                                                     <Form.Label>Extra Charge</Form.Label>
                                                     <Form.Control
@@ -415,7 +459,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                 </div>
                                                 <div className='w-50 ps-2'></div>
                                             </div>
-                                            <div className='div mb-3'>
+                                            <div className='mb-3'>
                                                 <p className='fw-bold mb-0'>Site Assets</p>
                                                 <hr className='mt-1' />
                                                 {
@@ -496,7 +540,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                     )
                                                 }
                                             </div>
-                                            <div className='div d-flex mb-3'>
+                                            <div className='d-flex mb-3'>
                                                 <div className='w-50 pe-2'>
                                                     <label 
                                                         htmlFor='shift-recurrence' 
@@ -529,32 +573,153 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                     {errors.repetition && touched.repetition && errors.repetition}
                                                 </p>
                                             </div>
-                                            <div className='div d-flex align-items-center mb-3'>
-                                                <p className='fw-bold mb-0 me-3'>Repeat</p>
-                                                <Select
-                                                    name='repeat'
-                                                    defaultValue={
-                                                        {value: values.repeat, label: values.repeat}
+                                            {
+                                                values.repetition === 'shift-recurrence' &&
+                                                <div className='shift-recurrence-wrap'>
+                                                    <div className='d-flex align-items-center mb-3'>
+                                                        <p className='fw-bold mb-0 me-3'>Repeat</p>
+                                                        <Select
+                                                            name='repeat'
+                                                            defaultValue={
+                                                                {value: values.repeat, label: values.repeat}
+                                                            }
+                                                            isSearchable={false}
+                                                            isClearable={false}
+                                                            options={repeatOpts}
+                                                            onChange={(opt) => setFieldValue('repeat', opt.value)}
+                                                            className='fix-width-field'
+                                                        />
+                                                    </div>
+                                                    <div className='d-flex align-items-center mb-3'>
+                                                        <p className='fw-bold mb-0 me-3'>Every</p>
+                                                        <Form.Control
+                                                            type='number'
+                                                            name='repeatCount'
+                                                            value={values.repeatCount}
+                                                            onChange={handleChange}
+                                                            className='fix-width-field'
+                                                        />
+                                                        <span className='mb-0 mx-3'>
+                                                            {
+                                                                values.repeat === 'Weekly' ? 'week(s)' : 'day(s)'
+                                                            }
+                                                        </span>
+                                                        <p className='error-feedback mb-0'>
+                                                            {errors.repeatCount && touched.repeatCount && errors.repeatCount}
+                                                        </p>
+                                                    </div>
+                                                    {
+                                                        values.repeat === 'Weekly' &&
+                                                        <div className='d-flex align-items-center mb-3'>
+                                                            <p className='fw-bold mb-0 me-3'>On</p>
+                                                            <Select
+                                                                name='repeatDays'
+                                                                isMulti={true}
+                                                                isSearchable={false}
+                                                                isClearable={false}
+                                                                options={repeatDaysOpts}
+                                                                onChange={(opt) => {
+                                                                    let temp = [...values.repeatDays];
+                                                                    temp = opt.filter(val => !temp.includes(val.value));
+                                                                    setFieldValue('repeatDays', temp);
+                                                                }}
+                                                                className='max-width-field'
+                                                            />
+                                                        </div>
                                                     }
-                                                    isSearchable={false}
-                                                    isClearable={false}
-                                                    options={repeatOpts}
-                                                    onChange={(opt) => setFieldValue('repeat', opt.value)}
-                                                />
-                                            </div>
-                                            <div className='div d-flex align-items-center mb-3'>
-                                                <p className='fw-bold mb-0 me-3'>Every</p>
-                                                <Form.Control
-                                                    type='number'
-                                                    name='every'
-                                                    value={values.every}
-                                                    onChange={handleChange}
-                                                />
-                                                <p className='fw-bold mb-0 me-3'>week(s)</p>
-                                                <p className='error-feedback'>
-                                                    {errors.every && touched.every && errors.every}
-                                                </p>
-                                            </div>
+                                                    <hr />
+                                                    <div className='d-flex align-items-center mb-3'>
+                                                        <p className='fw-bold mb-0 me-3'>End</p>
+                                                        <Select
+                                                            name='repeatEnd'
+                                                            defaultValue={{value: values.repeatEnd, label: values.repeatEnd}}
+                                                            isSearchable={false}
+                                                            isClearable={false}
+                                                            options={[{value: 'On date', label: 'On date'}, 
+                                                                    {value: 'After', label: 'After'}]}
+                                                            onChange={(opt) => setFieldValue('repeatEnd', opt.value)}
+                                                            className='fix-width-field me-3'
+                                                        />
+                                                        {
+                                                            values.repeatEnd === 'On date' &&
+                                                            <>
+                                                                <Form.Control
+                                                                    type='date'
+                                                                    name='repeatEndDate'
+                                                                    defaultValue={values.repeatEndDate}
+                                                                    onChange={handleChange}
+                                                                    onKeyDown={(e) => e.preventDefault()}
+                                                                    className='fix-width-field me-3'
+                                                                />
+                                                                <p className='error-feedback mb-0'>
+                                                                    {errors.repeatEndDate && touched.repeatEndDate && errors.repeatEndDate}
+                                                                </p>
+                                                            </>
+                                                        }
+                                                        {
+                                                            values.repeatEnd === 'After' &&
+                                                            <>
+                                                                <Form.Control
+                                                                    type='number'
+                                                                    name='repeatEndCount'
+                                                                    value={values.repeatEndCount}
+                                                                    onChange={handleChange}
+                                                                    className='fix-width-field'
+                                                                />
+                                                                <span className='mb-0 mx-3'>execution(s)</span>
+                                                                <p className='error-feedback mb-0'>
+                                                                    {errors.repeatEndCount && touched.repeatEndCount && errors.repeatEndCount}
+                                                                </p>
+                                                            </>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                            {
+                                                values.repetition === 'extra-dates' &&
+                                                <div className='d-flex mb-3'>
+                                                    <div className='extra-dates-column w-50 pe-2 custom-scrollbar'>
+                                                        <p className='fw-bold mb-2 me-3'>Extra Dates</p>
+                                                        {
+                                                            values.extraDates.length ? (
+                                                                values.extraDates.map((item, index) => {
+                                                                    return(
+                                                                        <div key={index} className='extra-date-item d-flex justify-content-between align-items-center'>
+                                                                            <p className='mb-0'>{item}</p>
+                                                                            <Button variant='icon' onClick={() => {
+                                                                                let temp = [...values.extraDates];
+                                                                                temp.splice(index, 1);
+                                                                                setFieldValue('extraDates', temp);
+                                                                            }}>
+                                                                                <BsX size={16} />
+                                                                            </Button>
+                                                                        </div>
+                                                                    )
+                                                                })
+                                                            ) : (
+                                                                <p>No dates added</p>
+                                                            )
+                                                        }
+                                                    </div>
+                                                    <div className='w-50 ps-2'>
+                                                        <p className='fw-bold mb-2 me-3'>Add Dates</p>
+                                                        <Form.Control
+                                                            type='date'
+                                                            name='extraDates'
+                                                            onChange={(e) => {
+                                                                let temp = [...values.extraDates];
+                                                                temp.push(e.target.value);
+                                                                setFieldValue('extraDates', temp);
+                                                            }}
+                                                            onKeyDown={(e) => e.preventDefault()}
+                                                        />
+                                                        <p className='error-feedback'>
+                                                            {errors.extraDates && touched.extraDates && errors.extraDates ? 
+                                                            errors.extraDates.find(val => val !== undefined) : ''}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            }
                                         </Modal.Body>
                                         <Modal.Footer>
                                             <Button variant='secondary' disabled={isSubmitting}>

@@ -472,6 +472,11 @@ input {
                     }
                 }
             }
+            .records-paginate-wrap {
+                .btn, p {
+                    font-size: 13px;
+                }
+            }
         }
     }
 }
@@ -539,6 +544,31 @@ input {
             }
             input {
                 visibility: hidden;
+            }
+        }
+        .shift-recurrence-wrap {
+            .fix-width-field {
+                width: 150px !important;
+            }
+            .max-width-field {
+                min-width: 150px;
+                max-width: 300px;
+            }
+        }
+        .extra-dates-column {
+            max-height: 200px;
+            .extra-date-item {
+                border: 1px solid lightgray;
+                border-radius: 5px;
+                padding: 5px;
+                margin-bottom: 10px;
+                .btn-icon {
+                    background-color: rgb(255, 224, 224);
+                    padding: 0 3px 3px;
+                    svg {
+                        color: red;
+                    }
+                }
             }
         }
     }

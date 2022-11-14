@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { Button, Table } from 'react-bootstrap';
-import { BiChevronLeft, BiChevronRight, BiPlus } from 'react-icons/bi';
+import { Button, Form, Table } from 'react-bootstrap';
+import { BiChevronLeft, BiChevronRight, BiFilterAlt, BiPlus } from 'react-icons/bi';
 import EmployeeShift from './EmployeeShift';
 import { Avatar, Loader } from '../UI';
 import moment from 'moment';
 import CreateShiftModal from './CreateShiftModal';
 import { v4 as uuid } from 'uuid';
+import Select from 'react-select';
 
 export default function ViewCalendarContent() {
     const currentWeek = [
@@ -756,6 +757,29 @@ export default function ViewCalendarContent() {
         }
     ];
 
+    const sitesOpts = [
+        { value: 'CCEP Uxbridge', label: 'CCEP Uxbridge' },
+        { value: 'KGV - Cruise', label: 'KGV - Cruise' },
+        { value: 'Hydrasun Gateway Business Park', label: 'Hydrasun Gateway Business Park' }
+    ];
+
+    const positionsOpts = [
+        { value: 'Core Officer', label: 'Core Officer' }
+    ];
+
+    const statusOpts = [
+        { value: 'all', label: 'All' },
+        { value: 'published', label: 'Published' },
+        { value: 'unpublished', label: 'Unpublished' }
+    ];
+
+    const sortOpts = [
+        { value: 'name-asc', label: 'Name-Ascending' },
+        { value: 'name-desc', label: 'Name-Descending' },
+        { value: 'hours-asc', label: 'Hours-Ascending' },
+        { value: 'hours-desc', label: 'Hours-Descending' },
+    ];
+
     const today = new Date().toISOString().replace(/T.*/,'').split('-').reverse().join('-');
     const [unassigned, setUnassigned] = useState(unassignedShiftDays);
     const [assigned, setAssigned] = useState(employeeShifts);
@@ -764,6 +788,7 @@ export default function ViewCalendarContent() {
     const [createShiftDate, setCreateShiftDate] = useState('');
     const [createShiftEmp, setCreateShiftEmp] = useState('');
     const [recordsToShow, setRecordsToShow] = useState(2);
+    const [showFilters, setShowFilters] = useState(false);
 
     const handleCreateShiftShow = () => setCreateShiftShow(!createShiftShow);
 
@@ -778,6 +803,8 @@ export default function ViewCalendarContent() {
 
     const showMoreRecords = () => setRecordsToShow(recordsToShow + 2);
     const showLessRecords = () => setRecordsToShow(recordsToShow - 2);
+
+    const handleShowFilters = () => setShowFilters(!showFilters);
 
     useEffect(() => {
       setTimeout(() => {
@@ -1045,38 +1072,43 @@ export default function ViewCalendarContent() {
             let newData = [...assigned];
             let empIndex = newData.findIndex(obj => obj.id === values.employee);
             let dayIndex = newData[empIndex].shiftDays.findIndex(obj => obj.date === values.startDate.split("-").reverse().join("-"));
-            let newShift = {
-                id: uuid().slice(0,3),
-                type: values.type,
-                startDate: values.startDate.split("-").reverse().join("-"),
-                endDate: values.endDate.split("-").reverse().join("-"),
-                startTime: values.startTime,
-                endTime: values.endTime,
-                client: values.client,
-                site: values.site,
-                subsite: values.subsite,
-                case: values.case,
-                position: values.position,
-                quantity: values.quantity,
-                payRate: values.payRate,
-                chargeRate: values.chargeRate,
-                extraRate: values.extraRate,
-                siteAssets: values.siteAssets,
-                pastEmployees: [],
-                cancelled: false,
-                published: false,
-                status: "Awaiting"
+            for (let i = 0; i < values.quantity; i++) {
+                let newShift = {
+                    id: uuid().slice(0,3),
+                    type: values.type,
+                    startDate: values.startDate.split("-").reverse().join("-"),
+                    endDate: values.endDate.split("-").reverse().join("-"),
+                    startTime: values.startTime,
+                    endTime: values.endTime,
+                    client: values.client,
+                    site: values.site,
+                    subsite: values.subsite,
+                    case: values.case,
+                    position: values.position,
+                    quantity: values.quantity,
+                    payRate: values.payRate,
+                    chargeRate: values.chargeRate,
+                    extraRate: values.extraRate,
+                    siteAssets: values.siteAssets,
+                    pastEmployees: [],
+                    cancelled: false,
+                    published: false,
+                    status: "Awaiting"
+                }
+                newData[empIndex].shiftDays[dayIndex].shifts.push(newShift);
             }
-            newData[empIndex].shiftDays[dayIndex].shifts.push(newShift);
             setAssigned(newData);
         }
     };
 
     return (
-        <div className='view-calendar'>
+        <div className={'view-calendar'+ (showFilters ? ' filter-active' : '')}>
             <div className='calendar-head d-flex align-items-center justify-content-between'>
                 <div className='current-week d-flex align-items-center'>
-                    <div className='dates me-3'>
+                    <Button variant='icon' className={'filters-toggler px-2 py-2'+ (showFilters ? ' active' : '')} onClick={handleShowFilters}>
+                        <BiFilterAlt size={20} />
+                    </Button>
+                    <div className='dates ms-3 me-3'>
                         <span className='start-date'>
                             {currentWeek[0].day} {currentWeek[0].date}
                         </span>
@@ -1096,7 +1128,94 @@ export default function ViewCalendarContent() {
                 </div>
                 <Button variant='primary'>Publish Shifts</Button>
             </div>
-            <div className='calendar-body mt-4'>
+            {
+                showFilters &&
+                <div className='filters p-3 mt-2'>
+                    <div className='row g-0 mb-3'>
+                        <div className='col-md-1'>
+                            <p className='mb-0'>Shift Filters</p>
+                        </div>
+                        <div className='col-md-4 pe-3'>
+                            <Select
+                                name='shift-filter-site'
+                                options={sitesOpts}
+                                isSearchable={true}
+                                isClearable={true}
+                                isMulti={true}
+                                placeholder='Site'
+                            />
+                        </div>
+                        <div className='col-md-4 pe-3'>
+                            <Select
+                                name='shift-filter-position'
+                                options={positionsOpts}
+                                isSearchable={true}
+                                isClearable={true}
+                                isMulti={true}
+                                placeholder='Position'
+                            />
+                        </div>
+                        <div className='col-md-3'>
+                            <Select
+                                name='shift-filter-status'
+                                options={statusOpts}
+                                isSearchable={false}
+                                isClearable={false}
+                                defaultValue={statusOpts[0]}
+                            />
+                        </div>
+                    </div>
+                    <div className='row g-0'>
+                        <div className='col-md-1'>
+                            <p className='mb-0'>Employee Filters</p>
+                        </div>
+                        <div className='col-md-2 pe-3'>
+                            <Form.Control
+                                type='text'
+                                name='employee-filter-fname'
+                                placeholder='Search Employee First Name'
+                            />
+                        </div>
+                        <div className='col-md-2 pe-3'>
+                            <Form.Control
+                                type='text'
+                                name='employee-filter-lname'
+                                placeholder='Search Employee Last Name'
+                            />
+                        </div>
+                        <div className='col-md-2 pe-3'>
+                            <Select
+                                name='employee-filter-site'
+                                options={sitesOpts}
+                                isSearchable={true}
+                                isClearable={true}
+                                isMulti={true}
+                                placeholder='Site'
+                            />
+                        </div>
+                        <div className='col-md-2 pe-3'>
+                            <Select
+                                name='employee-filter-position'
+                                options={positionsOpts}
+                                isSearchable={true}
+                                isClearable={true}
+                                isMulti={true}
+                                placeholder='Position'
+                            />
+                        </div>
+                        <div className='col-md-3'>
+                            <Select
+                                name='employee-filter-sort'
+                                options={sortOpts}
+                                isSearchable={false}
+                                isClearable={false}
+                                defaultValue={sortOpts[0]}
+                            />
+                        </div>
+                    </div>
+                </div>
+            }
+            <div className='calendar-body mt-3'>
                 <Table className='head-table mb-0' bordered responsive>
                     <thead>
                         <tr>

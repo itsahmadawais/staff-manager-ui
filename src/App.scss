@@ -4,6 +4,7 @@ $primary-color: #005E8E;
 $secondary-color: #E8AE00;
 $grey-color: #f7f7f7;
 $grey-border-color: #efefef;
+$dark-grey-color: rgb(130, 126, 126);
 
 * {
     font-family: 'Open Sans', sans-serif;
@@ -380,17 +381,97 @@ input {
 }
 
 /*
+##### Dashboard #####
+*/
+.home-content {
+    .list-items-wrap {
+        max-height: 200px;
+        box-shadow: 2px 2px 5px 2px $grey-color;
+        border-radius: 10px;
+    }
+}
+
+/***** Chart Card *****/
+.shifts-status-chart-wrap {
+    box-shadow: 2px 2px 5px 2px $grey-color;
+    border-radius: 10px;
+    .shifts-status-chart {
+        width: 200px;
+    }
+    .labels {
+        h5 {
+            font-weight: 600;
+        }
+        div {
+            font-size: 15px;
+            font-weight: 600;
+            span {
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 10px;
+            }
+        }
+    }
+}
+
+/***** Stats Card *****/
+.stats-card {
+    width: 48%;
+    border: none;
+    border-left: 3px solid $secondary-color;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px 2px $grey-color;
+    .card-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: $dark-grey-color;
+    }
+    .card-text {
+        font-size: 25px;
+        font-weight: bold;
+    }
+    .card-subtitle {
+        font-size: 13px;
+        font-weight: 600;
+        color: $dark-grey-color;
+    }
+}
+
+/*
 ##### View Calendar #####
 */
 .view-calendar {
+    &.filter-active {
+        .calendar-body {
+            .assigned-wrap {
+                height: calc(100vh - 540px);
+            }
+        }
+    }
     .calendar-head {
         .current-week {
+            .filters-toggler {
+                &.active {
+                    background-color: $primary-color;
+                    svg {
+                        color: #fff;
+                    }
+                }
+            }
             .dates {
                 span {
                     font-weight: 600;
                     font-size: 18px;
                 }
             }
+        }
+    }
+    .filters {
+        background-color: $grey-color;
+        border-radius: 10px;
+        * {
+            font-size: 13px;
         }
     }
     .calendar-body {

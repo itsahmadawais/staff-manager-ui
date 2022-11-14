@@ -172,6 +172,11 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
         }, 2500);
       }, [isLoading]);
 
+    useEffect(() => {
+        setSelectedOpt({value: employee.id, label: employee.name});
+    }, [employee]);
+    
+
     return (
         <Modal
             show={show}
@@ -414,7 +419,6 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                     isSearchable={true}
                                                     isClearable={true}
                                                     options={employees}
-                                                    value={selectedOpt} 
                                                     onChange={(opt) => setSelectedOpt(opt)}
                                                 />
                                             </div>
@@ -722,7 +726,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                             }
                                         </Modal.Body>
                                         <Modal.Footer>
-                                            <Button variant='secondary' disabled={isSubmitting}>
+                                            <Button variant='secondary' disabled={isSubmitting} onClick={handleClose}>
                                                 Cancel
                                             </Button>
                                             <Button type='submit' variant='primary' disabled={isSubmitting}>

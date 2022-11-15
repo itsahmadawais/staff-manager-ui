@@ -83,6 +83,24 @@ $dark-grey-color: rgb(130, 126, 126);
     }
 }
 
+/***** Loader *****/
+.primary-spinner {
+    color: $primary-color;
+}
+
+/***** General Tabs Nav Style *****/
+.nav-tabs {
+    .nav-item {
+        button {
+            font-weight: 500;
+            color: $primary-color;
+            &.active {
+                color: $secondary-color;
+            }
+        }
+    }
+}
+
 /***** Forms *****/
 input {
     &:focus {
@@ -385,7 +403,7 @@ input {
 */
 .home-content {
     .list-items-wrap {
-        max-height: 200px;
+        max-height: 230px;
         box-shadow: 2px 2px 5px 2px $grey-color;
         border-radius: 10px;
     }
@@ -652,5 +670,26 @@ input {
                 }
             }
         }
+    }
+}
+
+/*
+##### Profile #####
+*/
+.profile-content {
+    .user-box {
+        width: fit-content;
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 100px;
+            border: 3px solid $primary-color;
+        }
+        .name {
+            font-weight: 600;
+        }
+    }
+    .tabs-wrap {
+        border-left: 1px solid $grey-border-color;
     }
 }

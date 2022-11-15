@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
 import { BiEnvelope, BiBell } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { Avatar } from '../UI';
+import { AppContext } from '../../Contexts';
 
 export default function Topbar() {
   const notifications = [
@@ -20,12 +21,14 @@ export default function Topbar() {
     }
   ];
 
+  const {userData} = useContext(AppContext);
+
   return (
     <div className='topbar d-flex align-items-center justify-content-between p-3'>
       <div className='topbar-left'>
         <Link to={'/profile'} className='link d-flex align-items-center'>
-          <Avatar image='/images/user.jpg' />
-          <p className='ms-2 mb-0'>Micheal Clark</p>
+          <Avatar image={userData.image} />
+          <p className='ms-2 mb-0'>{userData.firstName+' '+userData.lastName}</p>
         </Link>
       </div>
       <div className='topbar-right d-flex align-items-center'>

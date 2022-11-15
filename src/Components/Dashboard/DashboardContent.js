@@ -3,28 +3,29 @@ import { Table } from 'react-bootstrap';
 import ChartCard from './ChartCard';
 import StatsCard from './StatsCard';
 import { Avatar } from '../UI';
+import { Link } from 'react-router-dom';
 
 export default function DashbaordContent() {
   const statsData = [
     {
       title: 'Total Employees',
       amount: '620',
-      type: 'Employee'
+      type: 'Employees'
     },
     {
       title: 'Shifts this Week',
       amount: '50',
-      type: 'Shift'
+      type: 'Shifts'
     },
     {
       title: 'Assigned',
       amount: '31',
-      type: 'Shift'
+      type: 'Shifts'
     },
     {
       title: 'Unassigned',
       amount: '19',
-      type: 'Shift'
+      type: 'Shifts'
     }
   ];
 
@@ -100,7 +101,7 @@ export default function DashbaordContent() {
   ];
 
   return (
-    <div className='home-content py-1'>
+    <div className='home-content'>
       <div className='row g-0'>
         <div className='col-md-5'>
           <div className='d-flex flex-wrap'>
@@ -119,7 +120,7 @@ export default function DashbaordContent() {
         <div className='col-md-6 pe-4'>
           <h5>Today's Shifts</h5>
           <div className='list-items-wrap p-3 custom-scrollbar'>
-            <Table responsive>
+            <Table className='mb-0' responsive>
               <thead>
                 <tr>
                   <th>Photo</th>
@@ -156,7 +157,14 @@ export default function DashbaordContent() {
         <div className='col-md-6'>
           <h5>Employees</h5>
           <div className='list-items-wrap p-3 custom-scrollbar'>
-            <Table responsive>
+            <Table className='mb-0' responsive>
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>Name</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
               <tbody>
                 {
                   employees.map((item) => {
@@ -167,6 +175,9 @@ export default function DashbaordContent() {
                         </td>
                         <td>
                           {item.name}
+                        </td>
+                        <td>
+                          <Link to='#'className='link'>View</Link>
                         </td>
                       </tr>
                     )

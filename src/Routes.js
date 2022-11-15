@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route } from 'react-router-dom';
-import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar } from './Pages';
+import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar, Profile, Settings } from './Pages';
 
 export function getRoutes() {
     const routes = [
@@ -27,6 +27,14 @@ export function getRoutes() {
         {
             path: '/schedule/view-calendar',
             component: <ViewCalendar />
+        },
+        {
+            path: '/profile',
+            component: <Profile />
+        },
+        {
+            path: '/settings',
+            component: <Settings />
         }
     ];
 

@@ -1,10 +1,12 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { BsArrowLeft } from 'react-icons/bs';
-import { Avatar } from '../UI'
-import NavMenu from './NavMenu'
+import { Avatar } from '../UI';
+import NavMenu from './NavMenu';
+import { AppContext } from '../../Contexts';
 
 export default function Sidebar() {
+  const {companyData} = useContext(AppContext);
   const [isMini, setIsMini] = useState(true);
   const sidebarRef = useRef(null);
   const [toggleMini, setToggleMini] = useState(false);
@@ -48,8 +50,8 @@ export default function Sidebar() {
         onMouseLeave={toggleSidebar}
       >
         <div className='sidebar-top d-flex align-items-center'>
-          <Avatar image='/images/logo.png' />
-          <p className='ms-3 mb-0'>Company Name</p>
+          <Avatar image={companyData.logo} />
+          <p className='ms-3 mb-0'>{companyData.name}</p>
         </div>
         <div className='nav-menu mt-4'>
           <NavMenu />

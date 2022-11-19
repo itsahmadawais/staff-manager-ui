@@ -1,6 +1,7 @@
 import React from 'react'
 import { Route } from 'react-router-dom';
-import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar, Profile, Settings } from './Pages';
+import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar, Profile, Settings, 
+    Users, CreateUser, UserRoles, GroupPermissions } from './Pages';
 
 export function getRoutes() {
     const routes = [
@@ -35,6 +36,22 @@ export function getRoutes() {
         {
             path: '/settings',
             component: <Settings />
+        },
+        {
+            path: '/users',
+            component: <Users />
+        },
+        {
+            path: '/users/create',
+            component: <CreateUser />
+        },
+        {
+            path: '/users/roles',
+            component: <UserRoles />
+        },
+        {
+            path: '/users/roles/permissions',
+            component: <GroupPermissions />
         }
     ];
 

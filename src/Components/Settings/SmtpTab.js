@@ -1,35 +1,33 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { AppContext } from '../../Contexts';
 import { Button, Form } from 'react-bootstrap';
 import { Loader } from '../UI';
 import Select from 'react-select';
 
-export default function CompanyTab() {
-    const countryOpts = [
-        {value: 'AFG', label: 'Afghanistan'},
-        {value: 'ALB', label: 'Albania'},
-        {value: 'US', label: 'United States'},
-        {value: 'UK', label: 'United Kindom'}
+export default function SmtpTab() {
+    const encryptionOpts = [
+        {value: 'tls', label: 'TLS'},
+        {value: 'ssl', label: 'SSL'}
     ];
-    const {companyData, dispatchEvents} = useContext(AppContext);
-    const [companyValues, setCompanyValues] = useState({
-        logo: companyData.logo,
-        name: companyData.name,
-        address: '',
+    const [smtpValues, setSmtpValues] = useState({
+        host: '',
         email: '',
-        phone: '',
-        officeHours: '',
-        country: ''
+        name: '',
+        password: '',
+        encryption: ''
     });
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required('Required')
+        host: Yup.string().required('Required'),
+        email: Yup.string().email('Invalid').required('Required'),
+        name: Yup.string().required('Required'),
+        password: Yup.string().required('Required'),
+        encryption: Yup.string().required('Required')
     });
     const [isLoading, setIsLoading] = useState(false);
 
-    const findCountryLabel = (value) => {
-        let found = countryOpts.find((item) => item.value === value);
+    const findLabel = (value) => {
+        let found = encryptionOpts.find((item) => item.value === value);
         return found.label;
     };
 
@@ -42,13 +40,12 @@ export default function CompanyTab() {
                     </div>
                 ) : (
                     <Formik
-                        initialValues={companyValues}
+                        initialValues={smtpValues}
                         validationSchema={validationSchema}
                         onSubmit={(values) => {
                             setIsLoading(true);
                             setTimeout(() => {
-                                dispatchEvents('UPDATE_COMPANY', {logo: values.logo, name: values.name});
-                                setCompanyValues(values);
+                                setSmtpValues(values);
                                 setIsLoading(false);
                             }, 1500);
                         }}
@@ -63,98 +60,76 @@ export default function CompanyTab() {
                                 <div className='row g-0 mb-3'>
                                     <div className='col-md-6 pe-2'>
                                         <Form.Label>
-                                            Company Logo
-                                        </Form.Label>
-                                        <Form.Control
-                                            type='file'
-                                            name='logo'
-                                            accept='image/*'
-                                            onChange={(e) => setFieldValue('logo', URL.createObjectURL(e.target.files[0]))}
-                                        />
-                                        <ErrorMessage name='logo' className='error-feedback' component='p' />
-                                    </div>
-                                    <div className='col-md-6 ps-2'>
-                                        <Form.Label>
-                                            Company Name
+                                            Mail Host
                                         </Form.Label>
                                         <Form.Control
                                             type='text'
-                                            name='name'
-                                            value={values.name}
-                                            placeholder='Enter company name'
+                                            name='host'
+                                            value={values.host}
+                                            placeholder='Enter mail host'
                                             onChange={handleChange}
                                         />
-                                        <ErrorMessage name='name' className='error-feedback' component='p' />
-                                    </div>
-                                </div>
-                                <div className='row g-0 mb-3'>
-                                    <div className='col-md-6 pe-2'>
-                                        <Form.Label>
-                                            Comapny Address
-                                        </Form.Label>
-                                        <Form.Control
-                                            type='text'
-                                            name='address'
-                                            value={values.address}
-                                            placeholder='Enter comapny address'
-                                            onChange={handleChange}
-                                        />
+                                        <ErrorMessage name='host' className='error-feedback' component='p' />
                                     </div>
                                     <div className='col-md-6 ps-2'>
                                         <Form.Label>
-                                            Company Email
+                                            Mail Address
                                         </Form.Label>
                                         <Form.Control
                                             type='email'
                                             name='email'
                                             value={values.email}
-                                            placeholder='Enter company email'
+                                            placeholder='Enter mail address'
                                             onChange={handleChange}
                                         />
+                                        <ErrorMessage name='email' className='error-feedback' component='p' />
                                     </div>
                                 </div>
                                 <div className='row g-0 mb-3'>
                                     <div className='col-md-6 pe-2'>
                                         <Form.Label>
-                                            Comapny Phone
-                                        </Form.Label>
-                                        <Form.Control
-                                            type='tel'
-                                            name='phone'
-                                            value={values.phone}
-                                            placeholder='Enter company phone'
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                    <div className='col-md-6 ps-2'>
-                                        <Form.Label>
-                                            Company Office Hours
+                                            Mail from Name
                                         </Form.Label>
                                         <Form.Control
                                             type='text'
-                                            name='officeHours'
-                                            value={values.officeHours}
-                                            placeholder='Enter company office hours'
+                                            name='name'
+                                            value={values.name}
+                                            placeholder='Enter mail from name'
                                             onChange={handleChange}
                                         />
+                                        <ErrorMessage name='name' className='error-feedback' component='p' />
+                                    </div>
+                                    <div className='col-md-6 ps-2'>
+                                        <Form.Label>
+                                            Password
+                                        </Form.Label>
+                                        <Form.Control
+                                            type='password'
+                                            name='password'
+                                            value={values.password}
+                                            placeholder='Enter mail password'
+                                            onChange={handleChange}
+                                        />
+                                        <ErrorMessage name='password' className='error-feedback' component='p' />
                                     </div>
                                 </div>
                                 <div className='row g-0 mb-3'>
                                     <div className='col-md-6 pe-2'>
                                         <Form.Label>
-                                            Country of Operations
+                                            Encryption
                                         </Form.Label>
                                         <Select
-                                            options={countryOpts}
+                                            options={encryptionOpts}
                                             defaultValue={
-                                                values.country !== '' ? 
-                                                {value: values.country, label: findCountryLabel(values.country)} :
+                                                values.encryption !== '' ? 
+                                                {value: values.encryption, label: findLabel(values.encryption)} :
                                                 undefined
                                             }
                                             isSearchable={true}
                                             isClearable={false}
-                                            onChange={(opt) => setFieldValue('country', opt.value)}
+                                            onChange={(opt) => setFieldValue('encryption', opt.value)}
                                         />
+                                        <ErrorMessage name='encryption' className='error-feedback' component='p' />
                                     </div>
                                 </div>
                                 <div className='text-end'>

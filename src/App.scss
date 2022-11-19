@@ -149,12 +149,12 @@ input {
     justify-content: center;
     align-items: center;
     font-size: 13px;
-    color: $primary-color;
     gap: 3px;
     .page-number {
         padding: 4px 10px;
         cursor: pointer;
         text-decoration: none;
+        color: $primary-color;
         background-color: #fff;
         border-radius: 3px;
         box-shadow: 2px 2px 2px $grey-color;
@@ -170,6 +170,8 @@ input {
     .next-prev {
         text-decoration: none;
         font-size: 18px;
+        font-weight: 600;
+        color: $primary-color;
         padding: 4px 8px;
     }
     .break {
@@ -335,8 +337,11 @@ input {
         overflow-x: hidden;
         .sidebar-top {
             img {
-                width: 50px;
+                width: 40px;
+                height: 40px;
                 border-radius: 0;
+                object-fit: cover;
+                border-radius: 40px;
             }
             p {
                 color: #fff;

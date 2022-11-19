@@ -24,7 +24,7 @@ export default function LoginLayout({children}) {
                 setUserData(payLoad);
                 break;
             case 'UPDATE_COMPANY':
-                setCompanyData({payLoad});
+                setCompanyData(payLoad);
                 break;
             default:
                 break;

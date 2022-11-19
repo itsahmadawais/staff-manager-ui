@@ -215,7 +215,7 @@ export default function NavMenu() {
                 },
                 {
                     id: '3',
-                    link: '/users/role',
+                    link: '/users/roles',
                     icon: <FaCircle size={14} />,
                     title: 'Role Permissions'
                 }

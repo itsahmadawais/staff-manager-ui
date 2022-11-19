@@ -6,6 +6,10 @@ import Schedule from "./Schedule/Schedule";
 import ViewCalendar from "./Schedule/ViewCalendar";
 import Profile from "./Profile";
 import Settings from "./Settings";
+import Users from "./Users/Users";
+import CreateUser from "./Users/CreateUser";
+import UserRoles from "./Users/UserRoles";
+import GroupPermissions from "./Users/GroupPermissions";
 
 export {
     Login,
@@ -15,5 +19,9 @@ export {
     Schedule,
     ViewCalendar,
     Profile,
-    Settings
+    Settings,
+    Users,
+    CreateUser,
+    UserRoles,
+    GroupPermissions
 }

@@ -89,6 +89,8 @@ export default function GroupPermissionsContent() {
         }
     ];
     const [permissions, setPermissions] = useState(rolePermissions[0].permissions);
+    const [allPermissions, setAllPermissions] = useState(permissions.slice(0, -1));
+    const [lastPermission, setLastPermission] = useState(permissions.splice(-1));
     const [isLoading, setIsLoading] = useState(true);
     const validationSchema = Yup.object().shape({});
 
@@ -176,7 +178,7 @@ export default function GroupPermissionsContent() {
                             handleSubmit
                         }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Table responsive>
+                                <Table bordered responsive>
                                     <thead>
                                         <tr>
                                             <th>
@@ -218,7 +220,7 @@ export default function GroupPermissionsContent() {
                                     </thead>
                                     <tbody>
                                         {
-                                            permissions.map((item, index) => {
+                                            allPermissions.map((item, index) => {
                                                 let keysValues = Object.entries(item);
                                                 return (
                                                     <tr key={index}>
@@ -243,6 +245,40 @@ export default function GroupPermissionsContent() {
                                                                 )
                                                             })
                                                         }
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                        {
+                                            lastPermission.map((item, index) => {
+                                                let keysValues = Object.entries(item);
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>
+                                                            {item.moduleName}
+                                                        </td>
+                                                        <td colSpan={4}>
+                                                            {
+                                                                keysValues.map((obj, index) => {
+                                                                    return (
+                                                                        obj[0] !== 'moduleName' ? (
+                                                                            <Form.Check 
+                                                                                key={index}
+                                                                                type='checkbox'
+                                                                                name={obj[0]}
+                                                                                value={values[obj[0]]}
+                                                                                label={obj[0] === 'miscellaneous_rolePermissions' ?
+                                                                                        'Role Permissions' : 
+                                                                                        'Settings'}
+                                                                                onChange={handleChange}
+                                                                            />
+                                                                        ) : (
+                                                                            null
+                                                                        )
+                                                                    )
+                                                                })
+                                                            }
+                                                        </td>
                                                     </tr>
                                                 )
                                             })

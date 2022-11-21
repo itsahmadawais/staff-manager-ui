@@ -10,6 +10,7 @@ import Users from "./Users/Users";
 import CreateUser from "./Users/CreateUser";
 import UserRoles from "./Users/UserRoles";
 import GroupPermissions from "./Users/GroupPermissions";
+import AbsenceReports from "./Reports/AbsenceReports";
 
 export {
     Login,
@@ -23,5 +24,6 @@ export {
     Users,
     CreateUser,
     UserRoles,
-    GroupPermissions
+    GroupPermissions,
+    AbsenceReports
 }

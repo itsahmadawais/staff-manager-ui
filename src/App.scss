@@ -698,3 +698,33 @@ input {
         border-left: 1px solid $grey-border-color;
     }
 }
+
+/*
+##### Group Permissions #####
+*/
+.group-permissions-content {
+    table {
+        tr {
+            &:not(:last-child) {
+                th, td {
+                    &:not(:first-child) {
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*
+##### Absence Reports #####
+*/
+.absence-reports-content {
+    .filters {
+        background-color: $grey-color;
+        border-radius: 10px;
+        h6 {
+            font-weight: 700;
+        }
+    }
+}

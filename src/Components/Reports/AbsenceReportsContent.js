@@ -74,6 +74,7 @@ export default function AbsenceReportsContent() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const perPageItems = 10;
 
     useEffect(() => {
         setTimeout(() => {
@@ -82,7 +83,7 @@ export default function AbsenceReportsContent() {
     }, [isLoading]);
     
     return (
-        <div className='absence-reports-content'>
+        <div className='absence-reports-content content-max-height custom-scrollbar'>
             <div className='row g-0 filters p-3 mb-4'>
                 <h6>Filters</h6>
                 <div className='col-md-6 pe-2'>
@@ -183,12 +184,12 @@ export default function AbsenceReportsContent() {
                             </tbody>
                         </Table>
                         {
-                            !isLoading && reports.length > 5 &&
+                            !isLoading && reports.length > perPageItems &&
                                 <div className='d-flex justify-content-end'>
                                     <Pagination 
                                         data={reports}
                                         setCurrentItems={setCurrentReports}
-                                        perPageItems={5}
+                                        perPageItems={perPageItems}
                                     />
                                 </div>
                         }

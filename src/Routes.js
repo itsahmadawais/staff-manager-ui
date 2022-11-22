@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route } from 'react-router-dom';
 import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar, Profile, Settings, 
-    Users, CreateUser, UserRoles, GroupPermissions, AbsenceReports } from './Pages';
+    Users, CreateUser, UserRoles, GroupPermissions, AbsenceReports, Departments, CreateDepartment, EditDepartment } from './Pages';
 
 export function getRoutes() {
     const routes = [
@@ -56,6 +56,18 @@ export function getRoutes() {
         {
             path: '/reports',
             component: <AbsenceReports />
+        },
+        {
+            path: '/departments',
+            component: <Departments />
+        },
+        {
+            path: '/departments/create',
+            component: <CreateDepartment />
+        },
+        {
+            path: '/departments/edit',
+            component: <EditDepartment />
         }
     ];
 

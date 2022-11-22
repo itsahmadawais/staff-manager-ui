@@ -60,6 +60,7 @@ export default function UsersContent() {
     const [currentUsers, setCurrentUsers] = useState(users);
     const [searchUser, setSearchUser] =  useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const perPageItems = 10;
     const [showEdit, setShowEdit] = useState(false);
     const [userToEdit, setUserToEdit] = useState({});
     const [showDelete, setShowDelete] = useState(false);
@@ -105,7 +106,7 @@ export default function UsersContent() {
     }, [isLoading]);
 
     return (
-        <div className='users-content'>
+        <div className='users-content content-max-height custom-scrollbar'>
             <div className='row g-0 mb-3'>
                 <div className='col-md-9'></div>
                 <div className='col-md-3'>
@@ -172,12 +173,12 @@ export default function UsersContent() {
                             </tbody>
                         </Table>
                         {
-                            !isLoading && users.length > 5 &&
+                            !isLoading && users.length > perPageItems &&
                                 <div className='d-flex justify-content-end'>
                                     <Pagination 
                                         data={users}
                                         setCurrentItems={setCurrentUsers}
-                                        perPageItems={5}
+                                        perPageItems={perPageItems}
                                     />
                                 </div>
                         }

@@ -11,6 +11,9 @@ import CreateUser from "./Users/CreateUser";
 import UserRoles from "./Users/UserRoles";
 import GroupPermissions from "./Users/GroupPermissions";
 import AbsenceReports from "./Reports/AbsenceReports";
+import Departments from "./Departments/Departments";
+import CreateDepartment from "./Departments/CreateDepartment";
+import EditDepartment from "./Departments/EditDepartment";
 
 export {
     Login,
@@ -25,5 +28,8 @@ export {
     CreateUser,
     UserRoles,
     GroupPermissions,
-    AbsenceReports
+    AbsenceReports,
+    Departments,
+    CreateDepartment,
+    EditDepartment
 }

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import { Loader } from '../../UI';
-import { Form, Table } from 'react-bootstrap';
+import { Button, Form, Table } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 export default function GroupPermissionsContent() {
     const rolePermissions = [
@@ -63,7 +63,7 @@ export default function GroupPermissionsContent() {
                     moduleName: 'Absences',
                     absences_view: true,
                     absences_add: true,
-                    absences_edit: true,
+                    absences_edit: false,
                     absences_delete: true
                 },
                 {
@@ -83,16 +83,16 @@ export default function GroupPermissionsContent() {
                 {
                     moduleName: 'Miscellaneous',
                     miscellaneous_rolePermissions: true,
-                    miscellaneous_settings: true
+                    miscellaneous_settings: false
                 }
             ]
         }
     ];
-    const [permissions, setPermissions] = useState(rolePermissions[0].permissions);
-    const [allPermissions, setAllPermissions] = useState(permissions.slice(0, -1));
-    const [lastPermission, setLastPermission] = useState(permissions.splice(-1));
+    const [permissions] = useState(rolePermissions[0].permissions);
+    const [allPermissions] = useState([...permissions.slice(0, permissions.length-1), ...permissions.slice(permissions.length)]);
+    const [lastPermission] = useState([permissions[permissions.length-1]]);
     const [isLoading, setIsLoading] = useState(true);
-    const validationSchema = Yup.object().shape({});
+    const navigate = useNavigate();
 
     useEffect(() => {
       setTimeout(() => {
@@ -101,7 +101,7 @@ export default function GroupPermissionsContent() {
     }, [isLoading]);
 
     const setInitialValues = () => {
-        let returnObj;
+        let returnObj = {};
         permissions.forEach(object => {
             for (const key in object) {
                 if (key !== 'moduleName') {
@@ -112,10 +112,13 @@ export default function GroupPermissionsContent() {
         return returnObj;
     };
 
-    const savePermissions = (values) => {};
+    const savePermissions = (values) => {
+        console.log(values);
+        navigate(-1);
+    };
 
     return (
-        <div className='group-permissions-content'>
+        <div className='group-permissions-content content-max-height custom-scrollbar'>
             <h5 className='mb-3'>{rolePermissions[0].name} Group Permissions</h5>
             {
                 isLoading ? (
@@ -124,52 +127,7 @@ export default function GroupPermissionsContent() {
                     </div>
                 ) : (
                      <Formik
-                        initialValues={setInitialValues}
-                        // initialValues={{
-                        //     departments_view: false,
-                        //     departments_add: false,
-                        //     departments_edit: false,
-                        //     departments_delete: false,
-                        //     locations_view: false,
-                        //     locations_add: false,
-                        //     locations_edit: false,
-                        //     locations_delete: false,
-                        //     documents_view: false,
-                        //     documents_add: false,
-                        //     documents_edit: false,
-                        //     documents_delete: false,
-                        //     employees_view: false,
-                        //     employees_add: false,
-                        //     employees_edit: false,
-                        //     employees_delete: false,
-                        //     subcontractors_view: false,
-                        //     subcontractors_add: false,
-                        //     subcontractors_edit: false,
-                        //     subcontractors_delete: false,
-                        //     clients_view: false,
-                        //     clients_add: false,
-                        //     clients_edit: false,
-                        //     clients_delete: false,
-                        //     schedules_view: false,
-                        //     schedules_add: false,
-                        //     schedules_edit: false,
-                        //     schedules_delete: false,
-                        //     absences_view: false,
-                        //     absences_add: false,
-                        //     absences_edit: false,
-                        //     absences_delete: false,
-                        //     absenceAllowances_view: false,
-                        //     absenceAllowances_add: false,
-                        //     absenceAllowances_edit: false,
-                        //     absenceAllowances_delete: false,
-                        //     users_view: false,
-                        //     users_add: false,
-                        //     users_edit: false,
-                        //     users_delete: false,
-                        //     miscellaneous_rolePermissions: false,
-                        //     miscellaneous_settings: false
-                        // }}
-                        validationSchema={validationSchema}
+                        initialValues={setInitialValues()}
                         onSubmit={savePermissions}
                     >
                         {({
@@ -229,13 +187,15 @@ export default function GroupPermissionsContent() {
                                                         </td>
                                                         {
                                                             keysValues.map((obj, index) => {
+                                                                let keyName = obj[0];
                                                                 return (
                                                                     obj[0] !== 'moduleName' ? (
                                                                         <td key={index}>
                                                                             <Form.Check 
                                                                                 type='checkbox'
                                                                                 name={obj[0]}
-                                                                                value={values[obj[0]]}
+                                                                                defaultChecked={values[keyName]}
+                                                                                value={values[keyName]}
                                                                                 onChange={handleChange}
                                                                             />
                                                                         </td>
@@ -260,13 +220,15 @@ export default function GroupPermissionsContent() {
                                                         <td colSpan={4}>
                                                             {
                                                                 keysValues.map((obj, index) => {
+                                                                    let keyName = obj[0];
                                                                     return (
                                                                         obj[0] !== 'moduleName' ? (
                                                                             <Form.Check 
                                                                                 key={index}
                                                                                 type='checkbox'
                                                                                 name={obj[0]}
-                                                                                value={values[obj[0]]}
+                                                                                defaultChecked={values[keyName]}
+                                                                                value={values[keyName]}
                                                                                 label={obj[0] === 'miscellaneous_rolePermissions' ?
                                                                                         'Role Permissions' : 
                                                                                         'Settings'}
@@ -285,6 +247,14 @@ export default function GroupPermissionsContent() {
                                         }
                                     </tbody>
                                 </Table>
+                                <div className='text-end mb-3'>
+                                    <Button variant='secondary' type='button' className='me-2' onClick={() => navigate(-1)}>
+                                        Cancel
+                                    </Button>
+                                    <Button variant='primary' type='submit'>
+                                        Save Permissions
+                                    </Button>
+                                </div>
                             </Form>
                         )}
                     </Formik>

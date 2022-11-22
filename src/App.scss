@@ -192,6 +192,12 @@ input {
     }
 }
 
+/***** Content Max Height *****/
+.content-max-height {
+    max-height: calc(100vh - 180px);
+    padding-right: 10px;
+}
+
 /*
 ##### Public Layout #####
 */
@@ -704,11 +710,20 @@ input {
 */
 .group-permissions-content {
     table {
-        tr {
-            &:not(:last-child) {
-                th, td {
-                    &:not(:first-child) {
-                        text-align: center;
+        thead {
+            th {
+                &:not(:first-child) {
+                    text-align: center;
+                }
+            }
+        }
+        tbody {
+            tr {
+                &:not(:last-child) {
+                    td {
+                        &:not(:first-child) {
+                            text-align: center;
+                        }
                     }
                 }
             }

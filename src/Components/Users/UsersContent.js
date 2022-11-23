@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
-import { Loader, Pagination } from '../UI';
+import { Loader, Pagination, SearchFilter } from '../UI';
 import DeleteUserModal from './DeleteUserModal';
 import EditUserModal from './EditUserModal';
 
@@ -110,11 +110,9 @@ export default function UsersContent() {
             <div className='row g-0 mb-3'>
                 <div className='col-md-9'></div>
                 <div className='col-md-3'>
-                    <Form.Control
-                        type='text'
-                        name='search-input'
-                        placeholder='Search User Name'
-                        onChange={(e) => setSearchUser(e.target.value)}
+                    <SearchFilter
+                        placeholder={'Search User Name'}
+                        handleSearch={setSearchUser}
                     />
                 </div>
             </div>

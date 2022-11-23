@@ -1,10 +1,10 @@
-import moment from 'moment';
 import React, { useState, useEffect } from 'react';
+import moment from 'moment';
 import { Form, Table } from 'react-bootstrap';
-import { Loader, Pagination } from '../UI';
+import { Loader, Pagination, SearchFilter } from '../UI';
 
 export default function AbsenceReportsContent() {
-    const [reports, setReports] = useState([
+    const reports = [
         {
             id: '1',
             firstName: 'Aalam',
@@ -68,7 +68,7 @@ export default function AbsenceReportsContent() {
             endDate: '08-11-2022',
             status: 'Approved'
         }
-    ]);
+    ];
     const [currentReports, setCurrentReports] =  useState(reports);
     const [searchReport, setSearchReport] =  useState('');
     const [startDate, setStartDate] = useState('');
@@ -112,11 +112,9 @@ export default function AbsenceReportsContent() {
             <div className='row g-0 mb-3'>
                 <div className='col-md-9'></div>
                 <div className='col-md-3'>
-                    <Form.Control
-                        type='text'
-                        name='search-input'
-                        placeholder='Search User Name'
-                        onChange={(e) => setSearchReport(e.target.value)}
+                    <SearchFilter 
+                        placeholder={'Search User Name'} 
+                        handleSearch={setSearchReport} 
                     />
                 </div>
             </div>

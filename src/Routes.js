@@ -1,7 +1,8 @@
 import React from 'react'
 import { Route } from 'react-router-dom';
 import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar, Profile, Settings, 
-    Users, CreateUser, UserRoles, GroupPermissions, AbsenceReports, Departments, CreateDepartment, EditDepartment } from './Pages';
+    Users, CreateUser, UserRoles, GroupPermissions, AbsenceReports, Departments, CreateDepartment, EditDepartment,
+    Locations, ViewLocation, EditLocation, CreateLocation } from './Pages';
 
 export function getRoutes() {
     const routes = [
@@ -68,6 +69,22 @@ export function getRoutes() {
         {
             path: '/departments/edit',
             component: <EditDepartment />
+        },
+        {
+            path: '/locations',
+            component: <Locations />
+        },
+        {
+            path: '/locations/detail',
+            component: <ViewLocation />
+        },
+        {
+            path: '/locations/edit',
+            component: <EditLocation />
+        },
+        {
+            path: '/locations/create',
+            component: <CreateLocation />
         }
     ];
 

@@ -63,6 +63,7 @@ export default function EditLocationContent() {
             }) => (
                 <>
                   <Form onSubmit={handleSubmit}>
+                    <h5 className='mb-3'>Edit Location</h5>
                     <div className='row g-0 mb-3'>
                       <div className='col-md-12'>
                         <Form.Label>

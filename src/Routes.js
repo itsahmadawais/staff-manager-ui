@@ -2,7 +2,7 @@ import React from 'react'
 import { Route } from 'react-router-dom';
 import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar, Profile, Settings, 
     Users, CreateUser, UserRoles, GroupPermissions, AbsenceReports, Departments, CreateDepartment, EditDepartment,
-    Locations, ViewLocation, EditLocation, CreateLocation } from './Pages';
+    Locations, ViewLocation, EditLocation, CreateLocation, Documents, CreateDocument, Absence, CreateAbsence } from './Pages';
 
 export function getRoutes() {
     const routes = [
@@ -85,6 +85,22 @@ export function getRoutes() {
         {
             path: '/locations/create',
             component: <CreateLocation />
+        },
+        {
+            path: '/documents',
+            component: <Documents />
+        },
+        {
+            path: '/documents/create',
+            component: <CreateDocument />
+        },
+        {
+            path: '/absence',
+            component: <Absence />
+        },
+        {
+            path: '/absence/create',
+            component: <CreateAbsence />
         }
     ];
 

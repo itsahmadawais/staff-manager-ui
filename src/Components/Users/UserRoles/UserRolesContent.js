@@ -71,10 +71,15 @@ export default function UserRolesContent() {
     
     return (
         <div className='user-roles-content'>
-            <div className='text-end mb-3'>
-                <Button variant='primary' onClick={setCreateNewValues}>
-                    Add New Role
-                </Button>
+            <div className='row g-0 mb-3'>
+                <div className='col-md-6'>
+                    <h5>Roles</h5>
+                </div>
+                <div className='col-md-6 text-end'>
+                    <Button variant='primary' onClick={setCreateNewValues}>
+                        Add New Role
+                    </Button>
+                </div>
             </div>
             {
                 isLoading ? (

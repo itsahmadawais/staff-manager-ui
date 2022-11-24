@@ -17,7 +17,11 @@ import EditDepartment from "./Departments/EditDepartment";
 import Locations from "./Locations/Locations";
 import ViewLocation from "./Locations/ViewLocation";
 import EditLocation from "./Locations/EditLocation";
-import CreateLocation from "./Locations/CreateLocation"
+import CreateLocation from "./Locations/CreateLocation";
+import Documents from "./Documents/Documents";
+import CreateDocument from "./Documents/CreateDocument";
+import Absence from "./Absence/Absence";
+import CreateAbsence from "./Absence/CreateAbsence";
 
 export {
     Login,
@@ -39,5 +43,9 @@ export {
     Locations,
     ViewLocation,
     EditLocation,
-    CreateLocation
+    CreateLocation,
+    Documents,
+    CreateDocument,
+    Absence,
+    CreateAbsence
 }

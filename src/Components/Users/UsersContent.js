@@ -108,7 +108,9 @@ export default function UsersContent() {
     return (
         <div className='users-content content-max-height custom-scrollbar'>
             <div className='row g-0 mb-3'>
-                <div className='col-md-9'></div>
+                <div className='col-md-9'>
+                    <h5>Users</h5>
+                </div>
                 <div className='col-md-3'>
                     <SearchFilter
                         placeholder={'Search User Name'}

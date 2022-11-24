@@ -112,6 +112,20 @@ export default function GroupPermissionsContent() {
         return returnObj;
     };
 
+    const handleAllSelect = (e, setFieldValue, keyIndex) => {
+        if (e.target.checked) {
+            allPermissions.map((item) => {
+                let keysValues = Object.entries(item);
+                setFieldValue(keysValues[keyIndex][0], true);
+            })
+        } else {
+            allPermissions.map((item) => {
+                let keysValues = Object.entries(item);
+                setFieldValue(keysValues[keyIndex][0], false);
+            })
+        }
+    };
+
     const savePermissions = (values) => {
         console.log(values);
         navigate(-1);
@@ -132,6 +146,7 @@ export default function GroupPermissionsContent() {
                     >
                         {({
                             values,
+                            setFieldValue,
                             handleChange,
                             handleSubmit
                         }) => (
@@ -148,6 +163,7 @@ export default function GroupPermissionsContent() {
                                                     name='viewAll'
                                                     id='viewAll'
                                                     label='View'
+                                                    onChange={(e) => handleAllSelect(e, setFieldValue, 1)}
                                                 />
                                             </th>
                                             <th>
@@ -156,6 +172,7 @@ export default function GroupPermissionsContent() {
                                                     name='addAll'
                                                     id='addAll'
                                                     label='Add'
+                                                    onChange={(e) => handleAllSelect(e, setFieldValue, 2)}
                                                 />
                                             </th>
                                             <th>
@@ -164,6 +181,7 @@ export default function GroupPermissionsContent() {
                                                     name='editAll'
                                                     id='editAll'
                                                     label='Edit'
+                                                    onChange={(e) => handleAllSelect(e, setFieldValue, 3)}
                                                 />
                                             </th>
                                             <th>
@@ -172,6 +190,7 @@ export default function GroupPermissionsContent() {
                                                     name='deleteAll'
                                                     id='deleteAll'
                                                     label='Delete'
+                                                    onChange={(e) => handleAllSelect(e, setFieldValue, 4)}
                                                 />
                                             </th>
                                         </tr>
@@ -194,7 +213,7 @@ export default function GroupPermissionsContent() {
                                                                             <Form.Check 
                                                                                 type='checkbox'
                                                                                 name={obj[0]}
-                                                                                defaultChecked={values[keyName]}
+                                                                                checked={values[keyName]}
                                                                                 value={values[keyName]}
                                                                                 onChange={handleChange}
                                                                             />
@@ -227,7 +246,7 @@ export default function GroupPermissionsContent() {
                                                                                 key={index}
                                                                                 type='checkbox'
                                                                                 name={obj[0]}
-                                                                                defaultChecked={values[keyName]}
+                                                                                checked={values[keyName]}
                                                                                 value={values[keyName]}
                                                                                 label={obj[0] === 'miscellaneous_rolePermissions' ?
                                                                                         'Role Permissions' : 

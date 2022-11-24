@@ -86,6 +86,7 @@ export default function CreateLocationContent() {
             }) => (
                 <>
                   <Form onSubmit={handleSubmit}>
+                    <h5 className='mb-3'>Create New Location</h5>
                     <div className='row g-0 mb-3'>
                       <div className='col-md-6 pe-2'>
                         <Form.Label>

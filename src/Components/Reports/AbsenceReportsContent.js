@@ -110,7 +110,9 @@ export default function AbsenceReportsContent() {
                 </div>
             </div>
             <div className='row g-0 mb-3'>
-                <div className='col-md-9'></div>
+                <div className='col-md-9'>
+                    <h5>Absence Reports</h5>
+                </div>
                 <div className='col-md-3'>
                     <SearchFilter 
                         placeholder={'Search User Name'} 

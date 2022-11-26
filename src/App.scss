@@ -743,3 +743,17 @@ input {
         }
     }
 }
+
+/*
+##### View Employee #####
+*/
+.view-employee-content {
+    .heading-label {
+        font-weight: 600;
+        margin-bottom: 0;
+    }
+    .details {
+        border: 1px solid $grey-border-color;
+        border-radius: 5px;
+    }
+}

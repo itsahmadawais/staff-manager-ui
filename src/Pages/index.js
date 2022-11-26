@@ -22,6 +22,10 @@ import Documents from "./Documents/Documents";
 import CreateDocument from "./Documents/CreateDocument";
 import Absence from "./Absence/Absence";
 import CreateAbsence from "./Absence/CreateAbsence";
+import Allowances from "./Absence/Allowances";
+import Employees from "./Employees/Employees";
+import ViewEmployee from "./Employees/ViewEmployee";
+import CreateEmployee from "./Employees/CreateEmployee";
 
 export {
     Login,
@@ -47,5 +51,9 @@ export {
     Documents,
     CreateDocument,
     Absence,
-    CreateAbsence
+    CreateAbsence,
+    Allowances,
+    Employees,
+    ViewEmployee,
+    CreateEmployee
 }

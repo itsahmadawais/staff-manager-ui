@@ -2,7 +2,8 @@ import React from 'react'
 import { Route } from 'react-router-dom';
 import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar, Profile, Settings, 
     Users, CreateUser, UserRoles, GroupPermissions, AbsenceReports, Departments, CreateDepartment, EditDepartment,
-    Locations, ViewLocation, EditLocation, CreateLocation, Documents, CreateDocument, Absence, CreateAbsence } from './Pages';
+    Locations, ViewLocation, EditLocation, CreateLocation, Documents, CreateDocument, Absence, CreateAbsence, 
+    Allowances, Employees, ViewEmployee, CreateEmployee } from './Pages';
 
 export function getRoutes() {
     const routes = [
@@ -101,6 +102,22 @@ export function getRoutes() {
         {
             path: '/absence/create',
             component: <CreateAbsence />
+        },
+        {
+            path: '/allowances',
+            component: <Allowances />
+        },
+        {
+            path: '/employees',
+            component: <Employees />
+        },
+        {
+            path: '/employees/detail',
+            component: <ViewEmployee />
+        },
+        {
+            path: '/employees/create',
+            component: <CreateEmployee />
         }
     ];
 

@@ -190,7 +190,7 @@ export default function NavMenu() {
                 },
                 {
                     id: '3',
-                    link: '/absence/allowances',
+                    link: '/allowances',
                     icon: <FaCircle size={14} />,
                     title: 'Manage Allowances'
                 }

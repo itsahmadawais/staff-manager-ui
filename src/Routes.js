@@ -3,7 +3,8 @@ import { Route } from 'react-router-dom';
 import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar, Profile, Settings, 
     Users, CreateUser, UserRoles, GroupPermissions, AbsenceReports, Departments, CreateDepartment, EditDepartment,
     Locations, ViewLocation, EditLocation, CreateLocation, Documents, CreateDocument, Absence, CreateAbsence, 
-    Allowances, Employees, ViewEmployee, CreateEmployee } from './Pages';
+    Allowances, Employees, ViewEmployee, CreateEmployee, EditEmployee, Subcontractors, CreateSubcontractor,
+    ViewSubcontractor, EditSubcontractor } from './Pages';
 
 export function getRoutes() {
     const routes = [
@@ -118,6 +119,26 @@ export function getRoutes() {
         {
             path: '/employees/create',
             component: <CreateEmployee />
+        },
+        {
+            path: '/employees/edit',
+            component: <EditEmployee />
+        },
+        {
+            path: '/subcontractors',
+            component: <Subcontractors />
+        },
+        {
+            path: '/subcontractors/create',
+            component: <CreateSubcontractor />
+        },
+        {
+            path: '/subcontractors/detail',
+            component: <ViewSubcontractor />
+        },
+        {
+            path: '/subcontractors/edit',
+            component: <EditSubcontractor />
         }
     ];
 

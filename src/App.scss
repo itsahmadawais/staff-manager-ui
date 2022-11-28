@@ -757,3 +757,17 @@ input {
         border-radius: 5px;
     }
 }
+
+/*
+##### View Subcontractor #####
+*/
+.view-subcontractor-content {
+    .heading-label {
+        font-weight: 600;
+        margin-bottom: 0;
+    }
+    .details {
+        border: 1px solid $grey-border-color;
+        border-radius: 5px;
+    }
+}

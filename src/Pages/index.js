@@ -26,6 +26,11 @@ import Allowances from "./Absence/Allowances";
 import Employees from "./Employees/Employees";
 import ViewEmployee from "./Employees/ViewEmployee";
 import CreateEmployee from "./Employees/CreateEmployee";
+import EditEmployee from "./Employees/EditEmployee";
+import Subcontractors from "./Subcontractors/Subcontractors";
+import CreateSubcontractor from "./Subcontractors/CreateSubcontractor";
+import ViewSubcontractor from "./Subcontractors/ViewSubcontractor";
+import EditSubcontractor from "./Subcontractors/EditSubcontractor";
 
 export {
     Login,
@@ -55,5 +60,10 @@ export {
     Allowances,
     Employees,
     ViewEmployee,
-    CreateEmployee
+    CreateEmployee,
+    EditEmployee,
+    Subcontractors,
+    CreateSubcontractor,
+    ViewSubcontractor,
+    EditSubcontractor
 }

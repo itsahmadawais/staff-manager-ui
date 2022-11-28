@@ -3,7 +3,7 @@ import { Button, Tab, Table, Tabs } from 'react-bootstrap';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import { v4 as uuid } from 'uuid';
 import { Loader } from '../UI';
-import UploadDocModal from './UploadDocModal';
+import UploadDocModal from '../Modals/UploadDocModal';
 
 export default function ViewEmployeeContent() {
   const [data, setData] = useState({

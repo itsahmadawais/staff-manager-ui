@@ -172,7 +172,7 @@ export default function CreateSubcontractorContent() {
                                 </Form.Label>
                                 <Select
                                     options={countryOpts}
-                                    isSearchable={false}
+                                    isSearchable={true}
                                     isClearable={false}
                                     onChange={(opt) => setFieldValue('country', opt.value)}
                                 />

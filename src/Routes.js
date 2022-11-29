@@ -4,7 +4,7 @@ import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar
     Users, CreateUser, UserRoles, GroupPermissions, AbsenceReports, Departments, CreateDepartment, EditDepartment,
     Locations, ViewLocation, EditLocation, CreateLocation, Documents, CreateDocument, Absence, CreateAbsence, 
     Allowances, Employees, ViewEmployee, CreateEmployee, EditEmployee, Subcontractors, CreateSubcontractor,
-    ViewSubcontractor, EditSubcontractor } from './Pages';
+    ViewSubcontractor, EditSubcontractor, Clients, ViewClient, EditClient, CreateClient } from './Pages';
 
 export function getRoutes() {
     const routes = [
@@ -25,11 +25,7 @@ export function getRoutes() {
             component: <Dashboard />
         },
         {
-            path: '/schedule',
-            component: <Schedule />
-        },
-        {
-            path: '/schedule/view-calendar',
+            path: '/view-calendar',
             component: <ViewCalendar />
         },
         {
@@ -53,7 +49,7 @@ export function getRoutes() {
             component: <UserRoles />
         },
         {
-            path: '/users/roles/permissions',
+            path: '/users/roles/:id/permissions',
             component: <GroupPermissions />
         },
         {
@@ -69,7 +65,7 @@ export function getRoutes() {
             component: <CreateDepartment />
         },
         {
-            path: '/departments/edit',
+            path: '/departments/:id/edit',
             component: <EditDepartment />
         },
         {
@@ -77,11 +73,11 @@ export function getRoutes() {
             component: <Locations />
         },
         {
-            path: '/locations/detail',
+            path: '/locations/:id/detail',
             component: <ViewLocation />
         },
         {
-            path: '/locations/edit',
+            path: '/locations/:id/edit',
             component: <EditLocation />
         },
         {
@@ -113,7 +109,7 @@ export function getRoutes() {
             component: <Employees />
         },
         {
-            path: '/employees/detail',
+            path: '/employees/:id/detail',
             component: <ViewEmployee />
         },
         {
@@ -121,7 +117,7 @@ export function getRoutes() {
             component: <CreateEmployee />
         },
         {
-            path: '/employees/edit',
+            path: '/employees/:id/edit',
             component: <EditEmployee />
         },
         {
@@ -133,12 +129,28 @@ export function getRoutes() {
             component: <CreateSubcontractor />
         },
         {
-            path: '/subcontractors/detail',
+            path: '/subcontractors/:id/detail',
             component: <ViewSubcontractor />
         },
         {
-            path: '/subcontractors/edit',
+            path: '/subcontractors/:id/edit',
             component: <EditSubcontractor />
+        },
+        {
+            path: '/clients',
+            component: <Clients />
+        },
+        {
+            path: '/clients/:id/detail',
+            component: <ViewClient />
+        },
+        {
+            path: '/clients/:id/edit',
+            component: <EditClient />
+        },
+        {
+            path: '/clients/create',
+            component: <CreateClient />
         }
     ];
 

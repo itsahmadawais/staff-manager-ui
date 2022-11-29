@@ -395,6 +395,11 @@ input {
                         background-size: 15px;
                         filter: brightness(0) invert(1);
                     }
+                    &.active {
+                        background-color: rgba(255, 255, 255, 0.105);
+                        border-radius: 7px;
+                        color: $secondary-color;
+                    }
                 }
                 .accordion-body {
                     .menu-item {
@@ -745,23 +750,9 @@ input {
 }
 
 /*
-##### View Employee #####
+##### View Employee, Subcontractor, Client #####
 */
-.view-employee-content {
-    .heading-label {
-        font-weight: 600;
-        margin-bottom: 0;
-    }
-    .details {
-        border: 1px solid $grey-border-color;
-        border-radius: 5px;
-    }
-}
-
-/*
-##### View Subcontractor #####
-*/
-.view-subcontractor-content {
+.view-employee-content, .view-subcontractor-content, .view-client-content {
     .heading-label {
         font-weight: 600;
         margin-bottom: 0;

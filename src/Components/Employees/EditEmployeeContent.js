@@ -261,7 +261,7 @@ export default function EditEmployeeContent() {
                                         {value: values.countryOfBirth, label: countryOpts.find(obj => obj.value === values.countryOfBirth).label} :
                                         undefined
                                     }
-                                    isSearchable={false}
+                                    isSearchable={true}
                                     isClearable={false}
                                     onChange={(opt) => setFieldValue('countryOfBirth', opt.value)}
                                 />
@@ -543,7 +543,7 @@ export default function EditEmployeeContent() {
                                         {value: values.country, label: countryOpts.find(obj => obj.value === values.country).label} :
                                         undefined
                                     }
-                                    isSearchable={false}
+                                    isSearchable={true}
                                     isClearable={false}
                                     onChange={(opt) => setFieldValue('country', opt.value)}
                                 />

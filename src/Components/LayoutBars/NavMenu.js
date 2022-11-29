@@ -3,7 +3,7 @@ import { Accordion } from 'react-bootstrap';
 import { BsGridFill } from "react-icons/bs";
 import { FaFileAlt, FaBuilding, FaMapMarkerAlt, FaFolderOpen, FaUserFriends, 
     FaUserEdit, FaUserCog, FaCalendarAlt, FaCalendarTimes, FaUserTie, FaCog, FaPowerOff, FaCircle } from "react-icons/fa";
-import { useNavigate, NavLink } from 'react-router-dom';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 
 export default function NavMenu() {
     const navMenu = [
@@ -147,25 +147,7 @@ export default function NavMenu() {
             submenu: [
                 {
                     id: '1',
-                    link: '/schedule',
-                    icon: <FaCircle size={14} />,
-                    title: 'View All'
-                },
-                {
-                    id: '2',
-                    link: '/schedule/create',
-                    icon: <FaCircle size={14} />,
-                    title: 'Add New'
-                },
-                {
-                    id: '3',
-                    link: '/schedule/assign-shifts',
-                    icon: <FaCircle size={14} />,
-                    title: 'Assign Shifts'
-                },
-                {
-                    id: '4',
-                    link: '/schedule/view-calendar',
+                    link: '/view-calendar',
                     icon: <FaCircle size={14} />,
                     title: 'View Calendar'
                 }
@@ -237,6 +219,7 @@ export default function NavMenu() {
     ];
 
     const navigate = useNavigate();
+    const currLocation = useLocation();
     const handleLogout = () => navigate('/login');
 
     return (
@@ -257,8 +240,9 @@ export default function NavMenu() {
                     } else if(navitem.submenu!==undefined){
                         return(
                             <Accordion key={navitem.id}>
-                                <Accordion.Button className='py-2 px-3'>
+                                <Accordion.Button className={`py-2 px-3 ${currLocation.pathname.includes(navitem.submenu[0].link) ? 'active' : null}`}>
                                     {navitem.icon} {navitem.title}
+                                    {console.log(navitem.submenu[0].link)}
                                 </Accordion.Button>
                                 <Accordion.Body className='p-0'>
                                     {
@@ -268,6 +252,7 @@ export default function NavMenu() {
                                                     key={subitem.id} 
                                                     to={subitem.link} 
                                                     className='menu-item corner-radius py-2 px-3 my-2 d-flex justify-content-between align-items-center'
+                                                    end
                                                 >
                                                     <div>{subitem.icon} {subitem.title}</div>
                                                 </NavLink>

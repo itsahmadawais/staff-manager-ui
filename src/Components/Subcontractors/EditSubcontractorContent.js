@@ -235,7 +235,7 @@ export default function EditSubcontractorContent() {
                                         {value: values.country, label: countryOpts.find(obj => obj.value === values.country).label} :
                                         undefined
                                     }
-                                    isSearchable={false}
+                                    isSearchable={true}
                                     isClearable={false}
                                     onChange={(opt) => setFieldValue('country', opt.value)}
                                 />

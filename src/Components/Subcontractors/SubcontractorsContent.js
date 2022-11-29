@@ -89,10 +89,10 @@ export default function SubcontractorsContent() {
                                                     <td>{item.email}</td>
                                                     <td>{item.mobile}</td>
                                                     <td>
-                                                        <Button variant='icon' className='me-2' onClick={() => navigate('/subcontractors/detail')}>
+                                                        <Button variant='icon' className='me-2' onClick={() => navigate('/subcontractors/'+item.id+'/detail')}>
                                                             <AiOutlineEye size={20} />
                                                         </Button>
-                                                        <Button variant='icon' className='me-2' onClick={() => navigate('/subcontractors/edit')}>
+                                                        <Button variant='icon' className='me-2' onClick={() => navigate('/subcontractors/'+item.id+'/edit')}>
                                                             <AiOutlineEdit size={20} />
                                                         </Button>
                                                         <Button variant='icon'>

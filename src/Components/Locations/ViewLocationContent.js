@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Tabs, Tab, Table } from 'react-bootstrap';
 import { Loader } from '../UI';
 import { v4 as uuid } from 'uuid';
-import AddContactModal from './AddContactModal';
+import AddContactModal from '../Modals/AddContactModal';
 
 export default function ViewLocationContent() {
   const [location, setLocation] = useState({

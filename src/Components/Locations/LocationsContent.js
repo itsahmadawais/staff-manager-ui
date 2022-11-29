@@ -87,10 +87,10 @@ export default function LocationsContent() {
                                                     <td>{item.clientFirstName+' '+item.clientLastName}</td>
                                                     <td>{item.country}</td>
                                                     <td>
-                                                        <Button variant='icon' className='me-2' onClick={() => navigate('/locations/detail')}>
+                                                        <Button variant='icon' className='me-2' onClick={() => navigate('/locations/'+item.id+'/detail')}>
                                                             <AiOutlineEye size={20} />
                                                         </Button>
-                                                        <Button variant='icon' onClick={() => navigate('/locations/edit')}>
+                                                        <Button variant='icon' onClick={() => navigate('/locations/'+item.id+'/edit')}>
                                                             <AiOutlineEdit size={20} />
                                                         </Button>
                                                     </td>

@@ -109,7 +109,7 @@ export default function DepartmentsContent() {
                                                     <td>{item.name}</td>
                                                     <td>{item.description}</td>
                                                     <td>
-                                                        <Button variant='icon' className='me-2' onClick={() => navigate('/departments/edit')}>
+                                                        <Button variant='icon' className='me-2' onClick={() => navigate('/departments/'+item.id+'/edit')}>
                                                             <AiOutlineEdit size={20} />
                                                         </Button>
                                                         <Button variant='icon'>

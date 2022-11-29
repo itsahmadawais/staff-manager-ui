@@ -2,7 +2,6 @@ import Login from "./Login";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 import Dashboard from "./Dashboard";
-import Schedule from "./Schedule/Schedule";
 import ViewCalendar from "./Schedule/ViewCalendar";
 import Profile from "./Profile";
 import Settings from "./Settings";
@@ -31,13 +30,16 @@ import Subcontractors from "./Subcontractors/Subcontractors";
 import CreateSubcontractor from "./Subcontractors/CreateSubcontractor";
 import ViewSubcontractor from "./Subcontractors/ViewSubcontractor";
 import EditSubcontractor from "./Subcontractors/EditSubcontractor";
+import Clients from "./Clients/Clients";
+import ViewClient from "./Clients/ViewClient";
+import EditClient from "./Clients/EditClient";
+import CreateClient from "./Clients/CreateClient";
 
 export {
     Login,
     ForgotPassword,
     ResetPassword,
     Dashboard,
-    Schedule,
     ViewCalendar,
     Profile,
     Settings,
@@ -65,5 +67,9 @@ export {
     Subcontractors,
     CreateSubcontractor,
     ViewSubcontractor,
-    EditSubcontractor
+    EditSubcontractor,
+    Clients,
+    ViewClient,
+    EditClient,
+    CreateClient
 }

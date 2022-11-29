@@ -183,7 +183,7 @@ export default function CreateEmployeeContent() {
                                 </Form.Label>
                                 <Select
                                     options={countryOpts}
-                                    isSearchable={false}
+                                    isSearchable={true}
                                     isClearable={false}
                                     onChange={(opt) => setFieldValue('countryOfBirth', opt.value)}
                                 />

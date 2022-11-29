@@ -110,7 +110,7 @@ export default function UserRolesContent() {
                                                 <Button variant='icon' className='me-2' onClick={() => setToEditValues(item)}>
                                                     <AiOutlineEdit size={20} />
                                                 </Button>
-                                                <Button variant='primary' onClick={() => navigate('/users/roles/permissions')}>
+                                                <Button variant='primary' onClick={() => navigate('/users/roles/'+item.id+'/permissions')}>
                                                     Change Permissions
                                                 </Button>
                                             </td>

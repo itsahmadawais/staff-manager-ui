@@ -77,7 +77,7 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
         }
     ];
 
-    const [selectedOpt, setSelectedOpt] = useState(employee !== '' ? {value: employee.id, label: employee.name} : null);
+    const [selectedOpt, setSelectedOpt] = useState(employee !== '' ? {value: employee.id, label: employee.firstName+' '+employee.lastName} : null);
     const [isLoading, setIsLoading] = useState(true);
     
     const validationSchema = Yup.object().shape({
@@ -358,7 +358,7 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                                     name='employee'
                                                     defaultValue={
                                                         values.employee !== '' ? 
-                                                        {value: values.employee, label: employee.name} : 
+                                                        {value: values.employee, label: employee.firstName+' '+employee.lastName} : 
                                                         undefined
                                                     }
                                                     isSearchable={true}
@@ -490,7 +490,7 @@ export default function EditShiftModal({data, employee, dayIndex, shiftIndex, sh
                                             </div>
                                         </Modal.Body>
                                         <Modal.Footer>
-                                            <Button variant='secondary' disabled={isSubmitting}>
+                                            <Button variant='secondary' disabled={isSubmitting} onClick={handleClose}>
                                                 Cancel
                                             </Button>
                                             <Button type='submit' variant='primary' disabled={isSubmitting}>

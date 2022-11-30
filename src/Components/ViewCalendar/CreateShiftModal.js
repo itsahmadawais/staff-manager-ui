@@ -91,8 +91,11 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
         { value: 'Sat', label: 'Sat'},
         { value: 'Sun', label: 'Sun'}
     ];
+    const repeatDateOpts = Array.from({length: 30}, (_, i) => i + 1).map((item) => {
+        return {value: item.toString(), label: item.toString()}
+    });
 
-    const [selectedOpt, setSelectedOpt] = useState(employee !== '' ? {value: employee.id, label: employee.name} : null);
+    const [selectedOpt, setSelectedOpt] = useState(employee !== '' ? {value: employee.id, label: employee.firstName+' '+employee.lastName} : null);
     const [isLoading, setIsLoading] = useState(true);
 
     const validationSchema = Yup.object().shape({
@@ -103,6 +106,21 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
             is: (val) => val === 'response',
             then: Yup.date().notRequired(),
             otherwise: Yup.date().min(Yup.ref('startDate'), 'End Date must not be earlier than Start Date').required('Required')
+            .test(
+                'endDateNotGreater',
+                'Shifts can be no longer than 24 hours',
+                function (value) {
+                    const {startDate, endDate, startTime, endTime} = this.parent;
+                    let startCombine = moment(startDate).format('DD-MM-YYYY')+' '+startTime;
+                    let endCombine = moment(endDate).format('DD-MM-YYYY')+' '+endTime;
+                    if (startDate.getTime() === endDate.getTime()) {
+                        return true;
+                    } else {
+                        console.log(moment(endCombine, 'DD-MM-YYYY HH:mm').diff(moment(startCombine, 'DD-MM-YYYY HH:mm'), 'hours'));
+                        return moment(endCombine, 'DD-MM-YYYY HH:mm').diff(moment(startCombine, 'DD-MM-YYYY HH:mm'), 'hours') < 24;
+                    }
+                }
+            )
         }),
         startTime: Yup.string().required('Required'),
         endTime: Yup.string()
@@ -173,7 +191,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
       }, [isLoading]);
 
     useEffect(() => {
-        setSelectedOpt({value: employee.id, label: employee.name});
+        setSelectedOpt({value: employee.id, label: employee.firstName+' '+employee.lastName});
     }, [employee]);
     
 
@@ -210,6 +228,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                     repeat: 'Weekly',
                     repeatCount: '1',
                     repeatDays: [],
+                    repeatMonthDate: '1',
                     repeatEnd: 'On date',
                     repeatEndDate: moment().format('YYYY-MM-DD'),
                     repeatEndCount: '1',
@@ -217,7 +236,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, {setSubmitting}) => {
-                    values.employee = selectedOpt !== null ? selectedOpt.value : '';
+                    values.employee = selectedOpt.value ? selectedOpt.value : '';
                     handleShiftCreation(values);
                     setSubmitting(true);
                     setTimeout(() => {
@@ -413,7 +432,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                     name='employee'
                                                     defaultValue={
                                                         values.employee !== '' ? 
-                                                        {value: values.employee, label: employee.name} : 
+                                                        {value: values.employee, label: employee.firstName+' '+employee.lastName} : 
                                                         undefined
                                                     }
                                                     isSearchable={true}
@@ -605,7 +624,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                         />
                                                         <span className='mb-0 mx-3'>
                                                             {
-                                                                values.repeat === 'Weekly' ? 'week(s)' : 'day(s)'
+                                                                values.repeat === 'Weekly' ? 'week(s)' : values.repeat === 'Daily' ? 'day(s)' : 'month(s)'
                                                             }
                                                         </span>
                                                         <p className='error-feedback mb-0'>
@@ -626,6 +645,23 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                                     let temp = [...values.repeatDays];
                                                                     temp = opt.filter(val => !temp.includes(val.value));
                                                                     setFieldValue('repeatDays', temp);
+                                                                }}
+                                                                className='max-width-field'
+                                                            />
+                                                        </div>
+                                                    }
+                                                    {
+                                                        values.repeat === 'Monthly' &&
+                                                        <div className='d-flex align-items-center mb-3'>
+                                                            <p className='fw-bold mb-0 me-3'>On</p>
+                                                            <Select
+                                                                name='repeatMonthDate'
+                                                                defaultValue={{value: values.repeatMonthDate, label: values.repeatMonthDate}}
+                                                                isSearchable={false}
+                                                                isClearable={false}
+                                                                options={repeatDateOpts}
+                                                                onChange={(opt) => {
+                                                                    setFieldValue('repeatMonthDate', opt.value);
                                                                 }}
                                                                 className='max-width-field'
                                                             />

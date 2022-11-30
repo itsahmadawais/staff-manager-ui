@@ -242,7 +242,6 @@ export default function NavMenu() {
                             <Accordion key={navitem.id}>
                                 <Accordion.Button className={`py-2 px-3 ${currLocation.pathname.includes(navitem.submenu[0].link) ? 'active' : null}`}>
                                     {navitem.icon} {navitem.title}
-                                    {console.log(navitem.submenu[0].link)}
                                 </Accordion.Button>
                                 <Accordion.Body className='p-0'>
                                     {

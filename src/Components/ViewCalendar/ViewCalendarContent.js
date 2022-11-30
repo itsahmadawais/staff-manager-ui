@@ -3,7 +3,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Button, Form, Table } from 'react-bootstrap';
 import { BiChevronLeft, BiChevronRight, BiFilterAlt, BiPlus } from 'react-icons/bi';
 import EmployeeShift from './EmployeeShift';
-import { Avatar, Loader } from '../UI';
+import { Avatar, Loader, SearchFilter } from '../UI';
 import moment from 'moment';
 import CreateShiftModal from './CreateShiftModal';
 import { v4 as uuid } from 'uuid';
@@ -80,11 +80,13 @@ export default function ViewCalendarContent() {
                     pastEmployees: [
                         {
                             id: '80',
-                            name: 'Alam Zaidi'
+                            firstName: 'Aalam',
+                            lastName: 'Zaidi'
                         },
                         {
                             id: '81',
-                            name: 'Daniel Smith'
+                            firstName: 'Daniel',
+                            lastName: 'Smith'
                         }
                     ],
                     type: 'shift',
@@ -151,11 +153,13 @@ export default function ViewCalendarContent() {
                     pastEmployees: [
                         {
                             id: '86',
-                            name: 'Alam Zaidi'
+                            firstName: 'Aalam',
+                            lastName: 'Zaidi'
                         },
                         {
                             id: '87',
-                            name: 'Daniel Smith'
+                            firstName: 'Daniel',
+                            lastName: 'Smith'
                         }
                     ],
                     type: 'shift',
@@ -183,11 +187,13 @@ export default function ViewCalendarContent() {
                     pastEmployees: [
                         {
                             id: '88',
-                            name: 'Alam Zaidi'
+                            firstName: 'Aalam',
+                            lastName: 'Zaidi'
                         },
                         {
                             id: '89',
-                            name: 'Daniel Smith'
+                            firstName: 'Daniel',
+                            lastName: 'Smith'
                         }
                     ],
                     type: 'shift',
@@ -215,11 +221,13 @@ export default function ViewCalendarContent() {
                     pastEmployees: [
                         {
                             id: '90',
-                            name: 'Alam Zaidi'
+                            firstName: 'Aalam',
+                            lastName: 'Zaidi'
                         },
                         {
                             id: '91',
-                            name: 'Daniel Smith'
+                            firstName: 'Daniel',
+                            lastName: 'Smith'
                         }
                     ],
                     type: 'shift',
@@ -247,11 +255,13 @@ export default function ViewCalendarContent() {
                     pastEmployees: [
                         {
                             id: '92',
-                            name: 'Alam Zaidi'
+                            firstName: 'Aalam',
+                            lastName: 'Zaidi'
                         },
                         {
                             id: '93',
-                            name: 'Daniel Smith'
+                            firstName: 'Daniel',
+                            lastName: 'Smith'
                         }
                     ],
                     type: 'shift',
@@ -333,7 +343,8 @@ export default function ViewCalendarContent() {
         {
             id: '18',
             image: '',
-            name: 'Abdullah',
+            firstName: 'Abdullah',
+            lastName: '',
             shiftsHours: '0',
             shiftDays: [
                 {
@@ -376,7 +387,8 @@ export default function ViewCalendarContent() {
         {
             id: '19',
             image: '/images/user.jpg',
-            name: 'Aalam Zaib',
+            firstName: 'Aalam',
+            lastName: 'Zaib',
             shiftsHours: '72',
             shiftDays: [
                 {
@@ -410,11 +422,13 @@ export default function ViewCalendarContent() {
                             pastEmployees: [
                                 {
                                     id: '98',
-                                    name: 'Alam Zaidi'
+                                    firstName: 'Alam',
+                                    lastName: 'Zaidi'
                                 },
                                 {
                                     id: '99',
-                                    name: 'Daniel Smith'
+                                    firstName: 'Daniel',
+                                    lastName: 'Smith'
                                 }
                             ],
                             type: 'shift',
@@ -543,7 +557,8 @@ export default function ViewCalendarContent() {
         {
             id: '20',
             image: '/images/user.jpg',
-            name: 'Amir Shafique',
+            firstName: 'Amir',
+            lastName: 'Shafique',
             shiftsHours: '0',
             shiftDays: [
                 {
@@ -586,7 +601,8 @@ export default function ViewCalendarContent() {
         {
             id: '21',
             image: '/images/user.jpg',
-            name: 'Amir Shafique',
+            firstName: 'Amir',
+            lastName: 'Shafique',
             shiftsHours: '0',
             shiftDays: [
                 {
@@ -629,7 +645,8 @@ export default function ViewCalendarContent() {
         {
             id: '22',
             image: '/images/user.jpg',
-            name: 'Amir Shafique',
+            firstName: 'Amir',
+            lastName: 'Shafique',
             shiftsHours: '0',
             shiftDays: [
                 {
@@ -672,7 +689,8 @@ export default function ViewCalendarContent() {
         {
             id: '23',
             image: '/images/user.jpg',
-            name: 'Amir Shafique',
+            firstName: 'Amir',
+            lastName: 'Shafique',
             shiftsHours: '0',
             shiftDays: [
                 {
@@ -715,7 +733,8 @@ export default function ViewCalendarContent() {
         {
             id: '24',
             image: '/images/user.jpg',
-            name: 'Amir Shafique',
+            firstName: 'Amir',
+            lastName: 'Shafique',
             shiftsHours: '0',
             shiftDays: [
                 {
@@ -780,15 +799,24 @@ export default function ViewCalendarContent() {
         { value: 'hours-desc', label: 'Hours-Descending' },
     ];
 
+    const [empFilterSort, setEmpFilterSort] = useState('name-asc');
+
     const today = new Date().toISOString().replace(/T.*/,'').split('-').reverse().join('-');
     const [unassigned, setUnassigned] = useState(unassignedShiftDays);
-    const [assigned, setAssigned] = useState(employeeShifts);
+    const [assigned, setAssigned] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [createShiftShow, setCreateShiftShow] = useState(false);
     const [createShiftDate, setCreateShiftDate] = useState('');
     const [createShiftEmp, setCreateShiftEmp] = useState('');
     const [recordsToShow, setRecordsToShow] = useState(2);
     const [showFilters, setShowFilters] = useState(false);
+    const [shiftFilterSite, setShiftFilterSite] = useState([]);
+    const [shiftFilterPosition, setShiftFilterPosition] = useState([]);
+    const [shiftFilterStatus, setShiftFilterStatus] = useState('all');
+    const [empFilterFname, setEmpFilterFname] = useState('');
+    const [empFilterLname, setEmpFilterLname] = useState('');
+    const [empFilterSite, setEmpFilterSite] = useState([]);
+    const [empFilterPosition, setEmpFilterPosition] = useState([]);
 
     const handleCreateShiftShow = () => setCreateShiftShow(!createShiftShow);
 
@@ -811,7 +839,21 @@ export default function ViewCalendarContent() {
         setIsLoading(false);
       }, 1500);
     }, [isLoading]);
-    
+
+    useEffect(() => {
+        if (empFilterSort === 'name-asc') {
+            setAssigned([...employeeShifts].sort((a, b) => a.firstName > b.firstName ? 1 : -1));
+        }
+        else if (empFilterSort === 'name-desc') {
+            setAssigned([...employeeShifts].sort((a, b) => a.firstName > b.firstName ? -1 : 1));
+        }
+        else if (empFilterSort === 'hours-asc') {
+            setAssigned([...employeeShifts].sort((a, b) => a.shiftsHours - b.shiftsHours));
+        }
+        else if (empFilterSort === 'hours-desc') {
+            setAssigned([...employeeShifts].sort((a, b) => b.shiftsHours - a.shiftsHours));
+        }
+    }, [empFilterSort]);
     
     const handleDragEnd = (result) => {
         const {source, destination} = result;
@@ -1143,6 +1185,7 @@ export default function ViewCalendarContent() {
                                 isClearable={true}
                                 isMulti={true}
                                 placeholder='Site'
+                                onChange={(opt) => setShiftFilterSite(opt)}
                             />
                         </div>
                         <div className='col-md-4 pe-3'>
@@ -1153,6 +1196,7 @@ export default function ViewCalendarContent() {
                                 isClearable={true}
                                 isMulti={true}
                                 placeholder='Position'
+                                onChange={(opt) => setShiftFilterPosition(opt)}
                             />
                         </div>
                         <div className='col-md-3'>
@@ -1162,6 +1206,7 @@ export default function ViewCalendarContent() {
                                 isSearchable={false}
                                 isClearable={false}
                                 defaultValue={statusOpts[0]}
+                                onChange={(opt) => setShiftFilterStatus(opt.value)}
                             />
                         </div>
                     </div>
@@ -1170,17 +1215,15 @@ export default function ViewCalendarContent() {
                             <p className='mb-0'>Employee Filters</p>
                         </div>
                         <div className='col-md-2 pe-3'>
-                            <Form.Control
-                                type='text'
-                                name='employee-filter-fname'
-                                placeholder='Search Employee First Name'
+                            <SearchFilter
+                                placeholder='Search First Name'
+                                handleSearch={setEmpFilterFname}
                             />
                         </div>
                         <div className='col-md-2 pe-3'>
-                            <Form.Control
-                                type='text'
-                                name='employee-filter-lname'
+                            <SearchFilter
                                 placeholder='Search Employee Last Name'
+                                handleSearch={setEmpFilterLname}
                             />
                         </div>
                         <div className='col-md-2 pe-3'>
@@ -1191,6 +1234,7 @@ export default function ViewCalendarContent() {
                                 isClearable={true}
                                 isMulti={true}
                                 placeholder='Site'
+                                onChange={(opt) => setEmpFilterSite(opt)}
                             />
                         </div>
                         <div className='col-md-2 pe-3'>
@@ -1201,6 +1245,7 @@ export default function ViewCalendarContent() {
                                 isClearable={true}
                                 isMulti={true}
                                 placeholder='Position'
+                                onChange={(opt) => setEmpFilterPosition(opt)}
                             />
                         </div>
                         <div className='col-md-3'>
@@ -1210,6 +1255,7 @@ export default function ViewCalendarContent() {
                                 isSearchable={false}
                                 isClearable={false}
                                 defaultValue={sortOpts[0]}
+                                onChange={(opt) => setEmpFilterSort(opt.value)}
                             />
                         </div>
                     </div>
@@ -1266,7 +1312,27 @@ export default function ViewCalendarContent() {
                                                                     ${shiftDay.date === today ? 'current-day' : undefined}`}
                                                                 >
                                                                     {
-                                                                        shiftDay.shifts?.map((shift, index) => {
+                                                                        shiftDay.shifts?.filter((item) => {
+                                                                            if(shiftFilterSite.length === 0) {
+                                                                                return item;
+                                                                            } else if (shiftFilterSite.filter(opt => opt.value === item.site).length > 0) {
+                                                                                return item;
+                                                                            }
+                                                                        }).filter((item) => {
+                                                                            if(shiftFilterPosition.length === 0) {
+                                                                                return item;
+                                                                            } else if (shiftFilterPosition.filter(opt => opt.value === item.position).length > 0) {
+                                                                                return item;
+                                                                            }
+                                                                        }).filter((item) => {
+                                                                            if(shiftFilterStatus === 'all') {
+                                                                                return item;
+                                                                            } else if (shiftFilterStatus === 'published' && item.published) {
+                                                                                return item;
+                                                                            } else if (shiftFilterStatus === 'unpublished' && !item.published) {
+                                                                                return item;
+                                                                            }
+                                                                        }).map((shift, index) => {
                                                                             return(
                                                                                 <Draggable 
                                                                                     key={shift.id} 
@@ -1319,12 +1385,24 @@ export default function ViewCalendarContent() {
                                     </tr> :
                                     <>
                                         {
-                                            assigned.slice(0, recordsToShow).map((employee) => {
+                                            assigned.slice(0, recordsToShow).filter((item) => {
+                                                if(empFilterFname === '') {
+                                                    return item;
+                                                } else if (item.firstName.toLowerCase().includes(empFilterFname.toLocaleLowerCase())) {
+                                                    return item;
+                                                }
+                                            }).filter((item) => {
+                                                if(empFilterLname === '') {
+                                                    return item;
+                                                } else if (item.lastName.toLowerCase().includes(empFilterLname.toLocaleLowerCase())) {
+                                                    return item;
+                                                }
+                                            }).map((employee) => {
                                                 return(
                                                     <tr key={employee.id}>
                                                         <td>
                                                             <Avatar image={employee.image} />
-                                                            <p className='name mb-0'>{employee.name}</p>
+                                                            <p className='name mb-0'>{employee.firstName+' '+employee.lastName}</p>
                                                             <p className='hours mb-0'>{employee.shiftsHours} hours</p>
                                                         </td>
                                                         {
@@ -1340,7 +1418,19 @@ export default function ViewCalendarContent() {
                                                                                 onClick={(e) => handleCreateShiftValues(e, shiftDay.date, employee)}
                                                                             >
                                                                                 {
-                                                                                    shiftDay.shifts?.map((shift, index) => {
+                                                                                    shiftDay.shifts?.filter((item) => {
+                                                                                        if(empFilterSite.length === 0) {
+                                                                                            return item;
+                                                                                        } else if (empFilterSite.filter(opt => opt.value === item.site).length > 0) {
+                                                                                            return item;
+                                                                                        }
+                                                                                    }).filter((item) => {
+                                                                                        if(empFilterPosition.length === 0) {
+                                                                                            return item;
+                                                                                        } else if (empFilterPosition.filter(opt => opt.value === item.position).length > 0) {
+                                                                                            return item;
+                                                                                        }
+                                                                                    }).map((shift, index) => {
                                                                                         return(
                                                                                             <Draggable 
                                                                                                 key={shift.id} 

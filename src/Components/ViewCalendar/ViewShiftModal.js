@@ -53,7 +53,7 @@ export default function ViewShiftModal({data, employee, show, handleCloseView, h
                                 <p className='field-name mb-0'>Employee</p>
                                 {
                                     employee !== '' ? (
-                                        <Link to={'#'} className='link'>{employee.name}</Link>
+                                        <Link to={'#'} className='link'>{employee.firstName+' '+employee.lastName}</Link>
                                     ) : (
                                         <p>Unassigned</p>
                                     )
@@ -66,7 +66,7 @@ export default function ViewShiftModal({data, employee, show, handleCloseView, h
                                             data.pastEmployees.map((item) => {
                                                 return(
                                                     <Link key={item.id} to={'#'} className='link me-1'>
-                                                        {item.name}
+                                                        {item.firstName+' '+item.lastName}
                                                     </Link>
                                                 )
                                             })

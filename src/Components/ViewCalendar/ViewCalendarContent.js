@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { Button, Form, Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { BiChevronLeft, BiChevronRight, BiFilterAlt, BiPlus } from 'react-icons/bi';
 import EmployeeShift from './EmployeeShift';
 import { Avatar, Loader, SearchFilter } from '../UI';
@@ -10,36 +10,6 @@ import { v4 as uuid } from 'uuid';
 import Select from 'react-select';
 
 export default function ViewCalendarContent() {
-    const currentWeek = [
-        {
-            day: 'Mon',
-            date: '10-10-2022'
-        },
-        {
-            day: 'Tue',
-            date: '11-10-2022'
-        },
-        {
-            day: 'Wed',
-            date: '12-10-2022'
-        },
-        {
-            day: 'Thu',
-            date: '13-10-2022'
-        },
-        {
-            day: 'Fri',
-            date: '14-10-2022'
-        },
-        {
-            day: 'Sat',
-            date: '15-10-2022'
-        },
-        {
-            day: 'Sun',
-            date: '16-10-2022'
-        }
-    ];
     const unassignedShiftDays = [
         {
             id: '1',
@@ -799,9 +769,52 @@ export default function ViewCalendarContent() {
         { value: 'hours-desc', label: 'Hours-Descending' },
     ];
 
-    const [empFilterSort, setEmpFilterSort] = useState('name-asc');
+    const getCurrentWeek = () => {
+        var weekStart = startDate.startOf('isoWeek');
+        let days = [];
+        for (var i = 0; i <= 6; i++) {
+            days.push({
+                day: moment(weekStart).add(i, 'days').format('ddd'),
+                date: moment(weekStart).add(i, 'days').format('DD-MM-YYYY')
+            });
+        }
+        return days;
+    };
 
+    const dummyWeek = [
+        {
+            day: 'Mon',
+            date: '10-10-2022'
+        },
+        {
+            day: 'Tue',
+            date: '11-10-2022'
+        },
+        {
+            day: 'Wed',
+            date: '12-10-2022'
+        },
+        {
+            day: 'Thu',
+            date: '13-10-2022'
+        },
+        {
+            day: 'Fri',
+            date: '14-10-2022'
+        },
+        {
+            day: 'Sat',
+            date: '15-10-2022'
+        },
+        {
+            day: 'Sun',
+            date: '16-10-2022'
+        }
+    ];
+
+    const [startDate, setStartDate] = useState(moment());
     const today = new Date().toISOString().replace(/T.*/,'').split('-').reverse().join('-');
+    const [currentWeek, setCurrentWeek] = useState(dummyWeek);
     const [unassigned, setUnassigned] = useState(unassignedShiftDays);
     const [assigned, setAssigned] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -817,6 +830,7 @@ export default function ViewCalendarContent() {
     const [empFilterLname, setEmpFilterLname] = useState('');
     const [empFilterSite, setEmpFilterSite] = useState([]);
     const [empFilterPosition, setEmpFilterPosition] = useState([]);
+    const [empFilterSort, setEmpFilterSort] = useState('name-asc');
 
     const handleCreateShiftShow = () => setCreateShiftShow(!createShiftShow);
 
@@ -840,6 +854,13 @@ export default function ViewCalendarContent() {
       }, 1500);
     }, [isLoading]);
 
+    /*
+    useEffect(() => {
+        setCurrentWeek(getCurrentWeek);
+        //After this, fetch new shifts and set the states 'unassigned' and 'assigned'
+    }, [startDate]);
+    */
+    
     useEffect(() => {
         if (empFilterSort === 'name-asc') {
             setAssigned([...employeeShifts].sort((a, b) => a.firstName > b.firstName ? 1 : -1));
@@ -1081,66 +1102,140 @@ export default function ViewCalendarContent() {
     };
 
     const handleShiftCreation = (values) => {
+        let extraDates = values.extraDates.filter(extraDate => moment(extraDate.split("-").reverse().join("-"), 'DD-MM-YYYY')
+            .isBetween(moment(currentWeek[0].date, 'DD-MM-YYYY'), moment(currentWeek[6].date, 'DD-MM-YYYY'), undefined, []));
+
         if (values.employee === '') {
             let newData = [...unassigned];
-            let dayIndex = newData.findIndex(obj => obj.date === values.startDate.split("-").reverse().join("-"));
-            for (let i = 0; i < values.quantity; i++) {
-                let newShift = {
-                    id: uuid().slice(0,3),
-                    type: values.type,
-                    startDate: values.startDate.split("-").reverse().join("-"),
-                    endDate: values.endDate.split("-").reverse().join("-"),
-                    startTime: values.startTime,
-                    endTime: values.endTime,
-                    client: values.client,
-                    site: values.site,
-                    subsite: values.subsite,
-                    case: values.case,
-                    position: values.position,
-                    quantity: values.quantity,
-                    payRate: values.payRate,
-                    chargeRate: values.chargeRate,
-                    extraRate: values.extraRate,
-                    siteAssets: values.siteAssets,
-                    pastEmployees: [],
-                    cancelled: false,
-                    published: false,
-                    status: 'Awaiting'
-                }
-                newData[dayIndex].shifts.push(newShift);
-            }
-            setUnassigned(newData);
+            let newShifts = makeUnassignedShifts(values, newData, values.startDate, extraDates);
+            setUnassigned(newShifts);
         } else {
             let newData = [...assigned];
-            let empIndex = newData.findIndex(obj => obj.id === values.employee);
-            let dayIndex = newData[empIndex].shiftDays.findIndex(obj => obj.date === values.startDate.split("-").reverse().join("-"));
-            for (let i = 0; i < values.quantity; i++) {
-                let newShift = {
-                    id: uuid().slice(0,3),
-                    type: values.type,
-                    startDate: values.startDate.split("-").reverse().join("-"),
-                    endDate: values.endDate.split("-").reverse().join("-"),
-                    startTime: values.startTime,
-                    endTime: values.endTime,
-                    client: values.client,
-                    site: values.site,
-                    subsite: values.subsite,
-                    case: values.case,
-                    position: values.position,
-                    quantity: values.quantity,
-                    payRate: values.payRate,
-                    chargeRate: values.chargeRate,
-                    extraRate: values.extraRate,
-                    siteAssets: values.siteAssets,
-                    pastEmployees: [],
-                    cancelled: false,
-                    published: false,
-                    status: "Awaiting"
-                }
-                newData[empIndex].shiftDays[dayIndex].shifts.push(newShift);
-            }
-            setAssigned(newData);
+            let newShifts = makeAssignedShifts(values, newData, values.startDate, extraDates);
+            setAssigned(newShifts);
         }
+    };
+
+    const makeUnassignedShifts = (values, newData, creationDate, extraDates) => {
+        let dayIndex = newData.findIndex(obj => obj.date === creationDate.split("-").reverse().join("-"));
+        for (let i = 0; i < values.quantity; i++) {
+            let newShift = {
+                id: uuid().slice(0,3),
+                type: values.type,
+                startDate: values.startDate.split("-").reverse().join("-"),
+                endDate: values.endDate.split("-").reverse().join("-"),
+                startTime: values.startTime,
+                endTime: values.endTime,
+                client: values.client,
+                site: values.site,
+                subsite: values.subsite,
+                case: values.case,
+                position: values.position,
+                quantity: values.quantity,
+                payRate: values.payRate,
+                chargeRate: values.chargeRate,
+                extraRate: values.extraRate,
+                siteAssets: values.siteAssets,
+                pastEmployees: [],
+                cancelled: false,
+                published: false,
+                status: 'Awaiting'
+            }
+            newData[dayIndex].shifts.push(newShift);
+        }
+        if (extraDates.length) {
+            extraDates.forEach(extraDate => {
+                let dayIndex = newData.findIndex(obj => obj.date === extraDate.split("-").reverse().join("-"));
+                for (let i = 0; i < values.quantity; i++) {
+                    let newShift = {
+                        id: uuid().slice(0,3),
+                        type: values.type,
+                        startDate: extraDate.split("-").reverse().join("-"),
+                        endDate: extraDate.split("-").reverse().join("-"),
+                        startTime: values.startTime,
+                        endTime: values.endTime,
+                        client: values.client,
+                        site: values.site,
+                        subsite: values.subsite,
+                        case: values.case,
+                        position: values.position,
+                        quantity: values.quantity,
+                        payRate: values.payRate,
+                        chargeRate: values.chargeRate,
+                        extraRate: values.extraRate,
+                        siteAssets: values.siteAssets,
+                        pastEmployees: [],
+                        cancelled: false,
+                        published: false,
+                        status: 'Awaiting'
+                    }
+                    newData[dayIndex].shifts.push(newShift);
+                }
+            });
+        }
+        return newData;
+    };
+
+    const makeAssignedShifts = (values, newData, creationDate, extraDates) => {
+        let empIndex = newData.findIndex(obj => obj.id === values.employee);
+        let dayIndex = newData[empIndex].shiftDays.findIndex(obj => obj.date === creationDate.split("-").reverse().join("-"));
+        for (let i = 0; i < values.quantity; i++) {
+            let newShift = {
+                id: uuid().slice(0,3),
+                type: values.type,
+                startDate: values.startDate.split("-").reverse().join("-"),
+                endDate: values.endDate.split("-").reverse().join("-"),
+                startTime: values.startTime,
+                endTime: values.endTime,
+                client: values.client,
+                site: values.site,
+                subsite: values.subsite,
+                case: values.case,
+                position: values.position,
+                quantity: values.quantity,
+                payRate: values.payRate,
+                chargeRate: values.chargeRate,
+                extraRate: values.extraRate,
+                siteAssets: values.siteAssets,
+                pastEmployees: [],
+                cancelled: false,
+                published: false,
+                status: "Awaiting"
+            }
+            newData[empIndex].shiftDays[dayIndex].shifts.push(newShift);
+        }
+        if (extraDates.length) {
+            extraDates.forEach(extraDate => {
+                let empIndex = newData.findIndex(obj => obj.id === values.employee);
+                let dayIndex = newData[empIndex].shiftDays.findIndex(obj => obj.date === extraDate.split("-").reverse().join("-"));
+                for (let i = 0; i < values.quantity; i++) {
+                    let newShift = {
+                        id: uuid().slice(0,3),
+                        type: values.type,
+                        startDate: extraDate.split("-").reverse().join("-"),
+                        endDate: extraDate.split("-").reverse().join("-"),
+                        startTime: values.startTime,
+                        endTime: values.endTime,
+                        client: values.client,
+                        site: values.site,
+                        subsite: values.subsite,
+                        case: values.case,
+                        position: values.position,
+                        quantity: values.quantity,
+                        payRate: values.payRate,
+                        chargeRate: values.chargeRate,
+                        extraRate: values.extraRate,
+                        siteAssets: values.siteAssets,
+                        pastEmployees: [],
+                        cancelled: false,
+                        published: false,
+                        status: "Awaiting"
+                    }
+                    newData[empIndex].shiftDays[dayIndex].shifts.push(newShift);
+                }
+            });
+        }
+        return newData;
     };
 
     return (
@@ -1160,10 +1255,10 @@ export default function ViewCalendarContent() {
                         </span>
                     </div>
                     <div className='actions'>
-                        <Button variant='icon' className='px-1 py-0'>
+                        <Button variant='icon' className='px-1 py-0' onClick={() => setStartDate(moment(startDate).subtract(1, 'weeks'))}>
                             <BiChevronLeft size={25} />
                         </Button>
-                        <Button variant='icon' className='px-1 py-0'>
+                        <Button variant='icon' className='px-1 py-0' onClick={() => setStartDate(moment(startDate).add(1, 'weeks'))}>
                             <BiChevronRight size={25} />
                         </Button>
                     </div>

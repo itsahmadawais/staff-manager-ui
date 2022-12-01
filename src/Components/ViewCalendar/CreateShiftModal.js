@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Modal, Table } from 'react-bootstrap';
 import * as Yup from 'yup';
-import { Formik, Field } from 'formik';
+import { Formik, Field, ErrorMessage } from 'formik';
 import Select from 'react-select';
 import moment from 'moment';
 import { ButtonLoader } from '../UI';
@@ -116,7 +116,6 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                     if (startDate.getTime() === endDate.getTime()) {
                         return true;
                     } else {
-                        console.log(moment(endCombine, 'DD-MM-YYYY HH:mm').diff(moment(startCombine, 'DD-MM-YYYY HH:mm'), 'hours'));
                         return moment(endCombine, 'DD-MM-YYYY HH:mm').diff(moment(startCombine, 'DD-MM-YYYY HH:mm'), 'hours') < 24;
                     }
                 }
@@ -178,10 +177,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
             is: (val) => val === 'shift-recurrence',
             then: Yup.number().min(1, 'It should not be less than 1')
         }),
-        extraDates: Yup.array().of(Yup.date().when('repetition', {
-            is: (val) => val === 'extra-dates',
-            then: Yup.date().min(moment().format('YYYY-MM-DD'), 'All dates must be greater than current day')
-        }))
+        extraDates: Yup.array()
     });
 
     useEffect(() => {
@@ -653,7 +649,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                     {
                                                         values.repeat === 'Monthly' &&
                                                         <div className='d-flex align-items-center mb-3'>
-                                                            <p className='fw-bold mb-0 me-3'>On</p>
+                                                            <p className='fw-bold mb-0 me-3'>On day</p>
                                                             <Select
                                                                 name='repeatMonthDate'
                                                                 defaultValue={{value: values.repeatMonthDate, label: values.repeatMonthDate}}
@@ -754,8 +750,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
                                                             onKeyDown={(e) => e.preventDefault()}
                                                         />
                                                         <p className='error-feedback'>
-                                                            {errors.extraDates && touched.extraDates && errors.extraDates ? 
-                                                            errors.extraDates.find(val => val !== undefined) : ''}
+                                                            {errors.extraDates && touched.extraDates && errors.extraDates}
                                                         </p>
                                                     </div>
                                                 </div>

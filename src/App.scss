@@ -593,6 +593,24 @@ input {
                 }
             }
         }
+        .shift-menu {
+            .btn-action {
+                float: right;
+                padding: 5px;
+                &::after {
+                    display: none;
+                }
+            }
+            .dropdown-menu {
+                font-size: 13px;
+                padding: 5px;
+                .dropdown-item {
+                    &:last-child {
+                        color: red;
+                    }
+                }
+            }
+        }
     }
 }
 

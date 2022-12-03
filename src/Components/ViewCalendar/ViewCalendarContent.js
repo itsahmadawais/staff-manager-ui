@@ -814,7 +814,7 @@ export default function ViewCalendarContent() {
 
     const [startDate, setStartDate] = useState(moment());
     const today = new Date().toISOString().replace(/T.*/,'').split('-').reverse().join('-');
-    const [currentWeek, setCurrentWeek] = useState(dummyWeek);
+    const [currentWeek, setCurrentWeek] = useState(dummyWeek); //call getCurrentWeek() when working with realtime shifts data
     const [unassigned, setUnassigned] = useState(unassignedShiftDays);
     const [assigned, setAssigned] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -1102,8 +1102,79 @@ export default function ViewCalendarContent() {
     };
 
     const handleShiftCreation = (values) => {
-        let extraDates = values.extraDates.filter(extraDate => moment(extraDate.split("-").reverse().join("-"), 'DD-MM-YYYY')
-            .isBetween(moment(currentWeek[0].date, 'DD-MM-YYYY'), moment(currentWeek[6].date, 'DD-MM-YYYY'), undefined, []));
+        let extraDates = [];
+        if (values.repetition === 'extra-dates') {
+            extraDates = filterExtraDates(values.extraDates);
+        } else {
+            switch (values.repeat) {
+                case 'Daily':
+                    let currDate = moment(values.startDate).add(values.repeatCount, 'days').format('YYYY-MM-DD');
+                    if (values.repeatEnd === 'On date') {
+                        while (moment(currDate).isBefore(moment(values.repeatEndDate))) {
+                            extraDates.push(currDate);
+                            currDate = moment(currDate).add(values.repeatCount, 'days').format('YYYY-MM-DD');
+                        }
+                    } else {
+                        for (let i = 1; i <= values.repeatEndCount; i++) {
+                            extraDates.push(currDate);
+                            currDate = moment(currDate).add(values.repeatCount, 'days').format('YYYY-MM-DD');
+                        }
+                    }
+                    break;
+                case 'Weekly':
+                    let currWeek = moment(currentWeek[0].date, 'DD-MM-YYYY').add(values.repeatCount, 'weeks');
+                    if (values.repeatEnd === 'On date') {
+                        let currWeekDate;
+                        do {
+                            currWeekDate = moment(moment(currWeek.startOf('isoWeek')).format('YYYY-MM-DD'));
+                            let repeatDays = values.repeatDays.map(item => item.value);
+                            for (let i = 0; i < 7; i++) {
+                                if (repeatDays.includes(currWeekDate.format('ddd'))) {
+                                    extraDates.push(currWeekDate.format('YYYY-MM-DD'));
+                                }
+                                currWeekDate = currWeekDate.add(1, 'day');
+                            }
+                            currWeek = moment(currWeekDate, 'YYYY-MM-DD').subtract(1, 'day').add(values.repeatCount, 'weeks');
+                        } while (moment(currWeekDate).isBefore(moment(values.repeatEndDate)));
+                    } else {
+                        for (let i = 1; i <= values.repeatEndCount; i++) {
+                            let currWeekDate = moment(moment(currWeek.startOf('isoWeek')).format('YYYY-MM-DD'));
+                            let repeatDays = values.repeatDays.map(item => item.value);
+                            for (let i = 0; i < 7; i++) {
+                                if (repeatDays.includes(currWeekDate.format('ddd'))) {
+                                    extraDates.push(currWeekDate.format('YYYY-MM-DD'));
+                                }
+                                currWeekDate = currWeekDate.add(1, 'day');
+                            }
+                            currWeek = moment(currWeekDate, 'YYYY-MM-DD').subtract(1, 'day').add(values.repeatCount, 'weeks');
+                        }
+                    }
+                    break;
+                case 'Monthly':
+                    let currMonth = moment(currentWeek[0].date, 'DD-MM-YYYY').add(values.repeatCount, 'months');
+                    let currMonthDate = moment(moment(currMonth.startOf('month')).format('YYYY-MM-DD'))
+                        .add(values.repeatMonthDate-1, 'days');
+                    if (values.repeatEnd === 'On date') {
+                        while (moment(currMonthDate).isBefore(moment(values.repeatEndDate))) {
+                            extraDates.push(currMonthDate.format('YYYY-MM-DD'));
+                            currMonth = moment(currMonthDate, 'YYYY-MM-DD').add(values.repeatCount, 'months');
+                            currMonthDate = moment(moment(currMonth.startOf('month')).format('YYYY-MM-DD'))
+                                .add(values.repeatMonthDate-1, 'days');
+                        };
+                    } else {
+                        for (let i = 1; i <= values.repeatEndCount; i++) {
+                            extraDates.push(currMonthDate.format('YYYY-MM-DD'));
+                            currMonth = moment(currMonthDate, 'YYYY-MM-DD').add(values.repeatCount, 'months');
+                            currMonthDate = moment(moment(currMonth.startOf('month')).format('YYYY-MM-DD'))
+                                .add(values.repeatMonthDate-1, 'days');
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+            extraDates = filterExtraDates(extraDates);
+        }
 
         if (values.employee === '') {
             let newData = [...unassigned];
@@ -1114,6 +1185,13 @@ export default function ViewCalendarContent() {
             let newShifts = makeAssignedShifts(values, newData, values.startDate, extraDates);
             setAssigned(newShifts);
         }
+    };
+
+    const filterExtraDates = (extraDates) => {
+        //Filter out dates which are not in this week and post them to API
+        //For now, its just filtering out those dates creating only the ones which are within the week
+        return extraDates.filter(extraDate => moment(extraDate.split("-").reverse().join("-"), 'DD-MM-YYYY')
+        .isBetween(moment(currentWeek[0].date, 'DD-MM-YYYY'), moment(currentWeek[6].date, 'DD-MM-YYYY'), undefined, []));
     };
 
     const makeUnassignedShifts = (values, newData, creationDate, extraDates) => {
@@ -1236,6 +1314,34 @@ export default function ViewCalendarContent() {
             });
         }
         return newData;
+    };
+
+    const deleteShift = (empId, dayIndex, shiftIndex) => {
+        let newData;
+        if (empId === 'Unassigned') {
+            newData = [...unassigned];
+            newData[dayIndex].shifts.splice(shiftIndex, 1);
+            setUnassigned(newData);
+        } else {
+            newData = [...assigned];
+            let empIndex = newData.findIndex(user => user.id === empId);
+            newData[empIndex].shiftDays[dayIndex].shifts.splice(shiftIndex, 1);
+            setAssigned(newData);
+        }
+    };
+
+    const changeShiftStatus = (values, empId, dayIndex, shiftIndex) => {
+        let newData;
+        if (empId === 'Unassigned') {
+            newData = [...unassigned];
+            newData[dayIndex].shifts[shiftIndex] = values;
+            setUnassigned(newData);
+        } else {
+            newData = [...assigned];
+            let empIndex = newData.findIndex(user => user.id === empId);
+            newData[empIndex].shiftDays[dayIndex].shifts[shiftIndex] = values;
+            setAssigned(newData);
+        }
     };
 
     return (
@@ -1446,6 +1552,8 @@ export default function ViewCalendarContent() {
                                                                                                 dayIndex={dayIndex}
                                                                                                 shiftIndex={index} 
                                                                                                 handleShiftEdit={handleShiftEdit} 
+                                                                                                deleteShift={deleteShift}
+                                                                                                changeShiftStatus={changeShiftStatus}
                                                                                             />
                                                                                         </div>
                                                                                     )}
@@ -1544,6 +1652,8 @@ export default function ViewCalendarContent() {
                                                                                                             dayIndex={dayIndex}
                                                                                                             shiftIndex={index} 
                                                                                                             handleShiftEdit={handleShiftEdit} 
+                                                                                                            deleteShift={deleteShift}
+                                                                                                            changeShiftStatus={changeShiftStatus}
                                                                                                         />
                                                                                                     </div>
                                                                                                 )}

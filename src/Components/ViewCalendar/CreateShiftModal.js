@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Modal, Table } from 'react-bootstrap';
 import * as Yup from 'yup';
-import { Formik, Field, ErrorMessage } from 'formik';
+import { Formik, Field } from 'formik';
 import Select from 'react-select';
 import moment from 'moment';
 import { ButtonLoader } from '../UI';
@@ -171,7 +171,7 @@ export default function CreateShiftModal({date, employee, show, handleClose, han
         }),
         repeatEndDate: Yup.date().when('repetition', {
             is: (val) => val === 'shift-recurrence',
-            then: Yup.date().min(moment().format('YYYY-MM-DD'), 'End date should not be less than current day')
+            then: Yup.date()
         }),
         repeatEndCount: Yup.number().when('repetition', {
             is: (val) => val === 'shift-recurrence',

@@ -1,10 +1,11 @@
 import React from 'react'
-import { Route } from 'react-router-dom';
-import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar, Profile, Settings, 
+import { Navigate, Route } from 'react-router-dom';
+import { ForgotPassword, Login, ResetPassword, Dashboard, Schedule, ViewCalendar, Profile, Settings,
     Users, CreateUser, UserRoles, GroupPermissions, AbsenceReports, Departments, CreateDepartment, EditDepartment,
-    Locations, ViewLocation, EditLocation, CreateLocation, Documents, CreateDocument, Absence, CreateAbsence, 
+    Locations, ViewLocation, EditLocation, CreateLocation, Documents, CreateDocument, Absence, CreateAbsence,
     Allowances, Employees, ViewEmployee, CreateEmployee, EditEmployee, Subcontractors, CreateSubcontractor,
     ViewSubcontractor, EditSubcontractor, Clients, ViewClient, EditClient, CreateClient } from './Pages';
+import { components } from 'react-select';
 
 export function getRoutes() {
     const routes = [
@@ -19,6 +20,10 @@ export function getRoutes() {
         {
             path: '/reset-password',
             component: <ResetPassword />
+        },
+        {
+            path: '/',
+            component: <Dashboard />
         },
         {
             path: '/dashboard',
@@ -151,6 +156,9 @@ export function getRoutes() {
         {
             path: '/clients/create',
             component: <CreateClient />
+        },{
+            path: '*',
+            component: <Navigate to="dashboard"/>
         }
     ];
 
@@ -163,6 +171,6 @@ export function getRoutes() {
     return (
         <>
             {appRoutes}
-        </>    
+        </>
     )
 }
